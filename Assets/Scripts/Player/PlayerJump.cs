@@ -4,16 +4,9 @@ using UnityEngine;
 public class PlayerJump : MonoBehaviour
 {
     [Header("Jump")]
-    [SerializeField]
     private float jumpSpeed = 15f;
-
-    [SerializeField]
     private float riseGravity = 3f;
-
-    [SerializeField]
     private float fallGravity = 5f;
-
-    [SerializeField]
     private float jumpCutMultiplier = 0.5f;
 
     [Header("Assist")]
@@ -30,11 +23,21 @@ public class PlayerJump : MonoBehaviour
     private float coyoteCounter;
     private float jumpBufferCounter;
 
+    public event System.Action OnJumped;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
+    }
+
+    public void ApplyData(TransformationData data)
+    {
+        jumpSpeed = data.jumpSpeed;
+        riseGravity = data.riseGravity;
+        fallGravity = data.fallGravity;
+        jumpCutMultiplier = data.jumpCutMultiplier;
     }
 
     private void Update()
@@ -75,6 +78,7 @@ public class PlayerJump : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpSpeed);
             jumpBufferCounter = 0f;
             coyoteCounter = 0f;
+            OnJumped?.Invoke();
         }
 
         // 비대칭 중력 적용
