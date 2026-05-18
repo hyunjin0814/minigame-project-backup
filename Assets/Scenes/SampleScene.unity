@@ -1825,6 +1825,7 @@ GameObject:
   - component: {fileID: 2099604097}
   - component: {fileID: 2099604095}
   - component: {fileID: 2099604103}
+  - component: {fileID: 2099604104}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -1946,10 +1947,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0731fa74cd35ef488c3340730b260e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerJump
-  jumpSpeed: 15
-  riseGravity: 3
-  fallGravity: 5
-  jumpCutMultiplier: 0.5
   coyoteTime: 0.1
   jumpBuffer: 0.1
 --- !u!114 &2099604097
@@ -1964,10 +1961,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 820ba02ce4374a544a4f80b59850602e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHorizontalMovement
-  maxSpeed: 9
-  accelTime: 0.08
-  decelTime: 0.05
-  airControl: 0.9
 --- !u!114 &2099604098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2070,6 +2063,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   animator: {fileID: 2099604102}
   spriteRenderer: {fileID: 2099604093}
+--- !u!114 &2099604104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099604089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740d8340faa13f145afe2a93f955d551, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTransformController
+  humanData: {fileID: 11400000, guid: 4659c071936b2324a9acd18c3836a76c, type: 2}
+  dogData: {fileID: 11400000, guid: b7a2e49fd23c6f440ae30c3f82b502e5, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
