@@ -4,16 +4,9 @@ using UnityEngine;
 public class PlayerHorizontalMovement : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField]
     private float maxSpeed = 9f;
-
-    [SerializeField]
     private float accelTime = 0.08f;
-
-    [SerializeField]
     private float decelTime = 0.05f;
-
-    [SerializeField]
     private float airControl = 0.9f;
 
     private Rigidbody2D rb;
@@ -25,6 +18,14 @@ public class PlayerHorizontalMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
+    }
+
+    public void ApplyData(TransformationData data)
+    {
+        maxSpeed = data.maxSpeed;
+        accelTime = data.accelTime;
+        decelTime = data.decelTime;
+        airControl = data.airControl;
     }
 
     private void FixedUpdate()

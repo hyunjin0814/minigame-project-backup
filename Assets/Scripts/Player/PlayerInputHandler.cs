@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,9 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 MoveInput { get; private set; }
     public bool JumpTriggered { get; set; }
     public bool JumpCutRequested { get; set; }
+
+    public event Action OnTransformHuman;
+    public event Action OnTransformDog;
 
     private void Awake()
     {
@@ -21,6 +25,9 @@ public class PlayerInputHandler : MonoBehaviour
         input.Player.Move.canceled += OnMove;
         input.Player.Jump.performed += OnJumpPressed;
         input.Player.Jump.canceled += OnJumpReleased;
+
+        input.Player.TransformHuman.performed += OnTransformHumanPerformed;
+        input.Player.TransformDog.performed += OnTransformDogPerformed;
     }
 
     private void OnDisable()
@@ -29,6 +36,10 @@ public class PlayerInputHandler : MonoBehaviour
         input.Player.Move.canceled -= OnMove;
         input.Player.Jump.performed -= OnJumpPressed;
         input.Player.Jump.canceled -= OnJumpReleased;
+
+        input.Player.TransformHuman.performed -= OnTransformHumanPerformed;
+        input.Player.TransformDog.performed -= OnTransformDogPerformed;
+
         input.Player.Disable();
     }
 
@@ -42,5 +53,15 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnJumpReleased(InputAction.CallbackContext ctx)
     {
         JumpCutRequested = true;
+    }
+
+    private void OnTransformHumanPerformed(InputAction.CallbackContext ctx)
+    {
+        OnTransformHuman?.Invoke();
+    }
+
+    private void OnTransformDogPerformed(InputAction.CallbackContext ctx)
+    {
+        OnTransformDog?.Invoke();
     }
 }
