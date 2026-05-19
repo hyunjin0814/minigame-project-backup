@@ -1,0 +1,28 @@
+{
+    "asset": "6eb69d566b615f34d960ff74e362e2f9",
+    "fileName": "019e3ed3-ccd3-7b6a-8552-55840c18b193.png",
+    "prompt": "Pixel art sprite of a young human protagonist, full body, head to toe, side view, facing right, idle pose standing still, 32x32 pixel art style, limited 16-color palette, dark tone with accent color, clean pixel edges, no anti-aliasing, transparent background, 2D platformer game asset, retro 16-bit style.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}
