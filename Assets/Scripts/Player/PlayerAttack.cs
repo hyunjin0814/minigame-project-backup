@@ -91,6 +91,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void HandleAttack()
     {
+        if (hitbox == null) return;
+
         if (phase == AttackPhase.Ready)
             ExecuteAttack();
         else
