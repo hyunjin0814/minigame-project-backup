@@ -21,6 +21,10 @@ public abstract class BaseTransformState : ITransformState
         // 2. Animator Controller 교체
         if (data.animatorController != null)
             controller.PlayerAnimator.SetAnimatorController(data.animatorController);
+
+        controller.Collider.direction = data.colliderDirection;
+        controller.Collider.size = data.colliderSize;
+        controller.Collider.offset = data.colliderOffset;
     }
 
     public virtual void Exit() { }

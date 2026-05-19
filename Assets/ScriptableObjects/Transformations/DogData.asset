@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb78fdff7822ec149acc59813342f294, type: 3}
   m_Name: DogData
   m_EditorClassIdentifier: Assembly-CSharp::TransformationData
-  formName: Human
-  maxSpeed: 9
-  accelTime: 0.08
+  formName: Dog
+  maxSpeed: 13
+  accelTime: 0.06
   decelTime: 0.05
   airControl: 0.9
-  jumpSpeed: 15
+  jumpSpeed: 12
   riseGravity: 3
   fallGravity: 5
   jumpCutMultiplier: 0.5
-  animatorController: {fileID: 0}
+  animatorController: {fileID: 9100000, guid: 60de4c93f5b73014ea94edb058904b81, type: 2}
