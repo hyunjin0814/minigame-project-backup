@@ -1919,6 +1919,7 @@ GameObject:
   - component: {fileID: 2099604103}
   - component: {fileID: 2099604104}
   - component: {fileID: 2099604105}
+  - component: {fileID: 2099604106}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -2155,12 +2156,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d136099a34df5ab4e94b7602a3537d8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
-  animator: {fileID: 2099604102}
-  spriteRenderer: {fileID: 2099604093}
-  rb: {fileID: 0}
-  inputHandler: {fileID: 0}
-  groundDetector: {fileID: 0}
-  jumpComponent: {fileID: 0}
 --- !u!114 &2099604104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2188,6 +2183,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHp: 3
+--- !u!114 &2099604106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099604089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b2063673fd9ba743b5e7d9fa2e39f40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  hitbox: {fileID: 1046735698}
+  attackDuration: 0.2
+  attackCooldown: 0.4
+  comboWindow: 0.5
+  attackBuffer: 0.1
+  hitboxOffsetRight: {x: 1, y: 1}
+  hitboxOffsetLeft: {x: -2, y: 1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

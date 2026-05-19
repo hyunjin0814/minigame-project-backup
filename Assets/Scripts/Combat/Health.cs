@@ -13,6 +13,8 @@ public class Health : MonoBehaviour, IDamageable
 
     public void TakeDamage(int amount)
     {
+        if (CurrentHp <= 0)
+            return;
         CurrentHp = Mathf.Max(0, CurrentHp - amount);
         if (CurrentHp == 0)
             OnDeath?.Invoke();

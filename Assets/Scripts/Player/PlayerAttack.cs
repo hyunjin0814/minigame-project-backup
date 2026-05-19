@@ -3,13 +3,34 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerAttack : MonoBehaviour
 {
-    [SerializeField] private AttackHitbox hitbox;
-    [SerializeField] private float attackDuration = 0.2f;
-    [SerializeField] private float attackCooldown = 0.4f;
-    [SerializeField] private float comboWindow = 0.5f;  // TODO: 애니메이션 붙일 때 조정
-    [SerializeField] private float attackBuffer = 0.1f;
+    [SerializeField]
+    private AttackHitbox hitbox;
 
-    private enum AttackPhase { Ready, Attacking, Cooldown }
+    [SerializeField]
+    private float attackDuration = 0.2f;
+
+    [SerializeField]
+    private float attackCooldown = 0.4f;
+
+    [SerializeField]
+    private float comboWindow = 0.5f; // TODO: 애니메이션 붙일 때 조정
+
+    [SerializeField]
+    private float attackBuffer = 0.1f;
+
+    [SerializeField]
+    private Vector2 hitboxOffsetRight = new Vector2(0.5f, 0f);
+
+    [SerializeField]
+    private Vector2 hitboxOffsetLeft = new Vector2(-2.5f, 0f);
+
+    private enum AttackPhase
+    {
+        Ready,
+        Attacking,
+        Cooldown,
+    }
+
     private AttackPhase phase = AttackPhase.Ready;
     private float timer;
 
@@ -91,7 +112,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void HandleAttack()
     {
-        if (hitbox == null) return;
+        if (hitbox == null)
+            return;
 
         if (phase == AttackPhase.Ready)
             ExecuteAttack();
@@ -105,6 +127,9 @@ public class PlayerAttack : MonoBehaviour
     private void ExecuteAttack()
     {
         // TODO: PlayAnimation(comboIndex) — 애니메이션 붙일 때 연결
+
+        Vector2 offset = facingRight ? hitboxOffsetRight : hitboxOffsetLeft;
+        hitbox.transform.localPosition = new Vector3(offset.x, offset.y, 0f);
 
         Vector3 pos = hitbox.transform.localPosition;
         hitbox.transform.localPosition = new Vector3(
