@@ -2,6 +2,9 @@
 CLAUDE.md
 GDD.md
 
+# Claude Code
+.claude/settings.local.json
+
 # Unity generated folders
 [Ll]ibrary/
 [Tt]emp/

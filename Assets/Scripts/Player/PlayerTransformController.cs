@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInputHandler))]
 [RequireComponent(typeof(PlayerHorizontalMovement))]
 [RequireComponent(typeof(PlayerJump))]
+[RequireComponent(typeof(PlayerAttack))]
 // [RequireComponent(typeof(PlayerAnimator))]
 public class PlayerTransformController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlayerTransformController : MonoBehaviour
     // 다른 컴포넌트에 대한 접근 (State가 사용)
     public PlayerHorizontalMovement HorizontalMovement { get; private set; }
     public PlayerJump Jump { get; private set; }
+    public PlayerAttack Attack { get; private set; }
 
     // public PlayerAnimator PlayerAnimator { get; private set; }
 
@@ -36,6 +38,7 @@ public class PlayerTransformController : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         HorizontalMovement = GetComponent<PlayerHorizontalMovement>();
         Jump = GetComponent<PlayerJump>();
+        Attack = GetComponent<PlayerAttack>();
         // PlayerAnimator = GetComponent<PlayerAnimator>();
         Collider = GetComponent<CapsuleCollider2D>();
 
