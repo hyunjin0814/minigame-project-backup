@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: DogData
   m_EditorClassIdentifier: Assembly-CSharp::TransformationData
   formName: Dog
+  colliderSize: {x: 1.9, y: 1.3}
+  colliderOffset: {x: 0, y: 0.65}
+  colliderDirection: 1
   maxSpeed: 13
   accelTime: 0.06
   decelTime: 0.05
