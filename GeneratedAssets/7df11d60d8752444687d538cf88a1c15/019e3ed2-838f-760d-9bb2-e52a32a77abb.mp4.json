@@ -1,0 +1,38 @@
+{
+    "asset": "7df11d60d8752444687d538cf88a1c15",
+    "fileName": "019e3ed2-838f-760d-9bb2-e52a32a77abb.mp4",
+    "prompt": "Small dog walking cycle animation, side view, 4 frames horizontal layout, pixel art style, limited 16-color palette, matching the design of the reference image, clean pixel edges, no anti-aliasing, transparent background. Full body head to toe.",
+    "negativePrompt": "",
+    "model": "video-kling-v3-i2v-pro",
+    "modelName": "Kling V3 I2V Pro",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Spritesheet",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 9,
+                "doodle": [],
+                "label": "First",
+                "strength": 1.0,
+                "invertStrength": false,
+                "assetReferenceGuid": "373b796acf58ca440b228c35053f5e1f",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 0,
+        "height": 0
+    },
+    "spriteSheet": true,
+    "duration": 5.0
+}
