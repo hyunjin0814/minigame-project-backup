@@ -21,4 +21,4 @@ MonoBehaviour:
   riseGravity: 3
   fallGravity: 5
   jumpCutMultiplier: 0.5
-  animatorController: {fileID: 0}
+  animatorController: {fileID: 9100000, guid: 60de4c93f5b73014ea94edb058904b81, type: 2}

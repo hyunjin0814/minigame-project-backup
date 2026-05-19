@@ -28,12 +28,15 @@ public class PlayerTransformController : MonoBehaviour
     // 입력
     private PlayerInputHandler inputHandler;
 
+    public CapsuleCollider2D Collider { get; private set; }
+
     private void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
         HorizontalMovement = GetComponent<PlayerHorizontalMovement>();
         Jump = GetComponent<PlayerJump>();
         PlayerAnimator = GetComponent<PlayerAnimator>();
+        Collider = GetComponent<CapsuleCollider2D>();
 
         // State 인스턴스 생성
         humanState = new HumanState(this, humanData);
