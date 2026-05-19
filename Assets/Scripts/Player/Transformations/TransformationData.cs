@@ -23,6 +23,6 @@ public class TransformationData : ScriptableObject
     public float fallGravity = 5f;
     public float jumpCutMultiplier = 0.5f;
 
-    [Header("Visual")]
-    public RuntimeAnimatorController animatorController;
+    // [Header("Visual")]
+    // public RuntimeAnimatorController animatorController;
 }
