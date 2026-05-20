@@ -927,8 +927,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   attackCooldown: 1.5
   alertDuration: 1
+  alertRadiusMultiplier: 1.4
   searchDuration: 3
   chaseCircleRadius: 7
+  attackCircleRadius: 9
+  attackOutOfRangeGrace: 1.5
 --- !u!114 &559558467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1094,7 +1097,7 @@ Transform:
   m_GameObject: {fileID: 559558464}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 2.22, z: 0}
+  m_LocalPosition: {x: 6.69, y: 2.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1121,6 +1124,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2112
   chaseSpeed: 5
+  chaseLungeSpeed: 7
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,7 +1405,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &771702803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1431,8 +1435,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   attackCooldown: 1.5
   alertDuration: 1
+  alertRadiusMultiplier: 1.4
   searchDuration: 3
   chaseCircleRadius: 7
+  attackCircleRadius: 9
+  attackOutOfRangeGrace: 1.5
 --- !u!114 &771702805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1452,7 +1459,7 @@ MonoBehaviour:
     m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
 --- !u!114 &771702806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1624,6 +1631,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2112
   chaseSpeed: 5
+  chaseLungeSpeed: 7
 --- !u!1 &785719195
 GameObject:
   m_ObjectHideFlags: 0
