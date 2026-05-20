@@ -26,6 +26,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float searchDuration = 3f;
 
+    [SerializeField]
+    private float chaseCircleRadius = 7f;
+
     private EnemyState state = EnemyState.Patrol;
     private EnemySight sight;
     private Health health;
@@ -68,10 +71,12 @@ public class EnemyController : MonoBehaviour
 
             case EnemyState.Chase:
                 movement.ChaseTick();
-                // IsPlayerWithinRadius()가 false 반환 시 Player가 null이 되므로 그 전에 저장
-                if (sight.Player != null)
+                // Chase 원형 감지 (반경 7, 벽 차단) — 인지 후엔 시야각이 아닌 원형
+                if (sight.IsPlayerInCircle(chaseCircleRadius))
+                {
                     lastSeenPosition = sight.Player.position;
-                if (!sight.IsPlayerWithinRadius())
+                }
+                else
                 {
                     ChangeState(EnemyState.Search);
                     break;
