@@ -13,6 +13,9 @@ public class EnemyController : MonoBehaviour
         Attack,
     }
 
+    // SightConeRenderer가 콘 색상 결정에 사용
+    public EnemyState CurrentState => state;
+
     [SerializeField]
     private float attackCooldown = 1.5f;
 

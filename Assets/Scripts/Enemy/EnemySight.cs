@@ -18,6 +18,10 @@ public class EnemySight : MonoBehaviour
 
     public int FacingDirection { get; set; } = 1;
 
+    // SightConeRenderer가 콘 메시 크기 계산에 사용
+    public float DetectionRadius => detectionRadius;
+    public float DetectionAngle => detectionAngle;
+
     public bool CanSeePlayer()
     {
         if (!IsPlayerWithinRadius())
