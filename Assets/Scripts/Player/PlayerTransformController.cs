@@ -37,7 +37,7 @@ public class PlayerTransformController : MonoBehaviour
     // 입력
     private PlayerInputHandler inputHandler;
 
-    public CapsuleCollider2D Collider { get; private set; }
+    public BoxCollider2D Collider { get; private set; }
 
     private void Awake()
     {
@@ -46,7 +46,7 @@ public class PlayerTransformController : MonoBehaviour
         Jump = GetComponent<PlayerJump>();
         Attack = GetComponent<PlayerAttack>();
         // PlayerAnimator = GetComponent<PlayerAnimator>();
-        Collider = GetComponent<CapsuleCollider2D>();
+        Collider = GetComponent<BoxCollider2D>();
         ChameleonStealth = GetComponent<ChameleonStealth>();
 
         // State 인스턴스 생성
