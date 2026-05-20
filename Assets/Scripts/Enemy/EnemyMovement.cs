@@ -21,6 +21,9 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField]
     private float chaseSpeed = 5f;
 
+    [SerializeField]
+    private float chaseLungeSpeed = 7f;
+
     private const float LookAroundInterval = 0.8f;
 
     public int FacingDirection { get; private set; } = 1;
@@ -49,8 +52,24 @@ public class EnemyMovement : MonoBehaviour
     public void ApplyAlertVelocity() =>
         rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
-    public void ApplyChaseVelocity() =>
-        rb.linearVelocity = new Vector2(FacingDirection * chaseSpeed, rb.linearVelocity.y);
+    // isLunging: lastSeenPosition으로 돌진 중일 때 true → chaseLungeSpeed 사용
+    public void ApplyChaseVelocity(bool isLunging = false)
+    {
+        float speed = isLunging ? chaseLungeSpeed : chaseSpeed;
+        rb.linearVelocity = new Vector2(FacingDirection * speed, rb.linearVelocity.y);
+    }
+
+    // 고정 좌표(lastSeenPosition)로 향하는 facing 갱신
+    public void ChaseTowardTarget(Vector2 target)
+    {
+        float diffX = target.x - transform.position.x;
+        if (Mathf.Abs(diffX) < 0.3f)
+            return;
+        Flip(diffX > 0 ? 1 : -1);
+    }
+
+    public bool ArrivedAtChaseTarget(Vector2 target) =>
+        Mathf.Abs(transform.position.x - target.x) < 0.3f;
 
     public void ResetSearch()
     {

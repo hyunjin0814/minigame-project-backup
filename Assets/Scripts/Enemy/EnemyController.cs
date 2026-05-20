@@ -53,6 +53,7 @@ public class EnemyController : MonoBehaviour
     private float alertTimer;
     private float searchTimer;
     private float attackOutOfRangeTimer;
+    private bool chaseIsLunging;
     private Vector2 lastSeenPosition;
 
     private void Awake()
@@ -90,18 +91,28 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case EnemyState.Chase:
-                movement.ChaseTick();
-                // Chase 원형 감지 (반경 7, 벽 차단) — 인지 후엔 시야각이 아닌 원형
-                if (sight.IsPlayerInCircle(chaseCircleRadius))
+                // 하이브리드: 원형 안이면 동적 추적, 밖이면 lastSeenPosition 돌진
+                bool inChaseCircle = sight.IsPlayerInCircle(chaseCircleRadius);
+                chaseIsLunging = !inChaseCircle;
+                if (inChaseCircle)
                 {
+                    movement.ChaseTick();
                     lastSeenPosition = sight.Player.position;
                 }
                 else
                 {
-                    ChangeState(EnemyState.Search);
-                    break;
+                    movement.ChaseTowardTarget(lastSeenPosition);
+                    if (movement.ArrivedAtChaseTarget(lastSeenPosition))
+                    {
+                        ChangeState(EnemyState.Search);
+                        break;
+                    }
                 }
-                if (attackBehavior != null && attackBehavior.IsInRange(sight.Player))
+                if (
+                    sight.Player != null
+                    && attackBehavior != null
+                    && attackBehavior.IsInRange(sight.Player)
+                )
                     ChangeState(EnemyState.Attack);
                 break;
 
@@ -172,7 +183,7 @@ public class EnemyController : MonoBehaviour
                 movement.ApplyAlertVelocity();
                 break;
             case EnemyState.Chase:
-                movement.ApplyChaseVelocity();
+                movement.ApplyChaseVelocity(chaseIsLunging);
                 break;
             case EnemyState.Search:
                 movement.ApplySearchVelocity();
@@ -202,6 +213,9 @@ public class EnemyController : MonoBehaviour
 
         if (newState == EnemyState.Attack)
             attackOutOfRangeTimer = 0f;
+
+        if (newState == EnemyState.Chase)
+            chaseIsLunging = false;   // 진입 시점에는 원형 안 (Alert 재확인 통과)
 
         attackTimer = 0f;
         state = newState;
