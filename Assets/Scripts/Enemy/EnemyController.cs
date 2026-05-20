@@ -24,6 +24,11 @@ public class EnemyController : MonoBehaviour
     private float alertDuration = 1f;
 
     [SerializeField]
+    private float alertRadiusMultiplier = 1.4f;
+
+    public float AlertRadiusMultiplier => alertRadiusMultiplier;
+
+    [SerializeField]
     private float searchDuration = 3f;
 
     [SerializeField]
@@ -76,8 +81,12 @@ public class EnemyController : MonoBehaviour
                 alertTimer -= Time.deltaTime;
                 if (alertTimer > 0f)
                     break;
-                // 1초 풀 대기 후 한 번만 판정
-                ChangeState(sight.CanSeePlayer() ? EnemyState.Chase : EnemyState.Patrol);
+                // 1초 풀 대기 후 한 번만 판정 — 확장 시야(1.4배)로 재확인
+                ChangeState(
+                    sight.CanSeePlayer(alertRadiusMultiplier)
+                        ? EnemyState.Chase
+                        : EnemyState.Patrol
+                );
                 break;
 
             case EnemyState.Chase:

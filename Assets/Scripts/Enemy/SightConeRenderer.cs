@@ -69,6 +69,10 @@ public class SightConeRenderer : MonoBehaviour
     {
         return controller.CurrentState switch
         {
+            EnemyController.EnemyState.Alert => (
+                sight.DetectionRadius * controller.AlertRadiusMultiplier,
+                sight.DetectionAngle
+            ),
             EnemyController.EnemyState.Chase => (controller.ChaseCircleRadius, 360f),
             EnemyController.EnemyState.Attack => (controller.AttackCircleRadius, 360f),
             _ => (sight.DetectionRadius, sight.DetectionAngle),

@@ -22,9 +22,10 @@ public class EnemySight : MonoBehaviour
     public float DetectionRadius => detectionRadius;
     public float DetectionAngle => detectionAngle;
 
-    public bool CanSeePlayer()
+    // radiusMultiplier: Alert 상태에서 1.4 등으로 확장 시야 호출
+    public bool CanSeePlayer(float radiusMultiplier = 1f)
     {
-        if (!IsPlayerWithinRadius())
+        if (!IsPlayerWithinRadius(radiusMultiplier))
             return false;
 
         Vector2 dirToPlayer = (Player.position - transform.position).normalized;
@@ -57,9 +58,10 @@ public class EnemySight : MonoBehaviour
         return true;
     }
 
-    public bool IsPlayerWithinRadius()
+    public bool IsPlayerWithinRadius(float radiusMultiplier = 1f)
     {
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, detectionRadius, playerLayer);
+        float effectiveRadius = detectionRadius * radiusMultiplier;
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, effectiveRadius, playerLayer);
         if (hit == null)
         {
             Player = null;
