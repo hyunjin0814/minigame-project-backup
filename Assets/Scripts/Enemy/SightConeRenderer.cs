@@ -70,7 +70,7 @@ public class SightConeRenderer : MonoBehaviour
         return controller.CurrentState switch
         {
             EnemyController.EnemyState.Chase => (controller.ChaseCircleRadius, 360f),
-            // Attack은 3c에서 AttackCircleRadius 추가되면 함께 처리
+            EnemyController.EnemyState.Attack => (controller.AttackCircleRadius, 360f),
             _ => (sight.DetectionRadius, sight.DetectionAngle),
         };
     }

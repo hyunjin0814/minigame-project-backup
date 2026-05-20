@@ -29,8 +29,15 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float chaseCircleRadius = 7f;
 
+    [SerializeField]
+    private float attackCircleRadius = 9f;
+
+    [SerializeField]
+    private float attackOutOfRangeGrace = 1.5f;
+
     // SightConeRenderer가 원형 메시 크기 계산에 사용
     public float ChaseCircleRadius => chaseCircleRadius;
+    public float AttackCircleRadius => attackCircleRadius;
 
     private EnemyState state = EnemyState.Patrol;
     private EnemySight sight;
@@ -40,6 +47,7 @@ public class EnemyController : MonoBehaviour
     private float attackTimer;
     private float alertTimer;
     private float searchTimer;
+    private float attackOutOfRangeTimer;
     private Vector2 lastSeenPosition;
 
     private void Awake()
@@ -102,25 +110,40 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case EnemyState.Attack:
-                movement.ChaseTick();
-                if (sight.Player != null)
+                // Attack 원형 감지 (Chase보다 넓음, 벽 차단)
+                bool inAttackCircle = sight.IsPlayerInCircle(attackCircleRadius);
+                if (inAttackCircle)
+                {
                     lastSeenPosition = sight.Player.position;
-                if (!sight.IsPlayerWithinRadius())
-                {
-                    ChangeState(EnemyState.Search);
-                    break;
+                    attackOutOfRangeTimer = 0f;
                 }
-                if (!attackBehavior.IsInRange(sight.Player))
+                else
                 {
-                    ChangeState(EnemyState.Chase);
-                    break;
+                    // 원형 밖에 머문 시간 누적 — grace 끝나면 Search
+                    attackOutOfRangeTimer += Time.deltaTime;
+                    if (attackOutOfRangeTimer >= attackOutOfRangeGrace)
+                    {
+                        ChangeState(EnemyState.Search);
+                        break;
+                    }
                 }
-                attackTimer -= Time.deltaTime;
-                if (attackTimer <= 0f)
+
+                // 사거리 안: 정지 + 공격 모션 / 사거리 밖 + 원형 안: 추격 이동
+                if (sight.Player != null && attackBehavior.IsInRange(sight.Player))
                 {
-                    attackBehavior.DoAttack(sight.Player);
-                    attackTimer = attackCooldown;
+                    movement.ChaseTick(); // 방향만 갱신
+                    attackTimer -= Time.deltaTime;
+                    if (attackTimer <= 0f)
+                    {
+                        attackBehavior.DoAttack(sight.Player);
+                        attackTimer = attackCooldown;
+                    }
                 }
+                else if (sight.Player != null)
+                {
+                    movement.ChaseTick();
+                }
+                // sight.Player == null (grace 중): 이동 없이 대기
                 break;
         }
     }
@@ -142,7 +165,13 @@ public class EnemyController : MonoBehaviour
                 movement.ApplySearchVelocity();
                 break;
             case EnemyState.Attack:
-                movement.ApplyStopVelocity();
+                // 사거리 안: 정지(공격 중) / 사거리 밖 + 원형 안: 추격 / grace 중: 대기
+                if (sight.Player != null && attackBehavior.IsInRange(sight.Player))
+                    movement.ApplyStopVelocity();
+                else if (sight.Player != null)
+                    movement.ApplyChaseVelocity();
+                else
+                    movement.ApplyStopVelocity();
                 break;
         }
     }
@@ -157,6 +186,9 @@ public class EnemyController : MonoBehaviour
             searchTimer = searchDuration;
             movement.ResetSearch();
         }
+
+        if (newState == EnemyState.Attack)
+            attackOutOfRangeTimer = 0f;
 
         attackTimer = 0f;
         state = newState;
