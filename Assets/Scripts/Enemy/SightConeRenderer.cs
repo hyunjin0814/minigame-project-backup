@@ -48,11 +48,11 @@ public class SightConeRenderer : MonoBehaviour
         };
     }
 
-    // Inspector에서 detectionRadius/Angle을 바꾸지 않는 한 매 프레임 재생성 안 함
+    // 상태별로 다른 감지 모양 — 시야각(Cone) 또는 원형(Circle)
+    // 값이 바뀔 때만 메시 재생성 (캐싱)
     private void TryRebuildMesh()
     {
-        float r = sight.DetectionRadius;
-        float a = sight.DetectionAngle;
+        (float r, float a) = GetCurrentGeometry();
 
         if (Mathf.Approximately(r, cachedRadius) && Mathf.Approximately(a, cachedAngle))
             return;
@@ -60,6 +60,19 @@ public class SightConeRenderer : MonoBehaviour
         cachedRadius = r;
         cachedAngle = a;
         BuildMesh(r, a);
+    }
+
+    // 상태별 메시 geometry 결정:
+    // - Chase/Attack: 원형 (360°) + 각 상태의 전용 반경
+    // - 그 외 (Patrol/Alert/Search): 시야각 (DetectionAngle°) + DetectionRadius
+    private (float radius, float angle) GetCurrentGeometry()
+    {
+        return controller.CurrentState switch
+        {
+            EnemyController.EnemyState.Chase => (controller.ChaseCircleRadius, 360f),
+            // Attack은 3c에서 AttackCircleRadius 추가되면 함께 처리
+            _ => (sight.DetectionRadius, sight.DetectionAngle),
+        };
     }
 
     // 항상 +X 방향(오른쪽)으로 메시 생성.

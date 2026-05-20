@@ -29,6 +29,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float chaseCircleRadius = 7f;
 
+    // SightConeRenderer가 원형 메시 크기 계산에 사용
+    public float ChaseCircleRadius => chaseCircleRadius;
+
     private EnemyState state = EnemyState.Patrol;
     private EnemySight sight;
     private Health health;
