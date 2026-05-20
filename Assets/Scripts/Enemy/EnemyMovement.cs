@@ -39,6 +39,9 @@ public class EnemyMovement : MonoBehaviour
     public void ApplyPatrolVelocity() =>
         rb.linearVelocity = new Vector2(FacingDirection * patrolSpeed, rb.linearVelocity.y);
 
+    public void ApplyAlertVelocity() =>
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+
     public void ApplyChaseVelocity() =>
         rb.linearVelocity = new Vector2(FacingDirection * chaseSpeed, rb.linearVelocity.y);
 

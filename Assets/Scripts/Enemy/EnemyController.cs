@@ -19,12 +19,16 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float attackCooldown = 1.5f;
 
+    [SerializeField]
+    private float alertDuration = 1f;
+
     private EnemyState state = EnemyState.Patrol;
     private EnemySight sight;
     private Health health;
     private IEnemyAttack attackBehavior;
     private EnemyMovement movement;
     private float attackTimer;
+    private float alertTimer;
 
     private void Awake()
     {
@@ -45,7 +49,17 @@ public class EnemyController : MonoBehaviour
             case EnemyState.Patrol:
                 movement.PatrolTick();
                 if (sight.CanSeePlayer())
-                    ChangeState(EnemyState.Chase);
+                    ChangeState(EnemyState.Alert);
+                break;
+
+            case EnemyState.Alert:
+                alertTimer -= Time.deltaTime;
+                if (alertTimer > 0f)
+                    break;
+                // 1초 풀 대기 후 한 번만 판정
+                ChangeState(
+                    sight.CanSeePlayer() ? EnemyState.Chase : EnemyState.Patrol
+                );
                 break;
 
             case EnemyState.Chase:
@@ -85,6 +99,9 @@ public class EnemyController : MonoBehaviour
             case EnemyState.Patrol:
                 movement.ApplyPatrolVelocity();
                 break;
+            case EnemyState.Alert:
+                movement.ApplyAlertVelocity();
+                break;
             case EnemyState.Chase:
                 movement.ApplyChaseVelocity();
                 break;
@@ -96,6 +113,9 @@ public class EnemyController : MonoBehaviour
 
     private void ChangeState(EnemyState newState)
     {
+        if (newState == EnemyState.Alert)
+            alertTimer = alertDuration;
+
         attackTimer = 0f;
         state = newState;
     }
