@@ -14,14 +14,15 @@ public abstract class BaseTransformState : ITransformState
 
     public virtual void Enter()
     {
-        // 1. 이동·점프 컴포넌트에 스탯 주입
+        // 이동·점프 컴포넌트에 스탯 주입
         controller.HorizontalMovement.ApplyData(data);
         controller.Jump.ApplyData(data);
 
-        // 2. Animator Controller 교체
+        // Animator Controller 교체
         // if (data.animatorController != null)
         //     controller.PlayerAnimator.SetAnimatorController(data.animatorController);
 
+        // 콜라이더 사이즈 교체
         controller.Collider.direction = data.colliderDirection;
         controller.Collider.size = data.colliderSize;
         controller.Collider.offset = data.colliderOffset;

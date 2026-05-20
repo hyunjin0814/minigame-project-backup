@@ -129,6 +129,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""TransformChameleon"",
+                    ""type"": ""Button"",
+                    ""id"": ""5d9e3aad-3abc-4b22-ac61-ad57d29afafb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""c1d2e3f4-a5b6-4c7d-8e9f-012345678901"",
@@ -237,6 +246,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ee5a87a4-9564-4fc1-a3ad-5ed64f921172"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TransformChameleon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -277,6 +297,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_TransformHuman = m_Player.FindAction("TransformHuman", throwIfNotFound: true);
         m_Player_TransformDog = m_Player.FindAction("TransformDog", throwIfNotFound: true);
+        m_Player_TransformChameleon = m_Player.FindAction("TransformChameleon", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -366,6 +387,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_TransformHuman;
     private readonly InputAction m_Player_TransformDog;
+    private readonly InputAction m_Player_TransformChameleon;
     private readonly InputAction m_Player_Attack;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
@@ -394,6 +416,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/TransformDog".
         /// </summary>
         public InputAction @TransformDog => m_Wrapper.m_Player_TransformDog;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/TransformChameleon".
+        /// </summary>
+        public InputAction @TransformChameleon => m_Wrapper.m_Player_TransformChameleon;
         /// <summary>
         /// Provides access to the underlying input action "Player/Attack".
         /// </summary>
@@ -436,6 +462,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @TransformDog.started += instance.OnTransformDog;
             @TransformDog.performed += instance.OnTransformDog;
             @TransformDog.canceled += instance.OnTransformDog;
+            @TransformChameleon.started += instance.OnTransformChameleon;
+            @TransformChameleon.performed += instance.OnTransformChameleon;
+            @TransformChameleon.canceled += instance.OnTransformChameleon;
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
@@ -462,6 +491,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @TransformDog.started -= instance.OnTransformDog;
             @TransformDog.performed -= instance.OnTransformDog;
             @TransformDog.canceled -= instance.OnTransformDog;
+            @TransformChameleon.started -= instance.OnTransformChameleon;
+            @TransformChameleon.performed -= instance.OnTransformChameleon;
+            @TransformChameleon.canceled -= instance.OnTransformChameleon;
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
@@ -629,6 +661,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTransformDog(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TransformChameleon" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTransformChameleon(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Attack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
