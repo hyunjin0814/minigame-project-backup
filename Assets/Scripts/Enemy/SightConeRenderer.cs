@@ -14,7 +14,9 @@ public class SightConeRenderer : MonoBehaviour
 
     private static readonly Color32 ColPatrol = new(180, 180, 180, 60);
     private static readonly Color32 ColAlert = new(255, 220, 0, 80);
-    private static readonly Color32 ColChase = new(255, 50, 50, 100);
+    private static readonly Color32 ColSearch = new(255, 165, 0, 70);
+    private static readonly Color32 ColChase = new(255, 90, 30, 100);
+    private static readonly Color32 ColAttack = new(200, 0, 0, 140);
 
     private Mesh mesh;
     private Material mat;
@@ -39,8 +41,9 @@ public class SightConeRenderer : MonoBehaviour
         mat.color = controller.CurrentState switch
         {
             EnemyController.EnemyState.Alert => ColAlert,
+            EnemyController.EnemyState.Search => ColSearch,
             EnemyController.EnemyState.Chase => ColChase,
-            EnemyController.EnemyState.Attack => ColChase,
+            EnemyController.EnemyState.Attack => ColAttack,
             _ => ColPatrol,
         };
     }
