@@ -21,10 +21,14 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField]
     private float chaseSpeed = 5f;
 
+    private const float LookAroundInterval = 0.8f;
+
     public int FacingDirection { get; private set; } = 1;
 
     private Rigidbody2D rb;
     private EnemySight sight;
+    private bool arrivedAtSearch;
+    private float lookAroundTimer;
 
     private void Awake()
     {
@@ -44,6 +48,37 @@ public class EnemyMovement : MonoBehaviour
 
     public void ApplyChaseVelocity() =>
         rb.linearVelocity = new Vector2(FacingDirection * chaseSpeed, rb.linearVelocity.y);
+
+    public void ResetSearch()
+    {
+        arrivedAtSearch = false;
+        lookAroundTimer = 0f;
+    }
+
+    public void SearchTick(Vector2 target)
+    {
+        if (Mathf.Abs(transform.position.x - target.x) < 0.3f)
+        {
+            arrivedAtSearch = true;
+            lookAroundTimer += Time.deltaTime;
+            if (lookAroundTimer >= LookAroundInterval)
+            {
+                Flip();
+                lookAroundTimer = 0f;
+            }
+        }
+        else
+        {
+            arrivedAtSearch = false;
+            Flip(target.x > transform.position.x ? 1 : -1);
+        }
+    }
+
+    public void ApplySearchVelocity()
+    {
+        float xVel = arrivedAtSearch ? 0f : FacingDirection * patrolSpeed;
+        rb.linearVelocity = new Vector2(xVel, rb.linearVelocity.y);
+    }
 
     public void ApplyStopVelocity() => rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 

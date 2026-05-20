@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour
         Patrol,
         Alert,
         Chase,
+        Search,
         Attack,
     }
 
@@ -22,6 +23,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float alertDuration = 1f;
 
+    [SerializeField]
+    private float searchDuration = 3f;
+
     private EnemyState state = EnemyState.Patrol;
     private EnemySight sight;
     private Health health;
@@ -29,6 +33,8 @@ public class EnemyController : MonoBehaviour
     private EnemyMovement movement;
     private float attackTimer;
     private float alertTimer;
+    private float searchTimer;
+    private Vector2 lastSeenPosition;
 
     private void Awake()
     {
@@ -57,24 +63,43 @@ public class EnemyController : MonoBehaviour
                 if (alertTimer > 0f)
                     break;
                 // 1초 풀 대기 후 한 번만 판정
-                ChangeState(
-                    sight.CanSeePlayer() ? EnemyState.Chase : EnemyState.Patrol
-                );
+                ChangeState(sight.CanSeePlayer() ? EnemyState.Chase : EnemyState.Patrol);
                 break;
 
             case EnemyState.Chase:
                 movement.ChaseTick();
+                // IsPlayerWithinRadius()가 false 반환 시 Player가 null이 되므로 그 전에 저장
+                if (sight.Player != null)
+                    lastSeenPosition = sight.Player.position;
                 if (!sight.IsPlayerWithinRadius())
-                    ChangeState(EnemyState.Patrol);
-                else if (attackBehavior != null && attackBehavior.IsInRange(sight.Player))
+                {
+                    ChangeState(EnemyState.Search);
+                    break;
+                }
+                if (attackBehavior != null && attackBehavior.IsInRange(sight.Player))
                     ChangeState(EnemyState.Attack);
+                break;
+
+            case EnemyState.Search:
+                movement.SearchTick(lastSeenPosition);
+                // 두리번 도중 시야각에 재감지 → Alert (Chase/Attack 직행 아님)
+                if (sight.CanSeePlayer())
+                {
+                    ChangeState(EnemyState.Alert);
+                    break;
+                }
+                searchTimer -= Time.deltaTime;
+                if (searchTimer <= 0f)
+                    ChangeState(EnemyState.Patrol);
                 break;
 
             case EnemyState.Attack:
                 movement.ChaseTick();
+                if (sight.Player != null)
+                    lastSeenPosition = sight.Player.position;
                 if (!sight.IsPlayerWithinRadius())
                 {
-                    ChangeState(EnemyState.Patrol);
+                    ChangeState(EnemyState.Search);
                     break;
                 }
                 if (!attackBehavior.IsInRange(sight.Player))
@@ -105,6 +130,9 @@ public class EnemyController : MonoBehaviour
             case EnemyState.Chase:
                 movement.ApplyChaseVelocity();
                 break;
+            case EnemyState.Search:
+                movement.ApplySearchVelocity();
+                break;
             case EnemyState.Attack:
                 movement.ApplyStopVelocity();
                 break;
@@ -115,6 +143,12 @@ public class EnemyController : MonoBehaviour
     {
         if (newState == EnemyState.Alert)
             alertTimer = alertDuration;
+
+        if (newState == EnemyState.Search)
+        {
+            searchTimer = searchDuration;
+            movement.ResetSearch();
+        }
 
         attackTimer = 0f;
         state = newState;
