@@ -23,7 +23,6 @@ public abstract class BaseTransformState : ITransformState
         //     controller.PlayerAnimator.SetAnimatorController(data.animatorController);
 
         // 콜라이더 사이즈 교체
-        controller.Collider.direction = data.colliderDirection;
         controller.Collider.size = data.colliderSize;
         controller.Collider.offset = data.colliderOffset;
     }

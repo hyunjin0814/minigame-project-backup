@@ -9,7 +9,6 @@ public class TransformationData : ScriptableObject
     [Header("Collider")]
     public Vector2 colliderSize;
     public Vector2 colliderOffset;
-    public CapsuleDirection2D colliderDirection;
 
     [Header("Movement")]
     public float maxSpeed = 9f;
