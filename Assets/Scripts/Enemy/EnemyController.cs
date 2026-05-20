@@ -104,9 +104,13 @@ public class EnemyController : MonoBehaviour
                     ChangeState(EnemyState.Alert);
                     break;
                 }
-                searchTimer -= Time.deltaTime;
-                if (searchTimer <= 0f)
-                    ChangeState(EnemyState.Patrol);
+                // 두리번 타이머는 도착한 후에만 카운트 — 이동 시간 제외
+                if (movement.ArrivedAtSearch)
+                {
+                    searchTimer -= Time.deltaTime;
+                    if (searchTimer <= 0f)
+                        ChangeState(EnemyState.Patrol);
+                }
                 break;
 
             case EnemyState.Attack:

@@ -25,6 +25,9 @@ public class EnemyMovement : MonoBehaviour
 
     public int FacingDirection { get; private set; } = 1;
 
+    // EnemyController가 두리번 타이머 시작 시점 판단에 사용
+    public bool ArrivedAtSearch => arrivedAtSearch;
+
     private Rigidbody2D rb;
     private EnemySight sight;
     private bool arrivedAtSearch;
