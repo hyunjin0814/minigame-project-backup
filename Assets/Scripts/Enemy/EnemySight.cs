@@ -46,7 +46,9 @@ public class EnemySight : MonoBehaviour
             return false;
         }
 
-        // TODO: 카멜레온 가시성 연동 (VisibilityState 확정 후 구현)
+        ChameleonStealth stealth = Player.GetComponent<ChameleonStealth>();
+        if (stealth != null && !stealth.IsDetectable)
+            return false;
 
         return true;
     }

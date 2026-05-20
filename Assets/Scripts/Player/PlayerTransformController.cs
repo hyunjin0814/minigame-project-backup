@@ -15,6 +15,9 @@ public class PlayerTransformController : MonoBehaviour
     [SerializeField]
     private TransformationData dogData;
 
+    [SerializeField]
+    private TransformationData chameleonData;
+
     // 다른 컴포넌트에 대한 접근 (State가 사용)
     public PlayerHorizontalMovement HorizontalMovement { get; private set; }
     public PlayerJump Jump { get; private set; }
@@ -24,9 +27,12 @@ public class PlayerTransformController : MonoBehaviour
 
     private ITransformState currentState;
 
+    public ChameleonStealth ChameleonStealth { get; private set; }
+
     // 각 State의 인스턴스를 미리 생성해서 캐싱
     private HumanState humanState;
     private DogState dogState;
+    private ChameleonState chameleonState;
 
     // 입력
     private PlayerInputHandler inputHandler;
@@ -41,10 +47,12 @@ public class PlayerTransformController : MonoBehaviour
         Attack = GetComponent<PlayerAttack>();
         // PlayerAnimator = GetComponent<PlayerAnimator>();
         Collider = GetComponent<CapsuleCollider2D>();
+        ChameleonStealth = GetComponent<ChameleonStealth>();
 
         // State 인스턴스 생성
         humanState = new HumanState(this, humanData);
         dogState = new DogState(this, dogData);
+        chameleonState = new ChameleonState(this, chameleonData);
     }
 
     private void Start()
@@ -57,17 +65,21 @@ public class PlayerTransformController : MonoBehaviour
     {
         inputHandler.OnTransformHuman += HandleTransformHuman;
         inputHandler.OnTransformDog += HandleTransformDog;
+        inputHandler.OnTransformChameleon += HandleTransformChameleon;
     }
 
     private void OnDisable()
     {
         inputHandler.OnTransformHuman -= HandleTransformHuman;
         inputHandler.OnTransformDog -= HandleTransformDog;
+        inputHandler.OnTransformChameleon -= HandleTransformChameleon;
     }
 
     private void HandleTransformHuman() => ChangeState(humanState);
 
     private void HandleTransformDog() => ChangeState(dogState);
+
+    private void HandleTransformChameleon() => ChangeState(chameleonState);
 
     private void ChangeState(ITransformState newState)
     {

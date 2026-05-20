@@ -43,6 +43,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "TransformChameleon",
+                    "type": "Button",
+                    "id": "5d9e3aad-3abc-4b22-ac61-ad57d29afafb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Attack",
                     "type": "Button",
                     "id": "c1d2e3f4-a5b6-4c7d-8e9f-012345678901",
@@ -149,6 +158,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee5a87a4-9564-4fc1-a3ad-5ed64f921172",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TransformChameleon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -3382,6 +3382,7 @@ GameObject:
   - component: {fileID: 2099604104}
   - component: {fileID: 2099604105}
   - component: {fileID: 2099604106}
+  - component: {fileID: 2099604107}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -3632,6 +3633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerTransformController
   humanData: {fileID: 11400000, guid: 4659c071936b2324a9acd18c3836a76c, type: 2}
   dogData: {fileID: 11400000, guid: b7a2e49fd23c6f440ae30c3f82b502e5, type: 2}
+  chameleonData: {fileID: 11400000, guid: de6d9877a2348ee4081da5389fadade5, type: 2}
 --- !u!114 &2099604105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3664,6 +3666,18 @@ MonoBehaviour:
   attackBuffer: 0.1
   hitboxOffsetRight: {x: 1, y: 1}
   hitboxOffsetLeft: {x: -2, y: 1}
+--- !u!114 &2099604107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099604089}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdadf8eb7fcc2aa4b845a2fcf107640c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChameleonStealth
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
