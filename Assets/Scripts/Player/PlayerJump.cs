@@ -23,6 +23,10 @@ public class PlayerJump : MonoBehaviour
     private float coyoteCounter;
     private float jumpBufferCounter;
 
+    // FixedUpdate에서 물리 적용 판단을 위한 플래그 변수들
+    private bool doJump;
+    private bool doJumpCut;
+
     public event System.Action OnJumped;
 
     private void Awake()
@@ -64,19 +68,52 @@ public class PlayerJump : MonoBehaviour
         {
             inputHandler.JumpCutRequested = false;
             if (motor.VelocityY > 0f)
-                motor.SetVelocityY(motor.VelocityY * jumpCutMultiplier);
+                doJumpCut = true;
         }
 
         // 점프 실행
         if (jumpBufferCounter > 0f && coyoteCounter > 0f)
         {
-            motor.SetVelocityY(jumpSpeed);
+            doJump = true;
+
             jumpBufferCounter = 0f;
             coyoteCounter = 0f;
-            OnJumped?.Invoke();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // 가변 점프컷 적용
+        if (doJumpCut)
+        {
+            // Update와 FixedUpdate 사이의 시차 때문에 그새 하강 중으로 바뀌었는지 재차 확인
+            if (motor.VelocityY > 0f)
+            {
+                motor.SetVelocityY(motor.VelocityY * jumpCutMultiplier);
+            }
+            doJumpCut = false;
         }
 
-        // 비대칭 중력 적용
-        motor.SetGravityScale(motor.VelocityY > 0f ? riseGravity : fallGravity);
+        // 일반 점프 적용
+        if (doJump)
+        {
+            motor.SetVelocityY(jumpSpeed);
+            OnJumped?.Invoke();
+            doJump = false;
+        }
+
+        // 중력 스케일 제어 로직 (기존 로직이 중력 제어를 포함하고 있었다면 여기에 유지)
+        if (motor.VelocityY > 0f)
+        {
+            motor.SetGravityScale(riseGravity);
+        }
+        else if (motor.VelocityY < 0f)
+        {
+            motor.SetGravityScale(fallGravity);
+        }
+        else if (groundDetector.IsGrounded)
+        {
+            motor.SetGravityScale(1f);
+        }
     }
 }
