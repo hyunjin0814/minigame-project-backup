@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(PlayerInputHandler), typeof(PlayerGroundDetector))]
+[RequireComponent(typeof(PlayerMotor), typeof(PlayerInputHandler), typeof(PlayerGroundDetector))]
 public class PlayerHorizontalMovement : MonoBehaviour
 {
     [Header("Movement")]
@@ -9,13 +9,13 @@ public class PlayerHorizontalMovement : MonoBehaviour
     private float decelTime = 0.05f;
     private float airControl = 0.9f;
 
-    private Rigidbody2D rb;
+    private PlayerMotor motor;
     private PlayerInputHandler inputHandler;
     private PlayerGroundDetector groundDetector;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        motor = GetComponent<PlayerMotor>();
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
     }
@@ -38,11 +38,11 @@ public class PlayerHorizontalMovement : MonoBehaviour
         if (!groundDetector.IsGrounded)
             accelRate *= airControl;
 
-        float speedDiff = targetSpeed - rb.linearVelocity.x;
+        float speedDiff = targetSpeed - motor.VelocityX;
         float movement =
             Mathf.Sign(speedDiff)
             * Mathf.Min(Mathf.Abs(speedDiff), accelRate * Time.fixedDeltaTime);
 
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x + movement, rb.linearVelocity.y);
+        motor.SetVelocityX(motor.VelocityX + movement);
     }
 }

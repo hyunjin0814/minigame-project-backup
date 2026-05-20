@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(PlayerInputHandler), typeof(PlayerGroundDetector))]
+[RequireComponent(typeof(PlayerMotor), typeof(PlayerInputHandler), typeof(PlayerGroundDetector))]
 public class PlayerJump : MonoBehaviour
 {
     [Header("Jump")]
@@ -16,7 +16,7 @@ public class PlayerJump : MonoBehaviour
     [SerializeField]
     private float jumpBuffer = 0.1f;
 
-    private Rigidbody2D rb;
+    private PlayerMotor motor;
     private PlayerInputHandler inputHandler;
     private PlayerGroundDetector groundDetector;
 
@@ -27,7 +27,7 @@ public class PlayerJump : MonoBehaviour
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        motor = GetComponent<PlayerMotor>();
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
     }
@@ -63,25 +63,20 @@ public class PlayerJump : MonoBehaviour
         if (inputHandler.JumpCutRequested)
         {
             inputHandler.JumpCutRequested = false;
-            if (rb.linearVelocity.y > 0f)
-            {
-                rb.linearVelocity = new Vector2(
-                    rb.linearVelocity.x,
-                    rb.linearVelocity.y * jumpCutMultiplier
-                );
-            }
+            if (motor.VelocityY > 0f)
+                motor.SetVelocityY(motor.VelocityY * jumpCutMultiplier);
         }
 
         // 점프 실행
         if (jumpBufferCounter > 0f && coyoteCounter > 0f)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpSpeed);
+            motor.SetVelocityY(jumpSpeed);
             jumpBufferCounter = 0f;
             coyoteCounter = 0f;
             OnJumped?.Invoke();
         }
 
         // 비대칭 중력 적용
-        rb.gravityScale = rb.linearVelocity.y > 0f ? riseGravity : fallGravity;
+        motor.SetGravityScale(motor.VelocityY > 0f ? riseGravity : fallGravity);
     }
 }
