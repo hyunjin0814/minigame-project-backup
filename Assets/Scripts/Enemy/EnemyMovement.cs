@@ -42,8 +42,7 @@ public class EnemyMovement : MonoBehaviour
     public void ApplyChaseVelocity() =>
         rb.linearVelocity = new Vector2(FacingDirection * chaseSpeed, rb.linearVelocity.y);
 
-    public void ApplyStopVelocity() =>
-        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+    public void ApplyStopVelocity() => rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
     public void Flip(int direction)
     {
@@ -79,7 +78,9 @@ public class EnemyMovement : MonoBehaviour
     {
         if (sight.Player == null)
             return;
-        Vector2 toPlayer = ((Vector2)sight.Player.position - (Vector2)transform.position).normalized;
+        Vector2 toPlayer = (
+            (Vector2)sight.Player.position - (Vector2)transform.position
+        ).normalized;
         if (Mathf.Abs(toPlayer.x) < 0.3f)
             return;
         Flip(toPlayer.x > 0 ? 1 : -1);

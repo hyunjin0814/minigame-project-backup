@@ -79,9 +79,15 @@ public class EnemyController : MonoBehaviour
     {
         switch (state)
         {
-            case EnemyState.Patrol: movement.ApplyPatrolVelocity(); break;
-            case EnemyState.Chase:  movement.ApplyChaseVelocity();  break;
-            case EnemyState.Attack: movement.ApplyStopVelocity();   break;
+            case EnemyState.Patrol:
+                movement.ApplyPatrolVelocity();
+                break;
+            case EnemyState.Chase:
+                movement.ApplyChaseVelocity();
+                break;
+            case EnemyState.Attack:
+                movement.ApplyStopVelocity();
+                break;
         }
     }
 
