@@ -6,9 +6,8 @@ public abstract class BossBase : MonoBehaviour
 {
     [Header("Drop")]
     [SerializeField] private GameObject dropItemPrefab;
+    [SerializeField] private GameObject stageClearZone;
 
-    [Header("Dash")]
-    [SerializeField] private int dashContactDamage = 1;
 
     public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Sprite { get; private set; }
@@ -19,6 +18,9 @@ public abstract class BossBase : MonoBehaviour
 
     protected BossStateMachine Fsm { get; private set; }
     protected abstract BossStateBase DeathState { get; }
+    protected abstract BossStateBase InitialState { get; }
+
+    public void Activate() => TransitionTo(InitialState);
 
     // 피격 무적 (짧은 색 플래시 + 데미지 차단)
     private bool hitInvincible;
@@ -48,13 +50,7 @@ public abstract class BossBase : MonoBehaviour
 
     public void TransitionTo(BossStateBase next) => Fsm.ChangeState(next);
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (IsDashing && collision.gameObject.CompareTag("Player"))
-            if (collision.gameObject.TryGetComponent<IDamageable>(out var target))
-                target.TakeDamage(dashContactDamage);
-        HitWall = true;
-    }
+    private void OnCollisionEnter2D(Collision2D collision) => HitWall = true;
 
     // 각 보스가 상태 초기화 및 첫 상태 진입을 담당
     protected abstract void InitStates();
@@ -66,7 +62,7 @@ public abstract class BossBase : MonoBehaviour
         Health.IsInvincible = hitInvincible || phaseInvincible;
     }
 
-    private void OnHit(int amount)
+    private void OnHit(int amount, Vector2 _)
     {
         StartCoroutine(HitFlashRoutine());
     }
@@ -97,6 +93,8 @@ public abstract class BossBase : MonoBehaviour
     {
         if (dropItemPrefab != null)
             Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
+        if (stageClearZone != null)
+            stageClearZone.SetActive(true);
     }
 
     protected virtual void OnDestroy()

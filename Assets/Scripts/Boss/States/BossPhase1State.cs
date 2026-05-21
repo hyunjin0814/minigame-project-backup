@@ -75,6 +75,7 @@ public class BossPhase1State : BossStateBase
         Boss.HitWall = false;
         Boss.IsDashing = true;
         Boss.Rb.linearVelocity = dir * settings.dashSpeed;
+        firstBoss.DashHitbox?.Activate();
 
         float elapsed = 0f;
         while (elapsed < settings.dashMaxDuration && !Boss.HitWall)
@@ -83,6 +84,7 @@ public class BossPhase1State : BossStateBase
             yield return null;
         }
 
+        firstBoss.DashHitbox?.Deactivate();
         Boss.Rb.linearVelocity = Vector2.zero;
         Boss.IsDashing = false;
         isExecutingPattern = false;
