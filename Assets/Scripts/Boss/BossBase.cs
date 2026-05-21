@@ -5,9 +5,11 @@ using UnityEngine;
 public abstract class BossBase : MonoBehaviour
 {
     [Header("Drop")]
-    [SerializeField] private GameObject dropItemPrefab;
-    [SerializeField] private GameObject stageClearZone;
+    [SerializeField]
+    private GameObject dropItemPrefab;
 
+    [SerializeField]
+    private GameObject stageClearZone;
 
     public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Sprite { get; private set; }
@@ -24,6 +26,7 @@ public abstract class BossBase : MonoBehaviour
 
     // 피격 무적 (짧은 색 플래시 + 데미지 차단)
     private bool hitInvincible;
+
     // 페이즈 전환 무적 (연출 없이 순수 데미지 차단)
     private bool phaseInvincible;
 
@@ -38,7 +41,8 @@ public abstract class BossBase : MonoBehaviour
     protected virtual void Start()
     {
         var player = GameObject.FindWithTag("Player");
-        if (player != null) PlayerTarget = player.transform;
+        if (player != null)
+            PlayerTarget = player.transform;
 
         Health.OnHit += OnHit;
         Health.OnDeath += OnDeath;
