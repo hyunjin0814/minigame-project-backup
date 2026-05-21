@@ -230,12 +230,12 @@ CompositeCollider2D:
         Y: -20000000
     - - X: 40000000
         Y: -10000000
-      - X: 20000000
+      - X: 30000000
         Y: -10000000
-      - X: 20000000
-        Y: -20000000
+      - X: 30000000
+        Y: -30000000
       - X: 40000000
-        Y: -20000000
+        Y: -30000000
   m_CompositePaths:
     m_Paths:
     - - {x: -5.000029, y: 0}
@@ -250,10 +250,10 @@ CompositeCollider2D:
       - {x: -10.00003, y: 0}
       - {x: -13, y: -0.000029300001}
       - {x: -12.99997, y: -1}
-    - - {x: 3.999971, y: -2}
+    - - {x: 3.999971, y: -3}
       - {x: 3.999971, y: -1}
-      - {x: 2, y: -1.0000293}
-      - {x: 2.0000293, y: -2}
+      - {x: 3, y: -1.0000293}
+      - {x: 3.0000293, y: -3}
     - - {x: -16.000029, y: -2}
       - {x: -16.000029, y: -1}
       - {x: -18, y: -1.0000293}
@@ -392,6 +392,16 @@ Tilemap:
   m_GameObject: {fileID: 33872908}
   m_Enabled: 1
   m_Tiles:
+  - first: {x: 3, y: -3, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 8
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741826
   - first: {x: -18, y: -2, z: 0}
     second:
       serializedVersion: 2
@@ -403,16 +413,6 @@ Tilemap:
       dummyAlignment: 0
       m_AllTileFlags: 1073741826
   - first: {x: -17, y: -2, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 8
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 0
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 2, y: -2, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 0
@@ -926,6 +926,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   attackCooldown: 1.5
+  attackWindup: 0.5
   alertDuration: 1
   alertRadiusMultiplier: 1.4
   searchDuration: 3
@@ -1405,7 +1406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &771702803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1434,6 +1435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   attackCooldown: 1.5
+  attackWindup: 0.5
   alertDuration: 1
   alertRadiusMultiplier: 1.4
   searchDuration: 3
@@ -2000,6 +2002,10 @@ CompositeCollider2D:
   - m_Collider: {fileID: 1603359514}
     m_ColliderPaths:
     - - X: 250000000
+        Y: -10000000
+      - X: 230000000
+        Y: -10000000
+      - X: 230000000
         Y: -30000000
       - X: -180000000
         Y: -30000000
@@ -2010,7 +2016,9 @@ CompositeCollider2D:
   m_CompositePaths:
     m_Paths:
     - - {x: 24.999971, y: -6}
-      - {x: 24.999971, y: -3}
+      - {x: 24.999971, y: -1}
+      - {x: 23, y: -1.0000293}
+      - {x: 22.999971, y: -3}
       - {x: -18, y: -3.0000293}
       - {x: -17.999971, y: -6}
   m_VertexDistance: 0.0005
@@ -3421,13 +3429,53 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 0
-      m_TileSpriteIndex: 2
+      m_TileSpriteIndex: 7
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741826
   - first: {x: 24, y: -4, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 5
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741826
+  - first: {x: 23, y: -3, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 4
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741826
+  - first: {x: 24, y: -3, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 5
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741826
+  - first: {x: 23, y: -2, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741826
+  - first: {x: 24, y: -2, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 0
@@ -3439,29 +3487,29 @@ Tilemap:
       m_AllTileFlags: 1073741826
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 129
+  - m_RefCount: 133
     m_Data: {fileID: 11400000, guid: 49166a5f9d2e6c34b8c9c7166c1848e2, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 1
+  - m_RefCount: 2
     m_Data: {fileID: -8620202154233844528, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 3020870990670601969, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
-  - m_RefCount: 41
+  - m_RefCount: 40
     m_Data: {fileID: -7517053698926566003, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
   - m_RefCount: 41
     m_Data: {fileID: -405332668, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
-  - m_RefCount: 1
+  - m_RefCount: 2
     m_Data: {fileID: 1365033814, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
-  - m_RefCount: 1
+  - m_RefCount: 3
     m_Data: {fileID: 2006164425, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 70493946, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
-  - m_RefCount: 41
+  - m_RefCount: 42
     m_Data: {fileID: 630756006, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 1344724942, guid: 53c0c4fb8ba029c45bb87ecfb396c807, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 129
+  - m_RefCount: 133
     m_Data:
       e00: 1
       e01: 0
@@ -3480,7 +3528,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 129
+  - m_RefCount: 133
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1

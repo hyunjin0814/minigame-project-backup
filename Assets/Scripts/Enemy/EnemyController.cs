@@ -105,7 +105,13 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     movement.ChaseTowardTarget(lastSeenPosition);
-                    if (movement.ArrivedAtChaseTarget(lastSeenPosition))
+                    int dirToTarget =
+                        lastSeenPosition.x > transform.position.x ? 1 : -1;
+                    // 도착하거나 벽/절벽에 막히면 Search로 (벽 너머 추격 포기)
+                    if (
+                        movement.ArrivedAtChaseTarget(lastSeenPosition)
+                        || movement.IsBlockedToward(dirToTarget)
+                    )
                     {
                         ChangeState(EnemyState.Search);
                         break;
