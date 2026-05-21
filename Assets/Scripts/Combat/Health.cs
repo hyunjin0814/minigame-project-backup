@@ -10,18 +10,18 @@ public class Health : MonoBehaviour, IDamageable
 
     public bool IsInvincible { get; set; }
 
-    public event Action<int> OnHit;
+    public event Action<int, Vector2> OnHit;
     public event Action OnDeath;
 
     private void Awake() => CurrentHp = maxHp;
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, Vector2 source = default)
     {
         if (CurrentHp <= 0 || IsInvincible)
             return;
         CurrentHp = Mathf.Max(0, CurrentHp - amount);
         Debug.Log($"[Health] 데미지 -{amount} → {CurrentHp}/{maxHp}");
-        OnHit?.Invoke(amount);
+        OnHit?.Invoke(amount, source);
         if (CurrentHp == 0)
             OnDeath?.Invoke();
     }

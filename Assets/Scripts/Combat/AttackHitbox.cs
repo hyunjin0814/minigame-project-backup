@@ -22,7 +22,7 @@ public class AttackHitbox : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<IDamageable>(out var target))
-            target.TakeDamage(damage);
+            target.TakeDamage(damage, transform.position);
 
         other.GetComponentInParent<EnemyController>()?.ReactToHit(transform.root.position);
     }

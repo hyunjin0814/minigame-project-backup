@@ -20,11 +20,15 @@ public class FirstBossController : BossBase
         warningLineLength = 20f,
     };
 
+    [Header("Dash Hitbox")]
+    [SerializeField] private AttackHitbox dashHitbox;
+
     [Header("Projectile")]
     [SerializeField] private Transform[] projectileSpawnPoints;
     [SerializeField] private LineRenderer warningLine;
 
     public ProjectilePool Pool { get; private set; }
+    public AttackHitbox DashHitbox => dashHitbox;
     public Transform[] ProjectileSpawnPoints => projectileSpawnPoints;
     public LineRenderer WarningLine => warningLine;
 
@@ -34,6 +38,7 @@ public class FirstBossController : BossBase
     private BossDeathState deathState;
 
     protected override BossStateBase DeathState => deathState;
+    protected override BossStateBase InitialState => introState;
 
     protected override void Awake()
     {
@@ -47,8 +52,6 @@ public class FirstBossController : BossBase
         phase2State = new BossPhase2State(this);
         phase1State = new BossPhase1State(this, phase1Settings);
         introState = new BossIntroState(this, phase1State);
-
-        TransitionTo(introState);
     }
 
     protected override void Update()
