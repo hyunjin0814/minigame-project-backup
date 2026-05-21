@@ -6,17 +6,22 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField]
     private int maxHp = 3;
     public int CurrentHp { get; private set; }
+    public int MaxHp => maxHp;
 
+    public bool IsInvincible { get; set; }
+
+    public event Action<int> OnHit;
     public event Action OnDeath;
 
     private void Awake() => CurrentHp = maxHp;
 
     public void TakeDamage(int amount)
     {
-        if (CurrentHp <= 0)
+        if (CurrentHp <= 0 || IsInvincible)
             return;
         CurrentHp = Mathf.Max(0, CurrentHp - amount);
         Debug.Log($"[Health] 데미지 -{amount} → {CurrentHp}/{maxHp}");
+        OnHit?.Invoke(amount);
         if (CurrentHp == 0)
             OnDeath?.Invoke();
     }
