@@ -43,6 +43,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float attackOutOfRangeGrace = 1.5f;
 
+    [SerializeField]
+    private float verticalChaseThreshold = 2f;
+
     // SightConeRenderer가 원형 메시 크기 계산에 사용
     public float ChaseCircleRadius => chaseCircleRadius;
     public float AttackCircleRadius => attackCircleRadius;
@@ -94,6 +97,13 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case EnemyState.Chase:
+                // 수직 추격 차단 — 원형 감지 범위 밖이면서 너무 높을 때만 포기
+                if (IsPlayerTooHigh() && !sight.IsPlayerInCircle(chaseCircleRadius))
+                {
+                    ChangeState(EnemyState.Search);
+                    break;
+                }
+
                 // 하이브리드: 원형 안이면 동적 추적, 밖이면 lastSeenPosition 돌진
                 bool inChaseCircle = sight.IsPlayerInCircle(chaseCircleRadius);
                 chaseIsLunging = !inChaseCircle;
@@ -144,6 +154,13 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case EnemyState.Attack:
+                // 수직 추격 차단 — 원형 감지 범위 밖이면서 너무 높을 때만 포기
+                if (IsPlayerTooHigh() && !sight.IsPlayerInCircle(attackCircleRadius))
+                {
+                    ChangeState(EnemyState.Search);
+                    break;
+                }
+
                 // Attack 원형 감지 (Chase보다 넓음, 벽 차단)
                 bool inAttackCircle = sight.IsPlayerInCircle(attackCircleRadius);
                 if (inAttackCircle)
@@ -242,6 +259,14 @@ public class EnemyController : MonoBehaviour
         movement.Flip(sourcePosition.x > transform.position.x ? 1 : -1);
         if (state == EnemyState.Patrol)
             ChangeState(EnemyState.Chase);
+    }
+
+    // 플레이어가 적보다 임계값 이상 위에 있는지 (수직 추격 차단용)
+    private bool IsPlayerTooHigh()
+    {
+        if (sight.Player == null)
+            return false;
+        return sight.Player.position.y - transform.position.y > verticalChaseThreshold;
     }
 
     private void HandleDeath() => gameObject.SetActive(false);
