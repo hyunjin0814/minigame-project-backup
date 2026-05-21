@@ -18,9 +18,14 @@ public class EnemySight : MonoBehaviour
 
     public int FacingDirection { get; set; } = 1;
 
-    public bool CanSeePlayer()
+    // SightConeRenderer가 콘 메시 크기 계산에 사용
+    public float DetectionRadius => detectionRadius;
+    public float DetectionAngle => detectionAngle;
+
+    // radiusMultiplier: Alert 상태에서 1.4 등으로 확장 시야 호출
+    public bool CanSeePlayer(float radiusMultiplier = 1f)
     {
-        if (!IsPlayerWithinRadius())
+        if (!IsPlayerWithinRadius(radiusMultiplier))
             return false;
 
         Vector2 dirToPlayer = (Player.position - transform.position).normalized;
@@ -53,15 +58,43 @@ public class EnemySight : MonoBehaviour
         return true;
     }
 
-    public bool IsPlayerWithinRadius()
+    public bool IsPlayerWithinRadius(float radiusMultiplier = 1f)
     {
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, detectionRadius, playerLayer);
+        float effectiveRadius = detectionRadius * radiusMultiplier;
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, effectiveRadius, playerLayer);
         if (hit == null)
         {
             Player = null;
             return false;
         }
         Player = hit.transform.root;
+        return true;
+    }
+
+    // Chase/Attack 상태에서 사용 — 360° 원형 감지 + 벽 차단(LoS)
+    // detectionRadius와 다른 반경 사용 가능 (인자로 받음)
+    public bool IsPlayerInCircle(float radius)
+    {
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, radius, playerLayer);
+        if (hit == null)
+        {
+            Player = null;
+            return false;
+        }
+        Player = hit.transform.root;
+
+        // 벽 차단 — 잠입 도구로서 벽 활용 가능하게
+        Vector2 dir = (Player.position - transform.position).normalized;
+        float dist = Vector2.Distance(transform.position, Player.position);
+        RaycastHit2D obstacleHit = Physics2D.Raycast(
+            (Vector2)transform.position + Vector2.up * 0.5f,
+            dir,
+            dist,
+            obstacleLayer
+        );
+        if (obstacleHit.collider != null)
+            return false;
+
         return true;
     }
 
