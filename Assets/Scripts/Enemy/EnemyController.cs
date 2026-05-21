@@ -21,6 +21,9 @@ public class EnemyController : MonoBehaviour
     private float attackCooldown = 1.5f;
 
     [SerializeField]
+    private float attackWindup = 0.5f;
+
+    [SerializeField]
     private float alertDuration = 1f;
 
     [SerializeField]
@@ -108,8 +111,9 @@ public class EnemyController : MonoBehaviour
                         break;
                     }
                 }
+                // 동적 모드(원형 안)에서만 Attack 전환 — lunge 중엔 LoS 차단된 상태일 수 있음
                 if (
-                    sight.Player != null
+                    inChaseCircle
                     && attackBehavior != null
                     && attackBehavior.IsInRange(sight.Player)
                 )
@@ -212,12 +216,18 @@ public class EnemyController : MonoBehaviour
         }
 
         if (newState == EnemyState.Attack)
+        {
             attackOutOfRangeTimer = 0f;
+            attackTimer = attackWindup;   // 첫 공격까지 windup 대기 (회피 타이밍 부여)
+        }
+        else
+        {
+            attackTimer = 0f;
+        }
 
         if (newState == EnemyState.Chase)
             chaseIsLunging = false;   // 진입 시점에는 원형 안 (Alert 재확인 통과)
 
-        attackTimer = 0f;
         state = newState;
     }
 
