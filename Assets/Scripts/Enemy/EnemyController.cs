@@ -90,9 +90,7 @@ public class EnemyController : MonoBehaviour
                     break;
                 // 1초 풀 대기 후 한 번만 판정 — 확장 시야(1.4배)로 재확인
                 ChangeState(
-                    sight.CanSeePlayer(alertRadiusMultiplier)
-                        ? EnemyState.Chase
-                        : EnemyState.Patrol
+                    sight.CanSeePlayer(alertRadiusMultiplier) ? EnemyState.Chase : EnemyState.Patrol
                 );
                 break;
 
@@ -115,8 +113,7 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     movement.ChaseTowardTarget(lastSeenPosition);
-                    int dirToTarget =
-                        lastSeenPosition.x > transform.position.x ? 1 : -1;
+                    int dirToTarget = lastSeenPosition.x > transform.position.x ? 1 : -1;
                     // 도착하거나 벽/절벽에 막히면 Search로 (벽 너머 추격 포기)
                     if (
                         movement.ArrivedAtChaseTarget(lastSeenPosition)
@@ -241,7 +238,7 @@ public class EnemyController : MonoBehaviour
         if (newState == EnemyState.Attack)
         {
             attackOutOfRangeTimer = 0f;
-            attackTimer = attackWindup;   // 첫 공격까지 windup 대기 (회피 타이밍 부여)
+            attackTimer = attackWindup; // 첫 공격까지 windup 대기 (회피 타이밍 부여)
         }
         else
         {
@@ -249,7 +246,7 @@ public class EnemyController : MonoBehaviour
         }
 
         if (newState == EnemyState.Chase)
-            chaseIsLunging = false;   // 진입 시점에는 원형 안 (Alert 재확인 통과)
+            chaseIsLunging = false; // 진입 시점에는 원형 안 (Alert 재확인 통과)
 
         state = newState;
     }

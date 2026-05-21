@@ -4,11 +4,15 @@ using UnityEngine;
 public class FirstBossController : BossBase
 {
     [Header("Phase Settings")]
-    [SerializeField, Tooltip("HP가 이 값 이하일 때 Phase2 전환. 0이면 비활성(Phase1에서 처치 가능)")]
+    [
+        SerializeField,
+        Tooltip("HP가 이 값 이하일 때 Phase2 전환. 0이면 비활성(Phase1에서 처치 가능)")
+    ]
     private int phase2HpThreshold = 0;
 
     [Header("Phase1 Pattern Settings")]
-    [SerializeField] private BossPhase1State.Settings phase1Settings = new BossPhase1State.Settings
+    [SerializeField]
+    private BossPhase1State.Settings phase1Settings = new BossPhase1State.Settings
     {
         patternCooldown = 2f,
         firstPatternDelay = 1f,
@@ -21,11 +25,15 @@ public class FirstBossController : BossBase
     };
 
     [Header("Dash Hitbox")]
-    [SerializeField] private AttackHitbox dashHitbox;
+    [SerializeField]
+    private AttackHitbox dashHitbox;
 
     [Header("Projectile")]
-    [SerializeField] private Transform[] projectileSpawnPoints;
-    [SerializeField] private LineRenderer warningLine;
+    [SerializeField]
+    private Transform[] projectileSpawnPoints;
+
+    [SerializeField]
+    private LineRenderer warningLine;
 
     public ProjectilePool Pool { get; private set; }
     public AttackHitbox DashHitbox => dashHitbox;
@@ -62,7 +70,8 @@ public class FirstBossController : BossBase
 
     private void CheckPhaseTransition()
     {
-        if (Fsm.Current != phase1State) return;
+        if (Fsm.Current != phase1State)
+            return;
         if (phase2HpThreshold > 0 && Health.CurrentHp <= phase2HpThreshold)
             TransitionTo(phase2State);
     }
