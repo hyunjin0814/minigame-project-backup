@@ -16,10 +16,6 @@ public class PlayerJump : MonoBehaviour
     [SerializeField]
     private float jumpBuffer = 0.1f;
 
-    [Header("Ceiling Passthrough")]
-    [SerializeField]
-    private string ceilingLayerName = "Platform"; // 충돌 끌 레이어 이름
-
     private PlayerMotor motor;
     private PlayerInputHandler inputHandler;
     private PlayerGroundDetector groundDetector;
@@ -31,9 +27,6 @@ public class PlayerJump : MonoBehaviour
     private bool doJump;
     private bool doJumpCut;
 
-    private int playerLayerIndex;
-    private int ceilingLayerIndex;
-
     public event System.Action OnJumped;
 
     private void Awake()
@@ -41,9 +34,6 @@ public class PlayerJump : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
-
-        playerLayerIndex = gameObject.layer;
-        ceilingLayerIndex = LayerMask.NameToLayer(ceilingLayerName);
     }
 
     public void ApplyData(TransformationData data)
@@ -112,7 +102,7 @@ public class PlayerJump : MonoBehaviour
             doJump = false;
         }
 
-        // 중력 스케일 제어 로직 (기존 로직이 중력 제어를 포함하고 있었다면 여기에 유지)
+        // 중력 스케일 제어
         if (motor.VelocityY > 0f)
         {
             motor.SetGravityScale(riseGravity);
@@ -125,8 +115,5 @@ public class PlayerJump : MonoBehaviour
         {
             motor.SetGravityScale(1f);
         }
-
-        bool isRising = motor.VelocityY > 0.1f;
-        Physics2D.IgnoreLayerCollision(playerLayerIndex, ceilingLayerIndex, isRising);
     }
 }
