@@ -15,9 +15,17 @@ public class PlayerGroundDetector : MonoBehaviour
 
     public bool IsGrounded { get; private set; }
 
+    private BoxCollider2D col;
+
+    private void Awake()
+    {
+        col = GetComponent<BoxCollider2D>();
+    }
+
     private void Update()
     {
-        IsGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        Vector2 boxSize = new Vector2(col.size.x, groundCheckRadius * 2f);
+        IsGrounded = Physics2D.OverlapBox(groundCheck.position, boxSize, 0f, groundLayer);
     }
 
     private void OnDrawGizmosSelected()
@@ -25,6 +33,12 @@ public class PlayerGroundDetector : MonoBehaviour
         if (groundCheck == null)
             return;
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        if (col != null)
+            Gizmos.DrawWireCube(
+                groundCheck.position,
+                new Vector2(col.size.x, groundCheckRadius * 2f)
+            );
+        else
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }
