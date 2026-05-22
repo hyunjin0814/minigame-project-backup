@@ -16,16 +16,36 @@ public class PlayerGroundDetector : MonoBehaviour
     public bool IsGrounded { get; private set; }
 
     private BoxCollider2D col;
+    private bool groundedThisStep;
 
     private void Awake()
     {
         col = GetComponent<BoxCollider2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Vector2 boxSize = new Vector2(col.size.x, groundCheckRadius * 2f);
-        IsGrounded = Physics2D.OverlapBox(groundCheck.position, boxSize, 0f, groundLayer);
+        IsGrounded = groundedThisStep;
+        groundedThisStep = false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) => EvaluateContact(other);
+
+    private void OnCollisionStay2D(Collision2D other) => EvaluateContact(other);
+
+    private void EvaluateContact(Collision2D other)
+    {
+        if (!other.enabled) return;
+        if (((1 << other.gameObject.layer) & groundLayer) == 0)
+            return;
+        foreach (var contact in other.contacts)
+        {
+            if (contact.normal.y > 0.7f)
+            {
+                groundedThisStep = true;
+                return;
+            }
+        }
     }
 
     private void OnDrawGizmosSelected()
