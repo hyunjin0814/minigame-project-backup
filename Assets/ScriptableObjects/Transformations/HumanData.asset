@@ -19,7 +19,7 @@ MonoBehaviour:
   accelTime: 0.08
   decelTime: 0.05
   airControl: 0.9
-  jumpSpeed: 15
+  jumpSpeed: 17
   riseGravity: 3
   fallGravity: 5
   jumpCutMultiplier: 0.5

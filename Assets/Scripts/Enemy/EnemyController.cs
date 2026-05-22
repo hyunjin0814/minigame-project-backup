@@ -254,8 +254,11 @@ public class EnemyController : MonoBehaviour
     public void ReactToHit(Vector2 sourcePosition)
     {
         movement.Flip(sourcePosition.x > transform.position.x ? 1 : -1);
-        if (state == EnemyState.Patrol)
+        if (state == EnemyState.Patrol || state == EnemyState.Alert || state == EnemyState.Search)
+        {
+            lastSeenPosition = sourcePosition;
             ChangeState(EnemyState.Chase);
+        }
     }
 
     // 플레이어가 적보다 임계값 이상 위에 있는지 (수직 추격 차단용)

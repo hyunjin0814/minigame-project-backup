@@ -15,9 +15,37 @@ public class PlayerGroundDetector : MonoBehaviour
 
     public bool IsGrounded { get; private set; }
 
-    private void Update()
+    private BoxCollider2D col;
+    private bool groundedThisStep;
+
+    private void Awake()
     {
-        IsGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        col = GetComponent<BoxCollider2D>();
+    }
+
+    private void FixedUpdate()
+    {
+        IsGrounded = groundedThisStep;
+        groundedThisStep = false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) => EvaluateContact(other);
+
+    private void OnCollisionStay2D(Collision2D other) => EvaluateContact(other);
+
+    private void EvaluateContact(Collision2D other)
+    {
+        if (!other.enabled) return;
+        if (((1 << other.gameObject.layer) & groundLayer) == 0)
+            return;
+        foreach (var contact in other.contacts)
+        {
+            if (contact.normal.y > 0.7f)
+            {
+                groundedThisStep = true;
+                return;
+            }
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -25,6 +53,12 @@ public class PlayerGroundDetector : MonoBehaviour
         if (groundCheck == null)
             return;
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        if (col != null)
+            Gizmos.DrawWireCube(
+                groundCheck.position,
+                new Vector2(col.size.x, groundCheckRadius * 2f)
+            );
+        else
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }

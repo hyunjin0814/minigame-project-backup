@@ -12,6 +12,7 @@ public class Health : MonoBehaviour, IDamageable
 
     public event Action<int, Vector2> OnHit;
     public event Action OnDeath;
+    public event Action<int> OnHeal;
 
     private void Awake() => CurrentHp = maxHp;
 
@@ -30,5 +31,6 @@ public class Health : MonoBehaviour, IDamageable
     {
         CurrentHp = Mathf.Min(maxHp, CurrentHp + amount);
         Debug.Log($"[Health] 회복 +{amount} → {CurrentHp}/{maxHp}");
+        OnHeal?.Invoke(amount);
     }
 }
