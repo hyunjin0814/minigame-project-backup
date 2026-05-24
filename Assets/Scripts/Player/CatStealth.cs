@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ChameleonStealth : MonoBehaviour
+public class CatStealth : MonoBehaviour
 {
     private const float HideDelay = 0.1f;
     private const float MaxStealthMoveDistance = 2.25f;
