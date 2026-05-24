@@ -8,6 +8,11 @@ using UnityEngine.InputSystem;
 // [RequireComponent(typeof(PlayerAnimator))]
 public class PlayerTransformController : MonoBehaviour
 {
+    // 카멜레온 → 인간 변신이 발생한 Time.time 기록.
+    // 각 적이 자신의 _sneakWindowDuration과 비교해 감지 무효 여부를 판단.
+    // TODO: 카멜레온 → 고양이 리네임 후 주석 업데이트
+    public float SneakWindowActivatedAt { get; private set; } = float.NegativeInfinity;
+
     [Header("Transformation Data")]
     [SerializeField]
     private TransformationData humanData;
@@ -86,8 +91,19 @@ public class PlayerTransformController : MonoBehaviour
         if (currentState == newState)
             return;
 
+        // 카멜레온 → 인간 변신 시만 스니크 윈도우 활성화
+        // TODO: 카멜레온 → 고양이 리네임 후 주석 업데이트
+        bool comingFromChameleon = currentState == chameleonState;
+
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
+
+        if (comingFromChameleon && newState == humanState)
+        {
+            SneakWindowActivatedAt = Time.time;
+            Debug.Log("[PlayerTransformController] 스니크 윈도우 활성화");
+        }
+
     }
 }

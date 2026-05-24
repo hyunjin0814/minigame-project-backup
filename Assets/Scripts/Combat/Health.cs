@@ -10,6 +10,9 @@ public class Health : MonoBehaviour, IDamageable
 
     public bool IsInvincible { get; set; }
 
+    // EnemyBase가 디버프·백스탭 배율 삽입에 사용. null이면 원본 데미지 그대로.
+    public Func<int, Vector2, int> DamageModifier { get; set; }
+
     public event Action<int, Vector2> OnHit;
     public event Action OnDeath;
     public event Action<int> OnHeal;
@@ -20,9 +23,10 @@ public class Health : MonoBehaviour, IDamageable
     {
         if (CurrentHp <= 0 || IsInvincible)
             return;
-        CurrentHp = Mathf.Max(0, CurrentHp - amount);
-        Debug.Log($"[Health] 데미지 -{amount} → {CurrentHp}/{maxHp}");
-        OnHit?.Invoke(amount, source);
+        int finalAmount = DamageModifier != null ? DamageModifier(amount, source) : amount;
+        CurrentHp = Mathf.Max(0, CurrentHp - finalAmount);
+        Debug.Log($"[Health] 데미지 -{finalAmount} → {CurrentHp}/{maxHp}");
+        OnHit?.Invoke(finalAmount, source);
         if (CurrentHp == 0)
             OnDeath?.Invoke();
     }
