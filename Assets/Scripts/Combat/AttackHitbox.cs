@@ -87,7 +87,5 @@ public class AttackHitbox : MonoBehaviour
     {
         if (other.TryGetComponent<IDamageable>(out var target))
             target.TakeDamage(damage, transform.position);
-
-        other.GetComponentInParent<EnemyController>()?.ReactToHit(transform.root.position);
     }
 }

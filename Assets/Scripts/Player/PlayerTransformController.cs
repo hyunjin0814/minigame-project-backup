@@ -104,5 +104,6 @@ public class PlayerTransformController : MonoBehaviour
             SneakWindowActivatedAt = Time.time;
             Debug.Log("[PlayerTransformController] 스니크 윈도우 활성화");
         }
+
     }
 }
