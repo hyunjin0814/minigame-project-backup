@@ -43,7 +43,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "TransformChameleon",
+                    "name": "TransformCat",
                     "type": "Button",
                     "id": "5d9e3aad-3abc-4b22-ac61-ad57d29afafb",
                     "expectedControlType": "",
@@ -168,7 +168,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TransformChameleon",
+                    "action": "TransformCat",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

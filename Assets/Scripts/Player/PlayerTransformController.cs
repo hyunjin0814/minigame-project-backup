@@ -8,9 +8,8 @@ using UnityEngine.InputSystem;
 // [RequireComponent(typeof(PlayerAnimator))]
 public class PlayerTransformController : MonoBehaviour
 {
-    // 카멜레온 → 인간 변신이 발생한 Time.time 기록.
+    // 고양이 → 인간 변신이 발생한 Time.time 기록.
     // 각 적이 자신의 _sneakWindowDuration과 비교해 감지 무효 여부를 판단.
-    // TODO: 카멜레온 → 고양이 리네임 후 주석 업데이트
     public float SneakWindowActivatedAt { get; private set; } = float.NegativeInfinity;
 
     [Header("Transformation Data")]
@@ -21,7 +20,7 @@ public class PlayerTransformController : MonoBehaviour
     private TransformationData dogData;
 
     [SerializeField]
-    private TransformationData chameleonData;
+    private TransformationData catData;
 
     // 다른 컴포넌트에 대한 접근 (State가 사용)
     public PlayerHorizontalMovement HorizontalMovement { get; private set; }
@@ -32,12 +31,12 @@ public class PlayerTransformController : MonoBehaviour
 
     private ITransformState currentState;
 
-    public ChameleonStealth ChameleonStealth { get; private set; }
+    public CatStealth CatStealth { get; private set; }
 
     // 각 State의 인스턴스를 미리 생성해서 캐싱
     private HumanState humanState;
     private DogState dogState;
-    private ChameleonState chameleonState;
+    private CatState catState;
 
     // 입력
     private PlayerInputHandler inputHandler;
@@ -52,12 +51,12 @@ public class PlayerTransformController : MonoBehaviour
         Attack = GetComponent<PlayerAttack>();
         // PlayerAnimator = GetComponent<PlayerAnimator>();
         Collider = GetComponent<BoxCollider2D>();
-        ChameleonStealth = GetComponent<ChameleonStealth>();
+        CatStealth = GetComponent<CatStealth>();
 
         // State 인스턴스 생성
         humanState = new HumanState(this, humanData);
         dogState = new DogState(this, dogData);
-        chameleonState = new ChameleonState(this, chameleonData);
+        catState = new CatState(this, catData);
     }
 
     private void Start()
@@ -70,36 +69,35 @@ public class PlayerTransformController : MonoBehaviour
     {
         inputHandler.OnTransformHuman += HandleTransformHuman;
         inputHandler.OnTransformDog += HandleTransformDog;
-        inputHandler.OnTransformChameleon += HandleTransformChameleon;
+        inputHandler.OnTransformCat += HandleTransformCat;
     }
 
     private void OnDisable()
     {
         inputHandler.OnTransformHuman -= HandleTransformHuman;
         inputHandler.OnTransformDog -= HandleTransformDog;
-        inputHandler.OnTransformChameleon -= HandleTransformChameleon;
+        inputHandler.OnTransformCat -= HandleTransformCat;
     }
 
     private void HandleTransformHuman() => ChangeState(humanState);
 
     private void HandleTransformDog() => ChangeState(dogState);
 
-    private void HandleTransformChameleon() => ChangeState(chameleonState);
+    private void HandleTransformCat() => ChangeState(catState);
 
     private void ChangeState(ITransformState newState)
     {
         if (currentState == newState)
             return;
 
-        // 카멜레온 → 인간 변신 시만 스니크 윈도우 활성화
-        // TODO: 카멜레온 → 고양이 리네임 후 주석 업데이트
-        bool comingFromChameleon = currentState == chameleonState;
+        // 고양이 → 인간 변신 시만 스니크 윈도우 활성화
+        bool comingFromCat = currentState == catState;
 
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
 
-        if (comingFromChameleon && newState == humanState)
+        if (comingFromCat && newState == humanState)
         {
             SneakWindowActivatedAt = Time.time;
             Debug.Log("[PlayerTransformController] 스니크 윈도우 활성화");

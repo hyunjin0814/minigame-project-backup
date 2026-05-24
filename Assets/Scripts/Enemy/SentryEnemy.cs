@@ -196,10 +196,9 @@ public class SentryEnemy : EnemyBase
 
         Transform playerTransform = hit.transform.root;
 
-        // 2. 카멜레온 형태별 감지 거리 조정
-        // TODO: 카멜레온 → 고양이 리네임 후 주석 및 변수명 업데이트
+        // 2. 고양이 형태별 감지 거리 조정
         float effectiveDistance = _viewDistance;
-        ChameleonStealth stealth = playerTransform.GetComponent<ChameleonStealth>();
+        CatStealth stealth = playerTransform.GetComponent<CatStealth>();
         if (stealth != null && stealth.enabled)
         {
             if (!stealth.IsDetectable)

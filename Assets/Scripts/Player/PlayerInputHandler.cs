@@ -12,7 +12,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public event Action OnTransformHuman;
     public event Action OnTransformDog;
-    public event Action OnTransformChameleon;
+    public event Action OnTransformCat;
     public event Action OnAttack;
 
     private void Awake()
@@ -30,7 +30,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         input.Player.TransformHuman.performed += OnTransformHumanPerformed;
         input.Player.TransformDog.performed += OnTransformDogPerformed;
-        input.Player.TransformChameleon.performed += OnTransformChameleonPerformed;
+        input.Player.TransformCat.performed += OnTransformCatPerformed;
         input.Player.Attack.performed += OnAttackPerformed;
     }
 
@@ -43,7 +43,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         input.Player.TransformHuman.performed -= OnTransformHumanPerformed;
         input.Player.TransformDog.performed -= OnTransformDogPerformed;
-        input.Player.TransformChameleon.performed -= OnTransformChameleonPerformed;
+        input.Player.TransformCat.performed -= OnTransformCatPerformed;
         input.Player.Attack.performed -= OnAttackPerformed;
 
         input.Player.Disable();
@@ -71,9 +71,9 @@ public class PlayerInputHandler : MonoBehaviour
         OnTransformDog?.Invoke();
     }
 
-    private void OnTransformChameleonPerformed(InputAction.CallbackContext ctx)
+    private void OnTransformCatPerformed(InputAction.CallbackContext ctx)
     {
-        OnTransformChameleon?.Invoke();
+        OnTransformCat?.Invoke();
     }
 
     private void OnAttackPerformed(InputAction.CallbackContext ctx)

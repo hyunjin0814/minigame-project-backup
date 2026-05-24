@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Boss
+  - NarrowPassage
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  -
   - Water
   - UI
   - Ground
@@ -18,7 +19,7 @@ TagManager:
   - PlayerAttack
   - EnemyAttack
   - Platform
-  - 
+  - NarrowPassage
   - 
   - 
   - 

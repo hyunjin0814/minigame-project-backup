@@ -218,17 +218,15 @@ public class CombatEnemy : EnemyBase
             return false;
         }
 
-        // 은신 체크 — 카멜레온 정지 시 감지 무효
-        // TODO: 카멜레온 → 고양이 리네임 후 주석 업데이트
-        ChameleonStealth stealth = playerTransform.GetComponent<ChameleonStealth>();
+        // 은신 체크 — 고양이 정지 시 감지 무효
+        CatStealth stealth = playerTransform.GetComponent<CatStealth>();
         if (stealth != null && !stealth.IsDetectable)
         {
             _player = null;
             return false;
         }
 
-        // 스니크 윈도우 체크 — 카멜레온 → 인간 변신 후 _sneakWindowDuration 동안 감지 무효
-        // TODO: 카멜레온 → 고양이 리네임 후 PlayerFormController 참조로 변경
+        // 스니크 윈도우 체크 — 고양이 → 인간 변신 후 _sneakWindowDuration 동안 감지 무효
         PlayerTransformController ptc = playerTransform.GetComponent<PlayerTransformController>();
         if (ptc != null && Time.time - ptc.SneakWindowActivatedAt < _sneakWindowDuration)
         {
