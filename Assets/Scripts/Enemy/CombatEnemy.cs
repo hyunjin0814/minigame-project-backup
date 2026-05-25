@@ -67,8 +67,6 @@ public class CombatEnemy : EnemyBase
         base.Awake();
         _rb = GetComponent<Rigidbody2D>();
         _attackBehavior = GetComponent<IEnemyAttack>();
-        // 베이스의 디버프 전용 modifier를 백스탭+디버프 통합 modifier로 교체
-        _health.DamageModifier = ApplyCombatModifier;
     }
 
     protected override void Update()
@@ -260,16 +258,12 @@ public class CombatEnemy : EnemyBase
         base.ChangeState(newState);
     }
 
-    // ── 데미지 모디파이어 (백스탭 + 디버프) ─────────────────────
-    private int ApplyCombatModifier(int baseDamage, Vector2 source)
+    // ── 데미지 모디파이어 ─────────────────────────────────────
+    // 약점·디버프 공통 로직은 EnemyBase.ComputeFinalDamage에서 처리.
+    // 여기서는 백스탭 배율만 계산.
+    protected override int ApplySpecialModifier(int damage, Vector2 source)
     {
-        // 1. 백스탭 판정: Idle/Patrol/Detect 상태 + 등 뒤 공격
-        int damage = IsBackstabCondition(source) ? baseDamage * _backstabMultiplier : baseDamage;
-
-        // 2. 디버프 배율 적용
-        return _currentDebuff != null
-            ? Mathf.RoundToInt(damage * _currentDebuff.DamageMultiplier)
-            : damage;
+        return IsBackstabCondition(source) ? damage * _backstabMultiplier : damage;
     }
 
     private bool IsBackstabCondition(Vector2 attackerPos)
