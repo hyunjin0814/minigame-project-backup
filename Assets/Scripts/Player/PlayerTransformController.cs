@@ -32,6 +32,7 @@ public class PlayerTransformController : MonoBehaviour
     private ITransformState currentState;
 
     public CatStealth CatStealth { get; private set; }
+    public DogSense DogSense { get; private set; }
 
     // 각 State의 인스턴스를 미리 생성해서 캐싱
     private HumanState humanState;
@@ -52,6 +53,7 @@ public class PlayerTransformController : MonoBehaviour
         // PlayerAnimator = GetComponent<PlayerAnimator>();
         Collider = GetComponent<BoxCollider2D>();
         CatStealth = GetComponent<CatStealth>();
+        DogSense = GetComponent<DogSense>();
 
         // State 인스턴스 생성
         humanState = new HumanState(this, humanData);

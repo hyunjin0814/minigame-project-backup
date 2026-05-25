@@ -43,7 +43,7 @@ public class SentryEnemy : EnemyBase
     public float ViewDistance => _viewDistance;
     public int FacingDirection => _facingDirection;
 
-    private Rigidbody2D _rb;
+    protected Rigidbody2D _rb;
     private IEnemyAttack _attackBehavior;
     private int _facingDirection = 1;
 
@@ -149,7 +149,7 @@ public class SentryEnemy : EnemyBase
         }
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         switch (_currentState)
         {
