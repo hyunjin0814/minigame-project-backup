@@ -1008,6 +1008,97 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &284136850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 284136851}
+  - component: {fileID: 284136852}
+  m_Layer: 8
+  m_Name: Icon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &284136851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284136850}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 434815313}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &284136852
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284136850}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: -7891853097444643261, guid: 57d769b865d287841bfa1a7b592d414a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.34, y: 0.29}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1 &286312239
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,6 +1349,53 @@ Transform:
   - {fileID: 1798467534}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &434815312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 434815313}
+  - component: {fileID: 434815314}
+  m_Layer: 8
+  m_Name: GroggyIndicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &434815313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434815312}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 284136851}
+  m_Father: {fileID: 1829085388}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &434815314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434815312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93c603a91c1f35448e641be4eac98aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossGroggyIndicator
+  _iconRoot: {fileID: 284136850}
+  _offset: {x: 0, y: 2.5, z: 0}
 --- !u!1 &449595698
 GameObject:
   m_ObjectHideFlags: 0
@@ -8091,6 +8229,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73b13167c7e48ed4191e464a127ac5ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirstBossController
+--- !u!4 &1829085388 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7856424877859508682, guid: c42d5cedbbf69b34999def5567d3f419, type: 3}
+  m_PrefabInstance: {fileID: 6899484241964594315}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1905178735
 GameObject:
   m_ObjectHideFlags: 0
@@ -8313,8 +8456,9 @@ GameObject:
   - component: {fileID: 2099604109}
   - component: {fileID: 2099604108}
   - component: {fileID: 2099604110}
-  - component: {fileID: 2099604111}
   - component: {fileID: 2099604112}
+  - component: {fileID: 2099604113}
+  - component: {fileID: 2099604114}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -8562,7 +8706,7 @@ MonoBehaviour:
   comboWindow: 0.5
   attackBuffer: 0.1
   hitboxOffsetSide: {x: 1, y: 0.9}
-  hitboxSizeSide: {x: 1.6, y: 1.6}
+  hitboxSizeSide: {x: 2, y: 2}
   hitboxOffsetUp: {x: 0, y: 2}
   hitboxSizeUp: {x: 1.5, y: 1.5}
   hitboxOffsetDown: {x: 0, y: -0.2}
@@ -8655,24 +8799,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHurtEffect
   flickerInterval: 0.1
   flickerDuration: 1
---- !u!114 &2099604111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2099604089}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cf1b1647880d98428006f2cd5796b3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DogSense
-  _smellRadius: 5
-  _hearingRadius: 10
-  _weaknessDuration: 4
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!114 &2099604112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8688,6 +8814,50 @@ MonoBehaviour:
   dashSpeed: 20
   dashDuration: 0.18
   dashCooldown: 0.4
+--- !u!114 &2099604113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099604089}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe04796982a415f468f09e31f8d0b4e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DogScanner
+  _scanRadius: 8
+  _scanCooldown: 5
+  _weaknessDuration: 4
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+--- !u!114 &2099604114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099604089}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fec95666d72b614280ba9655310f579, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DogDashAttack
+  _dashSpeed: 18
+  _maxDashDuration: 0.7
+  _maxDashDistance: 8
+  _retreatDistance: 2
+  _retreatSpeed: 12
+  _retreatMaxDuration: 0.5
+  _strikePauseDuration: 0.15
+  _dashAttackCooldown: 7
+  _damage: 20
+  _hitboxOffset: {x: 0.7, y: 0}
+  _hitboxSize: {x: 0.8, y: 0.6}
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &2105953761
 GameObject:
   m_ObjectHideFlags: 0
@@ -8709,7 +8879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2105953762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9124,6 +9294,10 @@ PrefabInstance:
       propertyPath: 'projectileSpawnPoints.Array.data[6]'
       value: 
       objectReference: {fileID: 1798467534}
+    - target: {fileID: 1648163341155881294, guid: c42d5cedbbf69b34999def5567d3f419, type: 3}
+      propertyPath: phase1Settings.groggyDurationOnWallHit
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2405616681351786530, guid: c42d5cedbbf69b34999def5567d3f419, type: 3}
       propertyPath: m_Name
       value: Middle_Boss
@@ -9186,7 +9360,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7856424877859508682, guid: c42d5cedbbf69b34999def5567d3f419, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 434815313}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c42d5cedbbf69b34999def5567d3f419, type: 3}
 --- !u!1001 &7442416441484410213
@@ -9244,6 +9421,10 @@ PrefabInstance:
     - target: {fileID: 6355911550933306457, guid: 867d00daa8f0dcf44ab75343dbb3d50d, type: 3}
       propertyPath: m_Name
       value: CombatEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355911550933306457, guid: 867d00daa8f0dcf44ab75343dbb3d50d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

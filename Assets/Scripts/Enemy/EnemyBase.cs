@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
-public abstract class EnemyBase : MonoBehaviour
+public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
 {
     public enum EnemyState
     {
@@ -37,6 +37,9 @@ public abstract class EnemyBase : MonoBehaviour
     protected WeaknessDebuff _currentDebuff;
 
     // ── 약점 시스템 ───────────────────────────────────────────
+    // IWeaknessTarget.Transform — MonoBehaviour.transform과 이름 충돌 회피 위해 명시적 구현
+    Transform IWeaknessTarget.Transform => transform;
+
     public bool IsWeaknessExposed { get; private set; }
     public event Action<bool> OnWeaknessChanged;
     private float _weaknessTimer;
@@ -58,6 +61,7 @@ public abstract class EnemyBase : MonoBehaviour
     {
         _health.OnHit -= HandleHit;
         _health.OnDeath -= HandleDeath;
+        if (IsWeaknessExposed) ClearWeakness(); // 비활성화/사망 시 Registry 정리
     }
 
     protected virtual void Update()
@@ -100,6 +104,7 @@ public abstract class EnemyBase : MonoBehaviour
         {
             IsWeaknessExposed = true;
             OnWeaknessChanged?.Invoke(true);
+            WeaknessRegistry.NotifyExposed(this);
         }
     }
 
@@ -110,7 +115,12 @@ public abstract class EnemyBase : MonoBehaviour
         IsWeaknessExposed = false;
         _weaknessTimer = 0f;
         OnWeaknessChanged?.Invoke(false);
+        WeaknessRegistry.NotifyCleared(this);
     }
+
+    // 강아지 외부 스캔 허용 여부. 잡몹은 기본 항상 허용.
+    // 특수 적(EliteEnemy 등)이 다른 규칙 원하면 override.
+    public virtual bool CanBeSensedExternally => true;
 
     // ── 데미지 계산 체인 ──────────────────────────────────────
     // Health.DamageModifier에 항상 이 메서드만 등록.
@@ -150,10 +160,7 @@ public abstract class EnemyBase : MonoBehaviour
             return;
         _weaknessTimer -= Time.deltaTime;
         if (_weaknessTimer <= 0f)
-        {
-            IsWeaknessExposed = false;
-            OnWeaknessChanged?.Invoke(false);
-        }
+            ClearWeakness(); // Registry 정리도 포함
     }
 
     // ── 추상 메서드 ───────────────────────────────────────────

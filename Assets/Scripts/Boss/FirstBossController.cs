@@ -22,6 +22,7 @@ public class FirstBossController : BossBase
         shotCount = 3,
         warningDuration = 1f,
         warningLineLength = 20f,
+        groggyDurationOnWallHit = 2.5f,
     };
 
     [Header("Dash Hitbox")]
