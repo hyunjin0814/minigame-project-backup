@@ -263,7 +263,10 @@ public class CombatEnemy : EnemyBase
     // 여기서는 백스탭 배율만 계산.
     protected override int ApplySpecialModifier(int damage, Vector2 source)
     {
-        return IsBackstabCondition(source) ? damage * _backstabMultiplier : damage;
+        bool isBackstab = IsBackstabCondition(source);
+        int result = isBackstab ? damage * _backstabMultiplier : damage;
+        Debug.Log($"[CombatEnemy] ApplySpecialModifier: damage={damage}, isBackstab={isBackstab}, result={result}");
+        return result;
     }
 
     private bool IsBackstabCondition(Vector2 attackerPos)
@@ -274,11 +277,16 @@ public class CombatEnemy : EnemyBase
             || _currentState == EnemyState.Combat
             || _currentState == EnemyState.Attack
         )
+        {
+            Debug.Log($"[CombatEnemy] IsBackstabCondition: state={_currentState} → false (전투 중)");
             return false;
+        }
 
-        // 공격자가 facingDirection과 같은 방향 = 등 뒤에서 공격
+        // 공격자가 facingDirection과 반대 방향 = 등 뒤에서 공격
         int dirToAttacker = attackerPos.x > transform.position.x ? 1 : -1;
-        return dirToAttacker == _facingDirection;
+        bool result = dirToAttacker != _facingDirection;
+        Debug.Log($"[CombatEnemy] IsBackstabCondition: attackerX={attackerPos.x:F2}, enemyX={transform.position.x:F2}, dirToAttacker={dirToAttacker}, facingDir={_facingDirection} → {result}");
+        return result;
     }
 
     // ── 이동 헬퍼 ─────────────────────────────────────────────
