@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer), typeof(Health))]
-public abstract class BossBase : MonoBehaviour
+public abstract class BossBase : MonoBehaviour, IWeaknessTarget
 {
     [Header("Drop")]
     [SerializeField]
@@ -30,6 +31,22 @@ public abstract class BossBase : MonoBehaviour
     // 페이즈 전환 무적 (연출 없이 순수 데미지 차단)
     private bool phaseInvincible;
 
+    // 약점 무적 — 평소 true, ExposeWeakness 동안만 false (디자인: 강아지 스캔으로만 데미지 가능)
+    private bool weaknessInvincible = true;
+
+    // ── 약점 시스템 (IWeaknessTarget) ─────────────────────────
+    public bool IsWeaknessExposed { get; private set; }
+    public event Action<bool> OnWeaknessChanged;
+    Transform IWeaknessTarget.Transform => transform;
+    public bool CanBeSensedExternally => IsGroggy;
+    private float _weaknessTimer;
+
+    // ── 그로기 시스템 ────────────────────────────────────────
+    public bool IsGroggy { get; private set; }
+    public event Action OnGroggyStarted;
+    public event Action OnGroggyEnded;
+    private float _groggyTimer;
+
     protected virtual void Awake()
     {
         Rb = GetComponent<Rigidbody2D>();
@@ -50,7 +67,12 @@ public abstract class BossBase : MonoBehaviour
         InitStates();
     }
 
-    protected virtual void Update() => Fsm.Update();
+    protected virtual void Update()
+    {
+        TickGroggy();
+        TickWeakness();
+        Fsm.Update();
+    }
 
     public void TransitionTo(BossStateBase next) => Fsm.ChangeState(next);
 
@@ -63,7 +85,72 @@ public abstract class BossBase : MonoBehaviour
     public void SetPhaseInvincible(bool value)
     {
         phaseInvincible = value;
-        Health.IsInvincible = hitInvincible || phaseInvincible;
+        RefreshInvincible();
+    }
+
+    private void RefreshInvincible()
+    {
+        Health.IsInvincible = hitInvincible || phaseInvincible || weaknessInvincible;
+    }
+
+    // ── 약점/그로기 (IWeaknessTarget) ────────────────────────
+    public void ExposeWeakness(float duration)
+    {
+        _weaknessTimer = duration;
+        if (IsWeaknessExposed) return;
+        IsWeaknessExposed = true;
+        weaknessInvincible = false;
+        RefreshInvincible();
+        OnWeaknessChanged?.Invoke(true);
+        WeaknessRegistry.NotifyExposed(this);
+        Debug.Log($"[Boss] 약점 노출 ({duration:F1}s)");
+    }
+
+    public void ClearWeakness()
+    {
+        if (!IsWeaknessExposed) return;
+        IsWeaknessExposed = false;
+        _weaknessTimer = 0f;
+        weaknessInvincible = true;
+        RefreshInvincible();
+        OnWeaknessChanged?.Invoke(false);
+        WeaknessRegistry.NotifyCleared(this);
+        Debug.Log("[Boss] 약점 노출 종료");
+    }
+
+    public void EnterGroggy(float duration)
+    {
+        if (IsGroggy) { _groggyTimer = Mathf.Max(_groggyTimer, duration); return; }
+        IsGroggy = true;
+        _groggyTimer = duration;
+        Rb.linearVelocity = Vector2.zero;
+        Sprite.color = new Color(0.6f, 0.7f, 1f); // 임시 파란 틴트 + 강아지 아이콘(BossGroggyIndicator) 병행
+        Debug.Log($"[Boss] Groggy 진입 ({duration:F1}s)");
+        OnGroggyStarted?.Invoke();
+    }
+
+    public void ExitGroggy()
+    {
+        if (!IsGroggy) return;
+        IsGroggy = false;
+        Sprite.color = Color.white;
+        if (IsWeaknessExposed) ClearWeakness(); // Q5 A: 그로기 잔여 시간 = 약점 윈도우 상한
+        Debug.Log("[Boss] Groggy 종료");
+        OnGroggyEnded?.Invoke();
+    }
+
+    private void TickWeakness()
+    {
+        if (!IsWeaknessExposed) return;
+        _weaknessTimer -= Time.deltaTime;
+        if (_weaknessTimer <= 0f) ClearWeakness();
+    }
+
+    private void TickGroggy()
+    {
+        if (!IsGroggy) return;
+        _groggyTimer -= Time.deltaTime;
+        if (_groggyTimer <= 0f) ExitGroggy();
     }
 
     private void OnHit(int amount, Vector2 _)
@@ -75,7 +162,7 @@ public abstract class BossBase : MonoBehaviour
     private IEnumerator HitFlashRoutine()
     {
         hitInvincible = true;
-        Health.IsInvincible = true;
+        RefreshInvincible();
 
         Sprite.color = Color.red;
         yield return new WaitForSeconds(0.1f);
@@ -83,13 +170,15 @@ public abstract class BossBase : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
 
         hitInvincible = false;
-        Health.IsInvincible = phaseInvincible;
+        RefreshInvincible();
     }
 
     private void OnDeath()
     {
         Health.OnHit -= OnHit;
         Health.OnDeath -= OnDeath;
+        if (IsWeaknessExposed) ClearWeakness();
+        if (IsGroggy) ExitGroggy();
         Fsm.ChangeState(DeathState);
     }
 

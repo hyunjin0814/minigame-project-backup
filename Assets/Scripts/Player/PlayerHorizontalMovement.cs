@@ -14,6 +14,7 @@ public class PlayerHorizontalMovement : MonoBehaviour
     private PlayerGroundDetector groundDetector;
     private PlayerDash dash;
     private PlayerAttack attack;
+    private DogDashAttack dogDashAttack;
 
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class PlayerHorizontalMovement : MonoBehaviour
         groundDetector = GetComponent<PlayerGroundDetector>();
         dash = GetComponent<PlayerDash>();
         attack = GetComponent<PlayerAttack>();
+        dogDashAttack = GetComponent<DogDashAttack>();
     }
 
     public void ApplyData(TransformationData data)
@@ -40,6 +42,10 @@ public class PlayerHorizontalMovement : MonoBehaviour
 
         // 공격 중 수평 이동 차단
         if (attack != null && attack.IsAttacking)
+            return;
+
+        // 강아지 돌진 공격 중 입력 기반 이동 차단 (DogDashAttack이 velocity 제어)
+        if (dogDashAttack != null && dogDashAttack.IsExecuting)
             return;
 
         float targetSpeed = inputHandler.MoveInput.x * maxSpeed;
