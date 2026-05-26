@@ -35,6 +35,8 @@ public class PlayerTransformController : MonoBehaviour
 
     public bool IsHitStopped { get; private set; }
 
+    public bool IsCatForm => currentState == catState;
+
     private Rigidbody2D rb;
     private ITransformState currentState;
 
