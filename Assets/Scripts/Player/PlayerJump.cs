@@ -19,6 +19,7 @@ public class PlayerJump : MonoBehaviour
     private PlayerMotor motor;
     private PlayerInputHandler inputHandler;
     private PlayerGroundDetector groundDetector;
+    private PlayerDash dash;
 
     private float coyoteCounter;
     private float jumpBufferCounter;
@@ -34,6 +35,7 @@ public class PlayerJump : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
+        dash = GetComponent<PlayerDash>();
     }
 
     public void ApplyData(TransformationData data)
@@ -83,6 +85,14 @@ public class PlayerJump : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 대시 중에는 PlayerDash가 중력/velocity를 제어 — 점프 로직과 중력 스케일 변경 모두 스킵
+        if (dash != null && dash.IsDashing)
+        {
+            doJump = false;
+            doJumpCut = false;
+            return;
+        }
+
         // 가변 점프컷 적용
         if (doJumpCut)
         {

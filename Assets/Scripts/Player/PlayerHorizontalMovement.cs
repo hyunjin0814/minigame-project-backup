@@ -12,12 +12,14 @@ public class PlayerHorizontalMovement : MonoBehaviour
     private PlayerMotor motor;
     private PlayerInputHandler inputHandler;
     private PlayerGroundDetector groundDetector;
+    private PlayerDash dash;
 
     private void Awake()
     {
         motor = GetComponent<PlayerMotor>();
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
+        dash = GetComponent<PlayerDash>();
     }
 
     public void ApplyData(TransformationData data)
@@ -30,6 +32,10 @@ public class PlayerHorizontalMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 대시 중에는 PlayerDash가 velocity를 제어하므로 입력 기반 이동 스킵
+        if (dash != null && dash.IsDashing)
+            return;
+
         float targetSpeed = inputHandler.MoveInput.x * maxSpeed;
 
         float accelRate =
