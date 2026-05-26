@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,7 +7,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerHorizontalMovement))]
 [RequireComponent(typeof(PlayerJump))]
 [RequireComponent(typeof(PlayerAttack))]
-// [RequireComponent(typeof(PlayerAnimator))]
+[RequireComponent(typeof(PlayerDash))]
+[RequireComponent(typeof(PlayerAnimator))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerTransformController : MonoBehaviour
 {
     // 고양이 → 인간 변신이 발생한 Time.time 기록.
@@ -26,9 +30,12 @@ public class PlayerTransformController : MonoBehaviour
     public PlayerHorizontalMovement HorizontalMovement { get; private set; }
     public PlayerJump Jump { get; private set; }
     public PlayerAttack Attack { get; private set; }
+    public PlayerDash Dash { get; private set; }
+    public PlayerAnimator PlayerAnimator { get; private set; }
 
-    // public PlayerAnimator PlayerAnimator { get; private set; }
+    public bool IsHitStopped { get; private set; }
 
+    private Rigidbody2D rb;
     private ITransformState currentState;
 
     public CatStealth CatStealth { get; private set; }
@@ -50,10 +57,12 @@ public class PlayerTransformController : MonoBehaviour
         HorizontalMovement = GetComponent<PlayerHorizontalMovement>();
         Jump = GetComponent<PlayerJump>();
         Attack = GetComponent<PlayerAttack>();
-        // PlayerAnimator = GetComponent<PlayerAnimator>();
+        Dash = GetComponent<PlayerDash>();
+        PlayerAnimator = GetComponent<PlayerAnimator>();
         Collider = GetComponent<BoxCollider2D>();
         CatStealth = GetComponent<CatStealth>();
         DogSense = GetComponent<DogSense>();
+        rb = GetComponent<Rigidbody2D>();
 
         // State 인스턴스 생성
         humanState = new HumanState(this, humanData);
@@ -92,6 +101,13 @@ public class PlayerTransformController : MonoBehaviour
         if (currentState == newState)
             return;
 
+        // 히트스톱 중에는 변신 FSM 전환 잠금
+        if (IsHitStopped)
+        {
+            Debug.Log("[PlayerTransformController] 히트스톱 중 변신 차단");
+            return;
+        }
+
         // 고양이 → 인간 변신 시만 스니크 윈도우 활성화
         bool comingFromCat = currentState == catState;
 
@@ -105,5 +121,28 @@ public class PlayerTransformController : MonoBehaviour
             Debug.Log("[PlayerTransformController] 스니크 윈도우 활성화");
         }
 
+    }
+
+    public void HitStop(Rigidbody2D enemyRb, float duration, Action onEnd = null)
+    {
+        StartCoroutine(HitStopCoroutine(enemyRb, duration, onEnd));
+    }
+
+    private IEnumerator HitStopCoroutine(Rigidbody2D enemyRb, float duration, Action onEnd)
+    {
+        IsHitStopped = true;
+
+        Time.timeScale = 0f;
+
+        Debug.Log($"[PlayerTransformController] 히트스톱 시작 ({duration}s)");
+
+        yield return new WaitForSecondsRealtime(duration);
+
+        Time.timeScale = 1f;
+
+        IsHitStopped = false;
+        Debug.Log("[PlayerTransformController] 히트스톱 종료");
+
+        onEnd?.Invoke();
     }
 }

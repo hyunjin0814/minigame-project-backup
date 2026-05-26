@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -8,6 +9,8 @@ public class AttackHitbox : MonoBehaviour
     [Header("Debug Visual")]
     [SerializeField] private bool showDebugVisual = false;
     [SerializeField] private Color debugColor = new Color(1f, 0.1f, 0.1f, 0.4f);
+
+    public event Action<IDamageable, Collider2D> OnHit;
 
     private Collider2D col;
     private SpriteRenderer debugRenderer;
@@ -83,9 +86,27 @@ public class AttackHitbox : MonoBehaviour
         return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
     }
 
+    public void SetBox(Vector2 offset, Vector2 size)
+    {
+        if (col is BoxCollider2D box)
+        {
+            box.offset = offset;
+            box.size = size;
+
+            if (debugRenderer != null)
+            {
+                debugRenderer.transform.localPosition = offset;
+                debugRenderer.transform.localScale = new Vector3(size.x, size.y, 1f);
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<IDamageable>(out var target))
+        {
             target.TakeDamage(damage, transform.position);
+            OnHit?.Invoke(target, other);
+        }
     }
 }
