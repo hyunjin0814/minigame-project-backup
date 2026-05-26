@@ -8,18 +8,22 @@ public abstract class EnemyBase : MonoBehaviour
     {
         Idle,
         Patrol,
-        Detect,  // 짧은 인지 딜레이 (Alert 상당)
+        Detect, // 짧은 인지 딜레이 (Alert 상당)
         Chase,
-        Combat,  // 감지 후 전투 지속 상태
+        Combat, // 감지 후 전투 지속 상태
         Attack,
     }
 
     [Header("Detection")]
-    [SerializeField] protected LayerMask _playerLayer;
-    [SerializeField] protected LayerMask _obstacleLayer;
+    [SerializeField]
+    protected LayerMask _playerLayer;
+
+    [SerializeField]
+    protected LayerMask _obstacleLayer;
 
     [Header("Weakness")]
-    [SerializeField] private float _weaknessDamageMultiplier = 2f;
+    [SerializeField]
+    private float _weaknessDamageMultiplier = 2f;
 
     protected Health _health;
     protected int _hp => _health.CurrentHp;
@@ -64,12 +68,15 @@ public abstract class EnemyBase : MonoBehaviour
 
     // ── 피격/사망 ─────────────────────────────────────────────
     private void HandleHit(int damage, Vector2 source) => OnHit(source);
+
     private void HandleDeath() => Die();
 
     protected virtual void OnHit(Vector2 attackerPosition)
     {
-        if (_health.CurrentHp <= 0) return;
-        if (_currentState == EnemyState.Chase || _currentState == EnemyState.Attack) return;
+        if (_health.CurrentHp <= 0)
+            return;
+        if (_currentState == EnemyState.Chase || _currentState == EnemyState.Attack)
+            return;
         _lastKnownPlayerPosition = attackerPosition;
         ChangeState(EnemyState.Chase);
     }
@@ -98,7 +105,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     public void ClearWeakness()
     {
-        if (!IsWeaknessExposed) return;
+        if (!IsWeaknessExposed)
+            return;
         IsWeaknessExposed = false;
         _weaknessTimer = 0f;
         OnWeaknessChanged?.Invoke(false);
@@ -129,7 +137,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     private void TickDebuff()
     {
-        if (_currentDebuff == null) return;
+        if (_currentDebuff == null)
+            return;
         _currentDebuff.RemainingTime -= Time.deltaTime;
         if (_currentDebuff.RemainingTime <= 0f)
             _currentDebuff = null;
@@ -137,7 +146,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     private void TickWeakness()
     {
-        if (!IsWeaknessExposed) return;
+        if (!IsWeaknessExposed)
+            return;
         _weaknessTimer -= Time.deltaTime;
         if (_weaknessTimer <= 0f)
         {

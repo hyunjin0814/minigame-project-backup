@@ -9,12 +9,18 @@ using UnityEngine;
 public class DogSense : MonoBehaviour
 {
     [Header("Sense Radii")]
-    [SerializeField] private float _smellRadius = 5f;
-    [SerializeField] private float _hearingRadius = 10f;
+    [SerializeField]
+    private float _smellRadius = 5f;
+
+    [SerializeField]
+    private float _hearingRadius = 10f;
 
     [Header("Weakness")]
-    [SerializeField] private float _weaknessDuration = 4f;
-    [SerializeField] private LayerMask _enemyLayer;
+    [SerializeField]
+    private float _weaknessDuration = 4f;
+
+    [SerializeField]
+    private LayerMask _enemyLayer;
 
     private const float ScanInterval = 0.2f;
     private float _scanTimer;
@@ -33,7 +39,8 @@ public class DogSense : MonoBehaviour
     private void Update()
     {
         _scanTimer -= Time.deltaTime;
-        if (_scanTimer > 0f) return;
+        if (_scanTimer > 0f)
+            return;
         _scanTimer = ScanInterval;
 
         ScanEnemies();
@@ -42,26 +49,40 @@ public class DogSense : MonoBehaviour
     private void ScanEnemies()
     {
         // 후각: 근거리 Idle/Patrol 적 → 약점 마킹
-        Collider2D[] smellHits = Physics2D.OverlapCircleAll(transform.position, _smellRadius, _enemyLayer);
+        Collider2D[] smellHits = Physics2D.OverlapCircleAll(
+            transform.position,
+            _smellRadius,
+            _enemyLayer
+        );
         foreach (var col in smellHits)
         {
             var enemy = col.GetComponentInParent<EnemyBase>();
-            if (enemy == null) continue;
-            if (enemy.CurrentState == EnemyBase.EnemyState.Idle ||
-                enemy.CurrentState == EnemyBase.EnemyState.Patrol)
+            if (enemy == null)
+                continue;
+            if (
+                enemy.CurrentState == EnemyBase.EnemyState.Idle
+                || enemy.CurrentState == EnemyBase.EnemyState.Patrol
+            )
             {
                 enemy.ExposeWeakness(_weaknessDuration);
             }
         }
 
         // 청각: 원거리 Chase/Attack 적 → 약점 마킹 (소리 있는 상태)
-        Collider2D[] hearingHits = Physics2D.OverlapCircleAll(transform.position, _hearingRadius, _enemyLayer);
+        Collider2D[] hearingHits = Physics2D.OverlapCircleAll(
+            transform.position,
+            _hearingRadius,
+            _enemyLayer
+        );
         foreach (var col in hearingHits)
         {
             var enemy = col.GetComponentInParent<EnemyBase>();
-            if (enemy == null) continue;
-            if (enemy.CurrentState == EnemyBase.EnemyState.Chase ||
-                enemy.CurrentState == EnemyBase.EnemyState.Attack)
+            if (enemy == null)
+                continue;
+            if (
+                enemy.CurrentState == EnemyBase.EnemyState.Chase
+                || enemy.CurrentState == EnemyBase.EnemyState.Attack
+            )
             {
                 enemy.ExposeWeakness(_weaknessDuration);
             }

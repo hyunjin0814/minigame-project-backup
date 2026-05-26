@@ -264,6 +264,8 @@ public class PlayerAttack : MonoBehaviour
             return;
 
         hitbox?.Activate();
+        IsAttacking = true;
+        CanDash = false;
         timer = attackDuration;
         phase = AttackPhase.Attacking;
     }
