@@ -21,6 +21,7 @@ public class PlayerDash : MonoBehaviour
 
     private PlayerMotor motor;
     private PlayerInputHandler inputHandler;
+    private PlayerAttack attack;
 
     private float dashTimer;
     private float cooldownTimer;
@@ -34,6 +35,7 @@ public class PlayerDash : MonoBehaviour
     {
         motor = GetComponent<PlayerMotor>();
         inputHandler = GetComponent<PlayerInputHandler>();
+        attack = GetComponent<PlayerAttack>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -80,6 +82,9 @@ public class PlayerDash : MonoBehaviour
     private void HandleDash()
     {
         if (IsDashing || cooldownTimer > 0f)
+            return;
+
+        if (attack != null && !attack.CanDash)
             return;
 
         StartDash();

@@ -1,7 +1,12 @@
 using System;
 using UnityEngine;
 
-public enum AttackDirection { Side, Up, Down }
+public enum AttackDirection
+{
+    Side,
+    Up,
+    Down,
+}
 
 [RequireComponent(typeof(PlayerInputHandler))]
 [RequireComponent(typeof(PlayerMotor))]
@@ -60,7 +65,15 @@ public class PlayerAttack : MonoBehaviour
 
     public event Action<AttackDirection> OnAttackTriggered;
 
-    private enum AttackPhase { Ready, Attacking, Cooldown }
+    public bool IsAttacking { get; private set; }
+    public bool CanDash { get; private set; } = true;
+
+    private enum AttackPhase
+    {
+        Ready,
+        Attacking,
+        Cooldown,
+    }
 
     private AttackPhase phase = AttackPhase.Ready;
     private float timer;
@@ -79,6 +92,7 @@ public class PlayerAttack : MonoBehaviour
     private PlayerGroundDetector groundDetector;
     private PlayerDash dash;
     private PlayerTransformController transformController;
+    private Rigidbody2D rb;
 
     private void Awake()
     {
@@ -87,6 +101,7 @@ public class PlayerAttack : MonoBehaviour
         groundDetector = GetComponent<PlayerGroundDetector>();
         dash = GetComponent<PlayerDash>();
         transformController = GetComponent<PlayerTransformController>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable()
@@ -103,13 +118,15 @@ public class PlayerAttack : MonoBehaviour
             hitbox.OnHit -= HandleHit;
 
         hitbox?.Deactivate();
+        IsAttacking = false;
+        CanDash = true;
         phase = AttackPhase.Ready;
         attackBuffered = false;
     }
 
     private void Update()
     {
-        if (inputHandler.MoveInput.x != 0)
+        if (!IsAttacking && inputHandler.MoveInput.x != 0)
             facingRight = inputHandler.MoveInput.x > 0;
 
         if (attackBuffered)
@@ -130,6 +147,8 @@ public class PlayerAttack : MonoBehaviour
                 if (timer <= 0f)
                 {
                     hitbox.Deactivate();
+                    IsAttacking = false;
+                    CanDash = true;
                     timer = attackCooldown - attackDuration;
                     phase = AttackPhase.Cooldown;
                 }
@@ -196,7 +215,8 @@ public class PlayerAttack : MonoBehaviour
         currentDirection = DetermineDirection();
         hitResolvedThisSwing = false;
 
-        Vector2 offset, size;
+        Vector2 offset,
+            size;
         switch (currentDirection)
         {
             case AttackDirection.Up:
@@ -210,18 +230,31 @@ public class PlayerAttack : MonoBehaviour
             default:
                 offset = new Vector2(
                     facingRight ? hitboxOffsetSide.x : -hitboxOffsetSide.x,
-                    hitboxOffsetSide.y);
+                    hitboxOffsetSide.y
+                );
                 size = hitboxSizeSide;
                 break;
         }
 
         hitbox.SetBox(offset, size);
+        IsAttacking = true;
+        CanDash = false;
+
+        if (groundDetector.IsGrounded)
+            motor.SetVelocityX(0f);
 
         OnAttackTriggered?.Invoke(currentDirection);
 
         timer = attackDuration;
         phase = AttackPhase.Attacking;
         comboIndex = (comboIndex + 1) % 3;
+    }
+
+    // 애니메이션 이벤트에서 호출
+    public void EnableMove()
+    {
+        IsAttacking = false;
+        CanDash = true;
     }
 
     // 애니메이션 이벤트에서 호출

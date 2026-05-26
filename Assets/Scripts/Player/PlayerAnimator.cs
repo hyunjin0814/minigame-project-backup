@@ -110,8 +110,8 @@ public class PlayerAnimator : MonoBehaviour
             animator.SetBool(IsGroundedHash, groundDetector.IsGrounded);
         }
 
-        // 좌우 flip — 입력 기준 (관성 미끄러짐 중에도 바라보는 방향 유지)
-        if (spriteRenderer != null)
+        // 좌우 flip — 공격 중에는 방향 고정
+        if (spriteRenderer != null && !attackComponent.IsAttacking)
         {
             if (inputHandler.MoveInput.x > 0.1f)
                 spriteRenderer.flipX = false;

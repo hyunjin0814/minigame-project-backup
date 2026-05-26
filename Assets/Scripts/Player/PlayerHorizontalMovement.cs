@@ -13,6 +13,7 @@ public class PlayerHorizontalMovement : MonoBehaviour
     private PlayerInputHandler inputHandler;
     private PlayerGroundDetector groundDetector;
     private PlayerDash dash;
+    private PlayerAttack attack;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class PlayerHorizontalMovement : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         groundDetector = GetComponent<PlayerGroundDetector>();
         dash = GetComponent<PlayerDash>();
+        attack = GetComponent<PlayerAttack>();
     }
 
     public void ApplyData(TransformationData data)
@@ -34,6 +36,10 @@ public class PlayerHorizontalMovement : MonoBehaviour
     {
         // 대시 중에는 PlayerDash가 velocity를 제어하므로 입력 기반 이동 스킵
         if (dash != null && dash.IsDashing)
+            return;
+
+        // 공격 중 수평 이동 차단
+        if (attack != null && attack.IsAttacking)
             return;
 
         float targetSpeed = inputHandler.MoveInput.x * maxSpeed;
