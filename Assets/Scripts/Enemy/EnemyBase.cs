@@ -125,8 +125,14 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     // ── 데미지 계산 체인 ──────────────────────────────────────
     // Health.DamageModifier에 항상 이 메서드만 등록.
     // 서브클래스는 DamageModifier를 교체하지 말고 ApplySpecialModifier만 오버라이드.
+    // 가장 최근 피격이 백스탭이었는지. 히트스톱 치명타 판정용(PlayerAttack이 조회).
+    // ComputeFinalDamage 진입 시 false로 리셋하고, 서브클래스가 ApplySpecialModifier에서 설정.
+    public bool LastHitWasBackstab { get; protected set; }
+
     private int ComputeFinalDamage(int baseDamage, Vector2 source)
     {
+        LastHitWasBackstab = false;
+
         // ① 서브클래스 전용 배율 (백스탭, 가드 감소 등)
         int damage = ApplySpecialModifier(baseDamage, source);
 

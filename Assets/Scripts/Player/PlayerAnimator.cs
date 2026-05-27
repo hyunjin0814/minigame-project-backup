@@ -48,6 +48,16 @@ public class PlayerAnimator : MonoBehaviour
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
+    private void Start()
+    {
+        // 씬 전환 후 스프라이트 방향 복원 (입력 공백 구간을 메움)
+        if (GameState.Instance != null && spriteRenderer != null)
+            spriteRenderer.flipX = GameState.Instance.savedFacingLeft;
+    }
+
+    /// <summary>현재 스프라이트가 왼쪽을 향하는지 (flipX 상태).</summary>
+    public bool IsFacingLeft => spriteRenderer != null && spriteRenderer.flipX;
+
     private void OnEnable()
     {
         jumpComponent.OnJumped += HandleJumped;

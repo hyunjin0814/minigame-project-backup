@@ -9,10 +9,17 @@ using UnityEngine;
 public class DogScanner : MonoBehaviour
 {
     [Header("Scan")]
-    [SerializeField] private float _scanRadius = 8f;
-    [SerializeField] private float _scanCooldown = 5f;
-    [SerializeField] private float _weaknessDuration = 4f;
-    [SerializeField] private LayerMask _targetLayer;
+    [SerializeField]
+    private float _scanRadius = 8f;
+
+    [SerializeField]
+    private float _scanCooldown = 5f;
+
+    [SerializeField]
+    private float _weaknessDuration = 4f;
+
+    [SerializeField]
+    private LayerMask _targetLayer;
 
     private PlayerInputHandler _input;
     private float _cooldownEndTime = 0f;
@@ -29,12 +36,14 @@ public class DogScanner : MonoBehaviour
     private void OnEnable()
     {
         // 쿨타임은 Time.time 기반이라 폼 전환과 무관하게 계속 흐름.
-        if (_input != null) _input.OnScan += HandleScan;
+        if (_input != null)
+            _input.OnScan += HandleScan;
     }
 
     private void OnDisable()
     {
-        if (_input != null) _input.OnScan -= HandleScan;
+        if (_input != null)
+            _input.OnScan -= HandleScan;
     }
 
     private void HandleScan()
@@ -51,12 +60,18 @@ public class DogScanner : MonoBehaviour
     private void DoScan()
     {
         int marked = 0;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _scanRadius, _targetLayer);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(
+            transform.position,
+            _scanRadius,
+            _targetLayer
+        );
         foreach (var col in hits)
         {
             var target = col.GetComponentInParent<IWeaknessTarget>();
-            if (target == null) continue;
-            if (!target.CanBeSensedExternally) continue;
+            if (target == null)
+                continue;
+            if (!target.CanBeSensedExternally)
+                continue;
             target.ExposeWeakness(_weaknessDuration);
             marked++;
         }

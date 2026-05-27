@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public enum AttackDirection
@@ -52,9 +53,6 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("Hit Reaction")]
     [SerializeField]
-    private float hitStopDuration = 0.06f;
-
-    [SerializeField]
     private float knockbackForce = 3f;
 
     [SerializeField]
@@ -91,7 +89,6 @@ public class PlayerAttack : MonoBehaviour
     private PlayerMotor motor;
     private PlayerGroundDetector groundDetector;
     private PlayerDash dash;
-    private PlayerTransformController transformController;
     private Rigidbody2D rb;
 
     private void Awake()
@@ -100,7 +97,6 @@ public class PlayerAttack : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         groundDetector = GetComponent<PlayerGroundDetector>();
         dash = GetComponent<PlayerDash>();
-        transformController = GetComponent<PlayerTransformController>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -282,17 +278,42 @@ public class PlayerAttack : MonoBehaviour
             return;
         hitResolvedThisSwing = true;
 
-        Rigidbody2D enemyRb = other.attachedRigidbody;
         AttackDirection dir = currentDirection;
 
-        if (transformController != null)
+        // AttackHitbox가 TakeDamage를 먼저 호출하므로, 이 시점엔 데미지·백스탭·사망 처리가 끝나 있다.
+        if (HitStopManager.Instance != null)
         {
-            transformController.HitStop(enemyRb, hitStopDuration, () => ApplyKnockback(dir));
+            HitStopType type = ResolveHitStopType(other);
+            float duration = HitStopManager.Instance.Freeze(type);
+            StartCoroutine(KnockbackAfter(duration, dir)); // 넉백은 정지 해제 후
         }
         else
         {
             ApplyKnockback(dir);
         }
+    }
+
+    // 치명타(백스탭·마무리 일격) > 대상 등급(HitStopProfile) > 기본 Light 순으로 판정.
+    private HitStopType ResolveHitStopType(Collider2D enemyCol)
+    {
+        var health = enemyCol.GetComponentInParent<Health>();
+        bool isKillingBlow = health != null && health.CurrentHp <= 0;
+
+        var enemyBase = enemyCol.GetComponentInParent<EnemyBase>();
+        bool isBackstab = enemyBase != null && enemyBase.LastHitWasBackstab;
+
+        if (isKillingBlow || isBackstab)
+            return HitStopType.Critical;
+
+        var profile = enemyCol.GetComponentInParent<HitStopProfile>();
+        return profile != null ? profile.BaseType : HitStopType.Light;
+    }
+
+    private IEnumerator KnockbackAfter(float delay, AttackDirection dir)
+    {
+        if (delay > 0f)
+            yield return new WaitForSecondsRealtime(delay);
+        ApplyKnockback(dir);
     }
 
     private void ApplyKnockback(AttackDirection dir)
