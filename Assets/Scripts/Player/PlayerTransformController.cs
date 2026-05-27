@@ -16,6 +16,9 @@ public class PlayerTransformController : MonoBehaviour
     // 각 적이 자신의 _sneakWindowDuration과 비교해 감지 무효 여부를 판단.
     public float SneakWindowActivatedAt { get; private set; } = float.NegativeInfinity;
 
+    /// <summary>해금되지 않은 능력 변신 시도 시 발행 (UI 피드백용).</summary>
+    public static event System.Action<AbilityType> OnLockedAbilityAttempted;
+
     [Header("Transformation Data")]
     [SerializeField]
     private TransformationData humanData;
@@ -79,6 +82,13 @@ public class PlayerTransformController : MonoBehaviour
     {
         // 마지막 변신 형태 복원 (없으면 인간). 씬 전환 사이 형태 유지.
         PlayerForm form = GameState.Instance != null ? GameState.Instance.savedForm : PlayerForm.Human;
+
+        // 해금 안 된 형태로 복원되는 경우 Human으로 폴백
+        if (form == PlayerForm.Dog && (GameState.Instance == null || !GameState.Instance.dogUnlocked))
+            form = PlayerForm.Human;
+        if (form == PlayerForm.Cat && (GameState.Instance == null || !GameState.Instance.catUnlocked))
+            form = PlayerForm.Human;
+
         ChangeState(StateFor(form));
     }
 
@@ -98,9 +108,27 @@ public class PlayerTransformController : MonoBehaviour
 
     private void HandleTransformHuman() => ChangeState(humanState);
 
-    private void HandleTransformDog() => ChangeState(dogState);
+    private void HandleTransformDog()
+    {
+        if (GameState.Instance != null && !GameState.Instance.dogUnlocked)
+        {
+            Debug.Log("[PlayerTransformController] 강아지 변신 미해금");
+            OnLockedAbilityAttempted?.Invoke(AbilityType.Dog);
+            return;
+        }
+        ChangeState(dogState);
+    }
 
-    private void HandleTransformCat() => ChangeState(catState);
+    private void HandleTransformCat()
+    {
+        if (GameState.Instance != null && !GameState.Instance.catUnlocked)
+        {
+            Debug.Log("[PlayerTransformController] 고양이 변신 미해금");
+            OnLockedAbilityAttempted?.Invoke(AbilityType.Cat);
+            return;
+        }
+        ChangeState(catState);
+    }
 
     /// <summary>현재 변신 형태를 PlayerForm 열거값으로 반환.</summary>
     public PlayerForm CurrentForm =>

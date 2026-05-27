@@ -81,6 +81,12 @@ public class PlayerDash : MonoBehaviour
 
     private void HandleDash()
     {
+        if (GameState.Instance != null && !GameState.Instance.dashUnlocked)
+        {
+            Debug.Log("[PlayerDash] 대시 미해금");
+            return;
+        }
+
         if (IsDashing || cooldownTimer > 0f)
             return;
 
