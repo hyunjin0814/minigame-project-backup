@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: HumanData
   m_EditorClassIdentifier: Assembly-CSharp::TransformationData
   formName: Human
-  colliderSize: {x: 1.9, y: 1.9}
-  colliderOffset: {x: 0, y: 1}
+  colliderSize: {x: 1.2, y: 1.85}
+  colliderOffset: {x: -0.1, y: 1}
   maxSpeed: 9
   accelTime: 0.08
   decelTime: 0.05
@@ -23,3 +23,4 @@ MonoBehaviour:
   riseGravity: 3
   fallGravity: 5
   jumpCutMultiplier: 0.5
+  animatorController: {fileID: 9100000, guid: e64c110315cad5b4b994b390b4e08be7, type: 2}

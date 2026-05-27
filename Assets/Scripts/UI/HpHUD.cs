@@ -6,26 +6,19 @@ public class HpHUD : MonoBehaviour
     [SerializeField] private Health playerHealth;
     [SerializeField] private TMP_Text hpText;
 
-    private void Start() => Refresh();
+    private void Start() => Refresh(); // 모든 Awake 이후 보장 → CurrentHp 채워진 상태로 읽음
 
     private void OnEnable()
     {
         if (playerHealth == null) return;
-        playerHealth.OnHit += OnHit;
-        playerHealth.OnDeath += Refresh;
-        playerHealth.OnHeal += OnHeal;
+        playerHealth.OnChanged += Refresh; // 복원 이벤트 구독 (순서 무관)
     }
 
     private void OnDisable()
     {
         if (playerHealth == null) return;
-        playerHealth.OnHit -= OnHit;
-        playerHealth.OnDeath -= Refresh;
-        playerHealth.OnHeal -= OnHeal;
+        playerHealth.OnChanged -= Refresh;
     }
-
-    private void OnHit(int amount, Vector2 source) => Refresh();
-    private void OnHeal(int amount) => Refresh();
 
     private void Refresh()
     {

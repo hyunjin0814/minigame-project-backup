@@ -42,6 +42,10 @@ public class ZoneTransition : MonoBehaviour
             GameState.Instance.savedMaxHP = health.MaxHp;
         }
 
+        // 스프라이트 방향 보관 (다음 씬 PlayerAnimator가 복원)
+        if (GameState.Instance != null && other.TryGetComponent<PlayerAnimator>(out var anim))
+            GameState.Instance.savedFacingLeft = anim.IsFacingLeft;
+
         SceneTransitionManager.Instance.TransitionTo(targetScene, targetEntryID);
     }
 

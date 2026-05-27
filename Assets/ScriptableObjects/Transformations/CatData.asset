@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: CatData
   m_EditorClassIdentifier: Assembly-CSharp::TransformationData
   formName: Cat
-  colliderSize: {x: 0.9, y: 0.8}
-  colliderOffset: {x: 0, y: 0.4}
-  colliderDirection: 1
+  colliderSize: {x: 1.5, y: 0.9}
+  colliderOffset: {x: -0.3, y: 0.5}
   maxSpeed: 6
   accelTime: 0.04
   decelTime: 0.05
@@ -24,3 +23,4 @@ MonoBehaviour:
   riseGravity: 3
   fallGravity: 5
   jumpCutMultiplier: 0.5
+  animatorController: {fileID: 9100000, guid: 444d81eef688df741bd09efe1cbcc61a, type: 2}

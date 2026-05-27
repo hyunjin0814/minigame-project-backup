@@ -19,8 +19,8 @@ public abstract class BaseTransformState : ITransformState
         controller.Jump.ApplyData(data);
 
         // Animator Controller 교체
-        // if (data.animatorController != null)
-        //     controller.PlayerAnimator.SetAnimatorController(data.animatorController);
+        if (data.animatorController != null)
+            controller.PlayerAnimator.SetAnimatorController(data.animatorController);
 
         // 콜라이더 사이즈 교체
         controller.Collider.size = data.colliderSize;

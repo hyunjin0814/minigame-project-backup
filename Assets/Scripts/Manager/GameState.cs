@@ -46,6 +46,10 @@ public class GameState : MonoBehaviour
     /// <summary>마지막 변신 형태. 씬 전환 후 PlayerTransformController가 복원한다.</summary>
     public PlayerForm savedForm = PlayerForm.Human;
 
+    // ── 시각 상태 유지 (씬 전환용) ──────────────────────────────────────────
+    /// <summary>마지막 스프라이트 방향. true = 왼쪽(flipX). 씬 전환 후 PlayerAnimator가 복원.</summary>
+    public bool savedFacingLeft = false;
+
     // ── Lifecycle ──────────────────────────────────────────────────────────
     private void Awake()
     {

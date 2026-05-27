@@ -16,6 +16,8 @@ public class Health : MonoBehaviour, IDamageable
     public event Action<int, Vector2> OnHit;
     public event Action OnDeath;
     public event Action<int> OnHeal;
+    /// <summary>HP/MaxHp 값이 바뀔 때마다 발생. UI 갱신 전용 (연출 부작용 없음).</summary>
+    public event Action OnChanged;
 
     private void Awake() => CurrentHp = maxHp;
 
@@ -27,6 +29,7 @@ public class Health : MonoBehaviour, IDamageable
         CurrentHp = Mathf.Max(0, CurrentHp - finalAmount);
         Debug.Log($"[Health] 데미지 -{finalAmount} → {CurrentHp}/{maxHp}");
         OnHit?.Invoke(finalAmount, source);
+        OnChanged?.Invoke();
         if (CurrentHp == 0)
             OnDeath?.Invoke();
     }
@@ -36,6 +39,7 @@ public class Health : MonoBehaviour, IDamageable
         CurrentHp = Mathf.Min(maxHp, CurrentHp + amount);
         Debug.Log($"[Health] 회복 +{amount} → {CurrentHp}/{maxHp}");
         OnHeal?.Invoke(amount);
+        OnChanged?.Invoke();
     }
 
     public void IncreaseMaxHp(int amount)
@@ -53,6 +57,7 @@ public class Health : MonoBehaviour, IDamageable
     {
         CurrentHp = Mathf.Clamp(hp, 0, maxHp);
         Debug.Log($"[Health] HP 강제 설정: {CurrentHp}/{maxHp}");
+        OnChanged?.Invoke();
     }
 
     /// <summary>
@@ -64,5 +69,6 @@ public class Health : MonoBehaviour, IDamageable
         maxHp = Mathf.Max(1, value);
         CurrentHp = Mathf.Min(CurrentHp, maxHp);
         Debug.Log($"[Health] 최대 HP 복원: {maxHp}");
+        OnChanged?.Invoke();
     }
 }
