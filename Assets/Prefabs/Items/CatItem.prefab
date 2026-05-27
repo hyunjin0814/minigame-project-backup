@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7793083615704360843
+--- !u!1 &7264906038194083094
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 898162464121469065}
-  - component: {fileID: 8112881875608859134}
-  - component: {fileID: 5721082088256603840}
-  - component: {fileID: 5543799894822566735}
+  - component: {fileID: 2012596087663763510}
+  - component: {fileID: 8368162865578416893}
+  - component: {fileID: 6594928294013891713}
+  - component: {fileID: 8248419473286005775}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: CatItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &898162464121469065
+--- !u!4 &2012596087663763510
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7793083615704360843}
+  m_GameObject: {fileID: 7264906038194083094}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 79.49, y: 0.64, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.46, y: 0.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &8112881875608859134
+--- !u!212 &8368162865578416893
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7793083615704360843}
+  m_GameObject: {fileID: 7264906038194083094}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -93,13 +93,13 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!58 &5721082088256603840
+--- !u!58 &6594928294013891713
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7793083615704360843}
+  m_GameObject: {fileID: 7264906038194083094}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -129,17 +129,16 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &5543799894822566735
+--- !u!114 &8248419473286005775
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7793083615704360843}
+  m_GameObject: {fileID: 7264906038194083094}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc9511b8a01d064418c5614bfd1de604, type: 3}
+  m_Script: {fileID: 11500000, guid: 4531567c5013899458bb67022f3974de, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MaxHpReward
-  rewardID: 
-  hpIncrease: 1
+  m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
+  itemData: {fileID: 11400000, guid: 58527b35636e419488c3b773f53a7f55, type: 2}

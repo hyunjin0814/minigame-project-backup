@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Blue_0
+  m_Name: Cave_Background
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
-  m_Sprite: {fileID: -6429493399158520243, guid: 29865fe8526b6ac4ab0ef2c5873a2960, type: 3}
+  m_Sprite: {fileID: -152693913, guid: 11f4d475eb0c8fa45a81180b40169c51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
