@@ -200,7 +200,6 @@ public class DogDashAttack : MonoBehaviour
 
     private void EndDash()
     {
-        _motor.SetVelocityX(0f);
         _motor.SetGravityScale(_savedGravity);
         _phase = DashPhase.Idle;
         _cooldownEndTime = Time.time + _dashAttackCooldown;

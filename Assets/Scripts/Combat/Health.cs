@@ -44,4 +44,25 @@ public class Health : MonoBehaviour, IDamageable
         Debug.Log($"[Health] 최대 HP +{amount} → {maxHp}");
         Heal(amount);
     }
+
+    /// <summary>
+    /// 씬 전환 후 HP 복원 전용. 이벤트를 발생시키지 않고 직접 설정한다.
+    /// PlayerSpawner에서만 사용할 것.
+    /// </summary>
+    public void ForceSetHp(int hp)
+    {
+        CurrentHp = Mathf.Clamp(hp, 0, maxHp);
+        Debug.Log($"[Health] HP 강제 설정: {CurrentHp}/{maxHp}");
+    }
+
+    /// <summary>
+    /// 씬 전환 후 최대 HP 복원 전용 (업그레이드 유지). 회복은 일으키지 않고 직접 설정한다.
+    /// PlayerSpawner에서만 사용할 것.
+    /// </summary>
+    public void SetMaxHp(int value)
+    {
+        maxHp = Mathf.Max(1, value);
+        CurrentHp = Mathf.Min(CurrentHp, maxHp);
+        Debug.Log($"[Health] 최대 HP 복원: {maxHp}");
+    }
 }

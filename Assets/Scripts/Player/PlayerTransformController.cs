@@ -1,7 +1,7 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+public enum PlayerForm { Human, Dog, Cat }
 
 [RequireComponent(typeof(PlayerInputHandler))]
 [RequireComponent(typeof(PlayerHorizontalMovement))]
@@ -33,7 +33,8 @@ public class PlayerTransformController : MonoBehaviour
     public PlayerDash Dash { get; private set; }
     public PlayerAnimator PlayerAnimator { get; private set; }
 
-    public bool IsHitStopped { get; private set; }
+    // 히트스톱 상태는 HitStopManager(전역 timeScale 소유자)에 위임.
+    public bool IsHitStopped => HitStopManager.Instance != null && HitStopManager.Instance.IsActive;
 
     public bool IsCatForm => currentState == catState;
 
@@ -76,8 +77,9 @@ public class PlayerTransformController : MonoBehaviour
 
     private void Start()
     {
-        // 기본 상태: 인간
-        ChangeState(humanState);
+        // 마지막 변신 형태 복원 (없으면 인간). 씬 전환 사이 형태 유지.
+        PlayerForm form = GameState.Instance != null ? GameState.Instance.savedForm : PlayerForm.Human;
+        ChangeState(StateFor(form));
     }
 
     private void OnEnable()
@@ -100,6 +102,19 @@ public class PlayerTransformController : MonoBehaviour
 
     private void HandleTransformCat() => ChangeState(catState);
 
+    /// <summary>현재 변신 형태를 PlayerForm 열거값으로 반환.</summary>
+    public PlayerForm CurrentForm =>
+        currentState == dogState ? PlayerForm.Dog :
+        currentState == catState ? PlayerForm.Cat :
+        PlayerForm.Human;
+
+    private ITransformState StateFor(PlayerForm form) => form switch
+    {
+        PlayerForm.Dog => dogState,
+        PlayerForm.Cat => catState,
+        _              => humanState,
+    };
+
     private void ChangeState(ITransformState newState)
     {
         if (currentState == newState)
@@ -119,34 +134,15 @@ public class PlayerTransformController : MonoBehaviour
         currentState = newState;
         currentState.Enter();
 
+        // 현재 형태를 영속화 → 씬 전환 후 복원에 사용
+        if (GameState.Instance != null)
+            GameState.Instance.savedForm = CurrentForm;
+
         if (comingFromCat && newState == humanState)
         {
             SneakWindowActivatedAt = Time.time;
             Debug.Log("[PlayerTransformController] 스니크 윈도우 활성화");
         }
 
-    }
-
-    public void HitStop(Rigidbody2D enemyRb, float duration, Action onEnd = null)
-    {
-        StartCoroutine(HitStopCoroutine(enemyRb, duration, onEnd));
-    }
-
-    private IEnumerator HitStopCoroutine(Rigidbody2D enemyRb, float duration, Action onEnd)
-    {
-        IsHitStopped = true;
-
-        Time.timeScale = 0f;
-
-        Debug.Log($"[PlayerTransformController] 히트스톱 시작 ({duration}s)");
-
-        yield return new WaitForSecondsRealtime(duration);
-
-        Time.timeScale = 1f;
-
-        IsHitStopped = false;
-        Debug.Log("[PlayerTransformController] 히트스톱 종료");
-
-        onEnd?.Invoke();
     }
 }

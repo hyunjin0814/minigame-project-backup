@@ -12,6 +12,10 @@ public class HUDController : MonoBehaviour
     {
         InventoryManager.OnItemAdded   += HandleItemAdded;
         InventoryManager.OnItemRemoved += HandleItemRemoved;
+
+        // 씬 전환 후: InventoryManager는 유지되지만 추가 이벤트는 이미 지나갔으므로
+        // 현재 보유 목록으로 슬롯을 다시 채운다.
+        SyncFromInventory();
     }
 
     private void OnDisable()
@@ -30,6 +34,19 @@ public class HUDController : MonoBehaviour
     private void HandleItemRemoved(InventoryItemData item)
     {
         if (!_slotItems.Remove(item)) return;
+        RefreshSlots();
+    }
+
+    private void SyncFromInventory()
+    {
+        if (InventoryManager.Instance == null) return;
+
+        _slotItems.Clear();
+        foreach (var item in InventoryManager.Instance.Items)
+        {
+            if (_slotItems.Count >= itemSlots.Length) break;
+            _slotItems.Add(item);
+        }
         RefreshSlots();
     }
 

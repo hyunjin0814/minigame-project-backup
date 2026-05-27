@@ -264,6 +264,7 @@ public class CombatEnemy : EnemyBase
     protected override int ApplySpecialModifier(int damage, Vector2 source)
     {
         bool isBackstab = IsBackstabCondition(source);
+        LastHitWasBackstab = isBackstab; // 히트스톱 치명타 판정용 (EnemyBase가 노출)
         int result = isBackstab ? damage * _backstabMultiplier : damage;
         Debug.Log($"[CombatEnemy] ApplySpecialModifier: damage={damage}, isBackstab={isBackstab}, result={result}");
         return result;

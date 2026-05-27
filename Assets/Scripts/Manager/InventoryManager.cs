@@ -10,6 +10,9 @@ public class InventoryManager : MonoBehaviour
 
     private readonly List<InventoryItemData> _items = new();
 
+    /// <summary>현재 보유 아이템 (씬 전환 후 HUD 재구성에 사용).</summary>
+    public IReadOnlyList<InventoryItemData> Items => _items;
+
     private void Awake()
     {
         if (Instance != null)
@@ -18,6 +21,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject); // 씬 전환 시 수집 아이템(열쇠 등) 유지
     }
 
     public void Add(ItemData data)
