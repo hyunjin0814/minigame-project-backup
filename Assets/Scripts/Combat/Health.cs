@@ -37,4 +37,11 @@ public class Health : MonoBehaviour, IDamageable
         Debug.Log($"[Health] 회복 +{amount} → {CurrentHp}/{maxHp}");
         OnHeal?.Invoke(amount);
     }
+
+    public void IncreaseMaxHp(int amount)
+    {
+        maxHp += amount;
+        Debug.Log($"[Health] 최대 HP +{amount} → {maxHp}");
+        Heal(amount);
+    }
 }
