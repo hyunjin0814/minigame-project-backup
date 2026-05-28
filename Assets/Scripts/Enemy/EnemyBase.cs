@@ -25,6 +25,12 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     [SerializeField]
     private float _weaknessDamageMultiplier = 2f;
 
+    [Header("Death")]
+    [SerializeField]
+    private float _deathAnimDuration = 2f;
+
+    public bool IsDead { get; private set; }
+
     protected Health _health;
     protected int _hp => _health.CurrentHp;
 
@@ -43,6 +49,13 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     public bool IsWeaknessExposed { get; private set; }
     public event Action<bool> OnWeaknessChanged;
     private float _weaknessTimer;
+
+    // ── 시각 표현용 이벤트 (EnemyAnimator가 구독) ─────────────
+    public event Action AttackPerformed;
+    public event Action Hurt;
+    public event Action Died;
+
+    protected void RaiseAttackPerformed() => AttackPerformed?.Invoke();
 
     // ── 라이프사이클 ─────────────────────────────────────────
     protected virtual void Awake()
@@ -66,6 +79,7 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
 
     protected virtual void Update()
     {
+        if (IsDead) return;
         TickDebuff();
         TickWeakness();
     }
@@ -79,15 +93,48 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     {
         if (_health.CurrentHp <= 0)
             return;
+        Hurt?.Invoke();
+
+        // 피격으로 공격 캔슬 — 활성화된 hitbox 즉시 정리
+        DeactivateAllHitboxes();
+
         if (_currentState == EnemyState.Chase || _currentState == EnemyState.Attack)
             return;
         _lastKnownPlayerPosition = attackerPosition;
         ChangeState(EnemyState.Chase);
     }
 
+    private void DeactivateAllHitboxes()
+    {
+        foreach (var hitbox in GetComponentsInChildren<AttackHitbox>(true))
+            hitbox.Deactivate();
+    }
+
     protected virtual void Die()
     {
+        if (IsDead) return;
+        IsDead = true;
+
         Debug.Log($"[{GetType().Name}] 사망");
+        Died?.Invoke();
+
+        // 약점 즉시 해제 — 강아지가 시체를 마킹하지 못하게
+        if (IsWeaknessExposed) ClearWeakness();
+
+        // 자식 hitbox만 비활성화 — 본체 콜라이더는 유지 (땅 위 안착).
+        // 적/플레이어는 Layer로 충돌 분리돼있어 본체 콜라이더가 켜져있어도 OK.
+        DeactivateAllHitboxes();
+
+        // 잔여 속도 정지 (FixedUpdate가 IsDead 가드로 막혀있어 명시적으로 0)
+        var rb = GetComponent<Rigidbody2D>();
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+
+        // Death 애니메이션 재생 시간 확보 후 비활성화
+        Invoke(nameof(DisableAfterDeath), _deathAnimDuration);
+    }
+
+    private void DisableAfterDeath()
+    {
         gameObject.SetActive(false);
     }
 
