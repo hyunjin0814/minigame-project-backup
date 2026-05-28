@@ -351,8 +351,8 @@ MonoBehaviour:
   _sneakWindowDuration: 1.5
   _patrolSpeed: 3
   _chaseSpeed: 5
-  _wallCheckDistance: 0.3
-  _edgeCheckDistance: 0.5
+  _wallCheckDistance: 1
+  _edgeCheckDistance: 1.5
   _groundLayer:
     serializedVersion: 2
     m_Bits: 2112

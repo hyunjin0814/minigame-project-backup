@@ -36,6 +36,19 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     // 페이즈 전환 무적 (연출 없이 순수 데미지 차단)
     private bool phaseInvincible;
 
+    // ── 색상 의도 시스템 ─────────────────────────────────────
+    // Sprite.color는 여러 시스템이 공유(텔레그래프/그로기/Hit 플래시).
+    // 각 시스템은 SetIntentColor로 "원하는 색"을 등록. Hit 플래시는 짧게 빨강을 덮은 뒤
+    // intentColor로 복원 — 텔레그래프/그로기 틴트가 사라지지 않게.
+    private Color _intentColor = Color.white;
+    private bool _isHitFlashing;
+
+    public void SetIntentColor(Color c)
+    {
+        _intentColor = c;
+        if (!_isHitFlashing) Sprite.color = c;
+    }
+
     // ── 약점 시스템 (IWeaknessTarget) ─────────────────────────
     public bool IsWeaknessExposed { get; private set; }
     public event Action<bool> OnWeaknessChanged;
@@ -48,6 +61,14 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     public event Action OnGroggyStarted;
     public event Action OnGroggyEnded;
     private float _groggyTimer;
+
+    // ── 시각 표현용 이벤트 (BossAnimator가 구독) ─────────────
+    public event Action Hurt;
+    public event Action Died;
+    public event Action AttackPerformed;
+    public event Action TelegraphPerformed;
+    public void RaiseAttackPerformed() => AttackPerformed?.Invoke();
+    public void RaiseTelegraphPerformed() => TelegraphPerformed?.Invoke();
 
     protected virtual void Awake()
     {
@@ -86,6 +107,17 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     }
 
     public void TransitionTo(BossStateBase next) => Fsm.ChangeState(next);
+
+    // 플레이어 방향으로 한 번 flip — 각 패턴 시작 시점에 호출
+    public void FacePlayer()
+    {
+        if (PlayerTarget == null) return;
+        float dx = PlayerTarget.position.x - transform.position.x;
+        if (Mathf.Abs(dx) < 0.01f) return;
+        Vector3 s = transform.localScale;
+        s.x = dx > 0f ? Mathf.Abs(s.x) : -Mathf.Abs(s.x);
+        transform.localScale = s;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision) => HitWall = true;
 
@@ -131,7 +163,7 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         IsGroggy = true;
         _groggyTimer = duration;
         Rb.linearVelocity = Vector2.zero;
-        Sprite.color = new Color(0.6f, 0.7f, 1f); // 임시 파란 틴트 + 강아지 아이콘(BossGroggyIndicator) 병행
+        SetIntentColor(new Color(0.6f, 0.7f, 1f)); // 임시 파란 틴트 + 강아지 아이콘(BossGroggyIndicator) 병행
         Debug.Log($"[Boss] Groggy 진입 ({duration:F1}s)");
         OnGroggyStarted?.Invoke();
     }
@@ -140,7 +172,7 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     {
         if (!IsGroggy) return;
         IsGroggy = false;
-        Sprite.color = Color.white;
+        SetIntentColor(Color.white);
         if (IsWeaknessExposed) ClearWeakness(); // Q5 A: 그로기 잔여 시간 = 약점 윈도우 상한
         Debug.Log("[Boss] Groggy 종료");
         OnGroggyEnded?.Invoke();
@@ -163,17 +195,21 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     private void OnHit(int amount, Vector2 _)
     {
         StartCoroutine(HitFlashRoutine());
+        Hurt?.Invoke();
     }
 
     // 피격 무적: 색 플래시 0.1s + 무적 0.4s
+    // 플래시 후 intentColor로 복원 — 텔레그래프/그로기 틴트가 사라지지 않게.
     private IEnumerator HitFlashRoutine()
     {
         hitInvincible = true;
         RefreshInvincible();
 
+        _isHitFlashing = true;
         Sprite.color = Color.red;
         yield return new WaitForSeconds(0.1f);
-        Sprite.color = Color.white;
+        _isHitFlashing = false;
+        Sprite.color = _intentColor;
         yield return new WaitForSeconds(0.3f);
 
         hitInvincible = false;
@@ -186,6 +222,7 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         Health.OnDeath -= OnDeath;
         if (IsWeaknessExposed) ClearWeakness();
         if (IsGroggy) ExitGroggy();
+        Died?.Invoke();
         Fsm.ChangeState(DeathState);
     }
 

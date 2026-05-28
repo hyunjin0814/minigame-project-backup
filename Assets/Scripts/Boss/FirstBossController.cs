@@ -25,6 +25,7 @@ public class FirstBossController : BossBase
         warningArrowHeadSize = 1.2f,
         warningBlinkInterval = 0.25f,
         groggyDurationOnWallHit = 2.5f,
+        throwAnimDuration = 0.4f,
     };
 
     [Header("Dash Hitbox")]

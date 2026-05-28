@@ -19,6 +19,7 @@ public class BossPhase1State : BossStateBase
         public float warningArrowHeadSize; // 화살촉 크기 (월드 유닛, 권장 1.0~1.5)
         public float warningBlinkInterval; // 깜빡임 한 사이클 시간 (s, 권장 0.2~0.3)
         public float groggyDurationOnWallHit; // 돌진 벽 충돌 후 그로기 지속 (권장 2.5~3f)
+        public float throwAnimDuration;    // 투사체 패턴 시작 던지기 모션 길이 (Attack3 3~6 = 약 0.4s)
     }
 
     private readonly Settings settings;
@@ -81,13 +82,15 @@ public class BossPhase1State : BossStateBase
     {
         if (Boss.PlayerTarget == null) { isExecutingPattern = false; yield break; }
 
-        // 텔레그래프: 방향 락온 (수평만) + 색 변경
+        // 텔레그래프: 방향 락온 (수평만) + 색 변경 + 예고 애니메이션
+        Boss.FacePlayer();
         float xSign = Mathf.Sign(Boss.PlayerTarget.position.x - Boss.transform.position.x);
         if (xSign == 0f) xSign = 1f; // 정확히 같은 x — fallback
         Vector2 dir = new Vector2(xSign, 0f);
-        Boss.Sprite.color = new Color(1f, 0.6f, 0f); // 주황색 = 돌진 예고
+        Boss.SetIntentColor(new Color(0.7f, 0.3f, 1f)); // 보라색 = 돌진 예고 (빨강 hit 플래시와 대조)
+        Boss.RaiseTelegraphPerformed();
         yield return new WaitForSeconds(settings.telegraphDuration);
-        Boss.Sprite.color = Color.white;
+        Boss.SetIntentColor(Color.white);
 
         // 돌진 — 수평만, 중력 일시 제거 (포물선 방지)
         Boss.HitWall = false;
@@ -135,7 +138,7 @@ public class BossPhase1State : BossStateBase
         isExecutingPattern = false;
     }
 
-    // 패턴 2: 사각 영역 내 랜덤 위치에서 순차 발사 (화살표 예고 + 깜빡임)
+    // 패턴 2: 던지기 모션 1번 후, 사각 영역 내 랜덤 위치에서 순차 발사 (화살표 예고 + 깜빡임)
     private IEnumerator ShootRoutine()
     {
         if (Boss.PlayerTarget == null)
@@ -143,6 +146,11 @@ public class BossPhase1State : BossStateBase
             isExecutingPattern = false;
             yield break;
         }
+
+        // 던지기 모션 한 번 (Attack3 3~6 프레임)
+        Boss.FacePlayer();
+        Boss.RaiseAttackPerformed();
+        yield return new WaitForSeconds(settings.throwAnimDuration);
 
         for (int i = 0; i < settings.shotCount; i++)
         {
