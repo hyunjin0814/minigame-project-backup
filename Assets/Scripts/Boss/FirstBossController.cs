@@ -22,6 +22,8 @@ public class FirstBossController : BossBase
         shotCount = 3,
         warningDuration = 1f,
         warningLineLength = 20f,
+        warningArrowHeadSize = 1.2f,
+        warningBlinkInterval = 0.25f,
         groggyDurationOnWallHit = 2.5f,
     };
 
@@ -29,17 +31,33 @@ public class FirstBossController : BossBase
     [SerializeField]
     private AttackHitbox dashHitbox;
 
-    [Header("Projectile")]
+    [Header("Projectile Spawn Area (월드 좌표)")]
+    [Tooltip("이 사각 영역 안에서 매번 랜덤 위치로 발사. 씬뷰에서 주황 외곽선으로 시각화")]
     [SerializeField]
-    private Transform[] projectileSpawnPoints;
+    private Vector2 projectileSpawnAreaMin;
+
+    [SerializeField]
+    private Vector2 projectileSpawnAreaMax;
 
     [SerializeField]
     private LineRenderer warningLine;
 
     public ProjectilePool Pool { get; private set; }
     public AttackHitbox DashHitbox => dashHitbox;
-    public Transform[] ProjectileSpawnPoints => projectileSpawnPoints;
+    public Vector2 ProjectileSpawnAreaMin => projectileSpawnAreaMin;
+    public Vector2 ProjectileSpawnAreaMax => projectileSpawnAreaMax;
     public LineRenderer WarningLine => warningLine;
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        // 발사체 스폰 영역 시각화 (씬뷰 전용)
+        Gizmos.color = new Color(1f, 0.5f, 0f, 0.7f);
+        Vector2 center = (projectileSpawnAreaMin + projectileSpawnAreaMax) * 0.5f;
+        Vector2 size   = projectileSpawnAreaMax - projectileSpawnAreaMin;
+        Gizmos.DrawWireCube(center, size);
+    }
+#endif
 
     private BossIntroState introState;
     private BossPhase1State phase1State;

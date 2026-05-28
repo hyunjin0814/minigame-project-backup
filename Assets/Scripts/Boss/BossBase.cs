@@ -12,6 +12,11 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     [SerializeField]
     private GameObject stageClearZone;
 
+    [Header("Damage")]
+    [Tooltip("약점 노출 중 받는 데미지 배율 (EnemyBase와 동일 — 강아지 스캔 보상)")]
+    [SerializeField]
+    private float weaknessDamageMultiplier = 2f;
+
     public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Sprite { get; private set; }
     public Health Health { get; private set; }
@@ -31,9 +36,6 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     // 페이즈 전환 무적 (연출 없이 순수 데미지 차단)
     private bool phaseInvincible;
 
-    // 약점 무적 — 평소 true, ExposeWeakness 동안만 false (디자인: 강아지 스캔으로만 데미지 가능)
-    private bool weaknessInvincible = true;
-
     // ── 약점 시스템 (IWeaknessTarget) ─────────────────────────
     public bool IsWeaknessExposed { get; private set; }
     public event Action<bool> OnWeaknessChanged;
@@ -52,7 +54,16 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         Rb = GetComponent<Rigidbody2D>();
         Sprite = GetComponent<SpriteRenderer>();
         Health = GetComponent<Health>();
+        Health.DamageModifier = ComputeFinalDamage;
         Fsm = new BossStateMachine();
+    }
+
+    // 약점 노출 중에는 데미지 ×weaknessDamageMultiplier (EnemyBase 일관성)
+    private int ComputeFinalDamage(int baseDamage, Vector2 source)
+    {
+        if (IsWeaknessExposed)
+            return Mathf.RoundToInt(baseDamage * weaknessDamageMultiplier);
+        return baseDamage;
     }
 
     protected virtual void Start()
@@ -90,7 +101,7 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
 
     private void RefreshInvincible()
     {
-        Health.IsInvincible = hitInvincible || phaseInvincible || weaknessInvincible;
+        Health.IsInvincible = hitInvincible || phaseInvincible;
     }
 
     // ── 약점/그로기 (IWeaknessTarget) ────────────────────────
@@ -99,11 +110,9 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         _weaknessTimer = duration;
         if (IsWeaknessExposed) return;
         IsWeaknessExposed = true;
-        weaknessInvincible = false;
-        RefreshInvincible();
         OnWeaknessChanged?.Invoke(true);
         WeaknessRegistry.NotifyExposed(this);
-        Debug.Log($"[Boss] 약점 노출 ({duration:F1}s)");
+        Debug.Log($"[Boss] 약점 노출 ({duration:F1}s) — 데미지 x{weaknessDamageMultiplier}");
     }
 
     public void ClearWeakness()
@@ -111,8 +120,6 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         if (!IsWeaknessExposed) return;
         IsWeaknessExposed = false;
         _weaknessTimer = 0f;
-        weaknessInvincible = true;
-        RefreshInvincible();
         OnWeaknessChanged?.Invoke(false);
         WeaknessRegistry.NotifyCleared(this);
         Debug.Log("[Boss] 약점 노출 종료");

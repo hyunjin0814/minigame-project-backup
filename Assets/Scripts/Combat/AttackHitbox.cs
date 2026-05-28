@@ -6,6 +6,9 @@ public class AttackHitbox : MonoBehaviour
 {
     [SerializeField] private int damage = 1;
 
+    /// <summary>디버그/치트용 공격력 외부 조정.</summary>
+    public int Damage { get => damage; set => damage = value; }
+
     [Header("Debug Visual")]
     [SerializeField] private bool showDebugVisual = false;
     [SerializeField] private Color debugColor = new Color(1f, 0.1f, 0.1f, 0.4f);
