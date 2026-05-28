@@ -454,15 +454,16 @@ MonoBehaviour:
   playerHealth: {fileID: 4930430848281739477}
   playerHitboxes:
   - {fileID: 3150398871384732234}
-  invincibleKey: 282
-  damageDownKey: 283
-  damageUpKey: 284
-  damageResetKey: 285
-  dashUnlockKey: 286
-  catUnlockKey: 287
-  dogUnlockKey: 288
-  unlockAllKey: 289
+  invincibleKey: 94
+  damageDownKey: 95
+  damageUpKey: 96
+  damageResetKey: 97
+  dashUnlockKey: 98
+  catUnlockKey: 99
+  dogUnlockKey: 100
+  unlockAllKey: 101
   showHud: 1
+  hudFontSize: 22
 --- !u!1 &3114766012271509267
 GameObject:
   m_ObjectHideFlags: 0
