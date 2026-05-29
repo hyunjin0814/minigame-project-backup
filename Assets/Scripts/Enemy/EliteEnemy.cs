@@ -24,6 +24,7 @@ public class EliteEnemy : SentryEnemy
     protected override void Update()
     {
         base.Update();
+        if (IsDead) return;
         TickGuard();
     }
 
@@ -72,6 +73,7 @@ public class EliteEnemy : SentryEnemy
 
     protected override void FixedUpdate()
     {
+        if (IsDead) return;
         if (_isGuarding)
         {
             _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);

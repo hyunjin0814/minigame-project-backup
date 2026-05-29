@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 8696918793804813526}
   - component: {fileID: 8254352875059144918}
   - component: {fileID: 9020619589307715935}
+  - component: {fileID: 1705508374871902871}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -438,6 +439,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d30dc6dc3f718e24a8c58eceb6b821d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
+--- !u!114 &1705508374871902871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090410412562405907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1301cda2cebb904fa95e331d09045c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugCheats
+  playerHealth: {fileID: 4930430848281739477}
+  playerHitboxes:
+  - {fileID: 3150398871384732234}
+  invincibleKey: 94
+  damageDownKey: 95
+  damageUpKey: 96
+  damageResetKey: 97
+  dashUnlockKey: 98
+  catUnlockKey: 99
+  dogUnlockKey: 100
+  unlockAllKey: 101
+  showHud: 1
+  hudFontSize: 22
 --- !u!1 &3114766012271509267
 GameObject:
   m_ObjectHideFlags: 0

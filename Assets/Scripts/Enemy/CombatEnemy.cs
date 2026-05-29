@@ -33,6 +33,10 @@ public class CombatEnemy : EnemyBase
     [SerializeField]
     private LayerMask _groundLayer;
 
+    // 플레이어가 적의 X축 기준 이 거리 이내에 있으면 facing 갱신·X 이동 정지 → 수직 정렬 시 떨림 방지
+    [SerializeField]
+    private float _facingDeadzone = 0.3f;
+
     [Header("State Timers")]
     [SerializeField]
     private float _detectDelay = 0.3f;
@@ -59,6 +63,7 @@ public class CombatEnemy : EnemyBase
     private float _detectTimer;
     private float _searchTimer;
     private float _attackTimer;
+    private bool _hasAttackedThisEntry;
     private bool _arrivedAtSearch;
 
     // ── 라이프사이클 ─────────────────────────────────────────
@@ -72,6 +77,7 @@ public class CombatEnemy : EnemyBase
     protected override void Update()
     {
         base.Update(); // TickDebuff
+        if (IsDead) return;
 
         switch (_currentState)
         {
@@ -91,7 +97,11 @@ public class CombatEnemy : EnemyBase
                 if (_player != null)
                 {
                     _lastKnownPlayerPosition = _player.position;
-                    UpdateFacing(_player.position.x > transform.position.x ? 1 : -1);
+
+                    // deadzone 밖일 때만 facing 갱신 — 수직 정렬 시 좌우 떨림 방지
+                    float dxChase = _player.position.x - transform.position.x;
+                    if (Mathf.Abs(dxChase) > _facingDeadzone)
+                        UpdateFacing(dxChase > 0 ? 1 : -1);
 
                     // 수직 추격 차단 — 발판 없는 맵에선 거의 발동 안 함 (안전장치)
                     if (IsPlayerTooHigh() && !IsPlayerInDetectCircle())
@@ -140,20 +150,26 @@ public class CombatEnemy : EnemyBase
                     break;
                 }
 
-                UpdateFacing(_player.position.x > transform.position.x ? 1 : -1);
+                float dxAtk = _player.position.x - transform.position.x;
+                if (Mathf.Abs(dxAtk) > _facingDeadzone)
+                    UpdateFacing(dxAtk > 0 ? 1 : -1);
 
                 if (_attackBehavior != null)
                 {
-                    if (!_attackBehavior.IsInRange(_player))
-                    {
-                        ChangeState(EnemyState.Chase);
-                        break;
-                    }
                     _attackTimer -= Time.deltaTime;
                     if (_attackTimer <= 0f)
                     {
+                        // cooldown 끝 — 사정거리 체크해서 카이팅 시 Chase 복귀
+                        if (_hasAttackedThisEntry && !_attackBehavior.IsInRange(_player))
+                        {
+                            ChangeState(EnemyState.Chase);
+                            break;
+                        }
+                        // 사정거리 안 → 공격 실행
+                        RaiseAttackPerformed();
                         _attackBehavior.DoAttack(_player);
                         _attackTimer = _attackCooldown;
+                        _hasAttackedThisEntry = true;
                     }
                 }
                 break;
@@ -162,6 +178,7 @@ public class CombatEnemy : EnemyBase
 
     private void FixedUpdate()
     {
+        if (IsDead) return;
         switch (_currentState)
         {
             case EnemyState.Patrol:
@@ -174,11 +191,13 @@ public class CombatEnemy : EnemyBase
                 _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
                 break;
             case EnemyState.Chase:
-                _rb.linearVelocity = new Vector2(
-                    _facingDirection * _chaseSpeed,
-                    _rb.linearVelocity.y
-                );
+            {
+                // deadzone 안(수직 정렬)에서는 X 정지 — 좌우 떨림 방지
+                float dxFixed = (_player != null) ? _player.position.x - transform.position.x : 0f;
+                float xVelChase = Mathf.Abs(dxFixed) > _facingDeadzone ? _facingDirection * _chaseSpeed : 0f;
+                _rb.linearVelocity = new Vector2(xVelChase, _rb.linearVelocity.y);
                 break;
+            }
             case EnemyState.Combat:
                 float xVel = _arrivedAtSearch ? 0f : _facingDirection * _patrolSpeed;
                 _rb.linearVelocity = new Vector2(xVel, _rb.linearVelocity.y);
@@ -253,6 +272,7 @@ public class CombatEnemy : EnemyBase
                 break;
             case EnemyState.Attack:
                 _attackTimer = _attackWindup;
+                _hasAttackedThisEntry = false;
                 break;
         }
         base.ChangeState(newState);

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6835852775889991999}
   - component: {fileID: 1648163341155881294}
   - component: {fileID: 2420784141390044372}
+  - component: {fileID: 1411888956540862433}
   m_Layer: 8
   m_Name: Middle_Boss
   m_TagString: Boss
@@ -85,7 +86,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -164,8 +165,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73b13167c7e48ed4191e464a127ac5ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirstBossController
-  dropItemPrefab: {fileID: 2707131361716664896, guid: ec07e4a5ff77e284194ac8eeeebc18c0, type: 3}
+  dropItemPrefab: {fileID: 7793083615704360843, guid: c904c5428ab2a5c4ab0fc9d1ae483956, type: 3}
   stageClearZone: {fileID: 0}
+  weaknessDamageMultiplier: 2
   phase2HpThreshold: 0
   phase1Settings:
     patternCooldown: 2
@@ -176,15 +178,12 @@ MonoBehaviour:
     shotCount: 3
     warningDuration: 1
     warningLineLength: 20
+    warningArrowHeadSize: 1.2
+    warningBlinkInterval: 0.25
+    groggyDurationOnWallHit: 2.5
   dashHitbox: {fileID: 2723762974076273248}
-  projectileSpawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  projectileSpawnAreaMin: {x: 18, y: 0}
+  projectileSpawnAreaMax: {x: 51, y: 8}
   warningLine: {fileID: 0}
 --- !u!61 &2420784141390044372
 BoxCollider2D:
@@ -220,7 +219,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.01}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -230,8 +229,21 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.9, y: 0.95}
   m_EdgeRadius: 0
+--- !u!114 &1411888956540862433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2405616681351786530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c8d4f2f0ec3d24ab6634e9ac74e53f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitStopProfile
+  baseType: 1
 --- !u!1 &2620936388836080294
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,3 +336,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
   damage: 1
+  showDebugVisual: 0
+  debugColor: {r: 1, g: 0.1, b: 0.1, a: 0.4}

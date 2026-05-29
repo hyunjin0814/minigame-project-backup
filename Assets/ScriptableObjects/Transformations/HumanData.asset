@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: HumanData
   m_EditorClassIdentifier: Assembly-CSharp::TransformationData
   formName: Human
-  colliderSize: {x: 1.2, y: 1.85}
-  colliderOffset: {x: -0.1, y: 1}
+  colliderSize: {x: 0.9, y: 1.85}
+  colliderOffset: {x: 0, y: 1}
   maxSpeed: 9
   accelTime: 0.08
   decelTime: 0.05

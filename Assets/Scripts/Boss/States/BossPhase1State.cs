@@ -16,7 +16,10 @@ public class BossPhase1State : BossStateBase
         public int shotCount;            // 발사체 발사 횟수
         public float warningDuration;    // 궤적 예고선 표시 시간 (초)
         public float warningLineLength;  // 예고선 길이
+        public float warningArrowHeadSize; // 화살촉 크기 (월드 유닛, 권장 1.0~1.5)
+        public float warningBlinkInterval; // 깜빡임 한 사이클 시간 (s, 권장 0.2~0.3)
         public float groggyDurationOnWallHit; // 돌진 벽 충돌 후 그로기 지속 (권장 2.5~3f)
+        public float throwAnimDuration;    // 투사체 패턴 시작 던지기 모션 길이 (Attack3 3~6 = 약 0.4s)
     }
 
     private readonly Settings settings;
@@ -79,13 +82,15 @@ public class BossPhase1State : BossStateBase
     {
         if (Boss.PlayerTarget == null) { isExecutingPattern = false; yield break; }
 
-        // 텔레그래프: 방향 락온 (수평만) + 색 변경
+        // 텔레그래프: 방향 락온 (수평만) + 색 변경 + 예고 애니메이션
+        Boss.FacePlayer();
         float xSign = Mathf.Sign(Boss.PlayerTarget.position.x - Boss.transform.position.x);
         if (xSign == 0f) xSign = 1f; // 정확히 같은 x — fallback
         Vector2 dir = new Vector2(xSign, 0f);
-        Boss.Sprite.color = new Color(1f, 0.6f, 0f); // 주황색 = 돌진 예고
+        Boss.SetIntentColor(new Color(0.7f, 0.3f, 1f)); // 보라색 = 돌진 예고 (빨강 hit 플래시와 대조)
+        Boss.RaiseTelegraphPerformed();
         yield return new WaitForSeconds(settings.telegraphDuration);
-        Boss.Sprite.color = Color.white;
+        Boss.SetIntentColor(Color.white);
 
         // 돌진 — 수평만, 중력 일시 제거 (포물선 방지)
         Boss.HitWall = false;
@@ -133,25 +138,37 @@ public class BossPhase1State : BossStateBase
         isExecutingPattern = false;
     }
 
-    // 패턴 2: 랜덤 스폰 포인트에서 순차 발사 (궤적 예고 포함)
+    // 패턴 2: 던지기 모션 1번 후, 사각 영역 내 랜덤 위치에서 순차 발사 (화살표 예고 + 깜빡임)
     private IEnumerator ShootRoutine()
     {
-        if (Boss.PlayerTarget == null || firstBoss.ProjectileSpawnPoints.Length == 0)
+        if (Boss.PlayerTarget == null)
         {
             isExecutingPattern = false;
             yield break;
         }
 
+        // 던지기 모션 한 번 (Attack3 3~6 프레임)
+        Boss.FacePlayer();
+        Boss.RaiseAttackPerformed();
+        yield return new WaitForSeconds(settings.throwAnimDuration);
+
         for (int i = 0; i < settings.shotCount; i++)
         {
-            // 랜덤 스폰 포인트 선택
-            int idx = Random.Range(0, firstBoss.ProjectileSpawnPoints.Length);
-            Vector2 from = firstBoss.ProjectileSpawnPoints[idx].position;
+            // 영역 내 랜덤 좌표 (월드 좌표)
+            Vector2 areaMin = firstBoss.ProjectileSpawnAreaMin;
+            Vector2 areaMax = firstBoss.ProjectileSpawnAreaMax;
+            Vector2 from = new Vector2(
+                Random.Range(areaMin.x, areaMax.x),
+                Random.Range(areaMin.y, areaMax.y)
+            );
             Vector2 dir = ((Vector2)Boss.PlayerTarget.position - from).normalized;
 
-            // 궤적 예고선 표시
-            ShowWarningLine(from, from + dir * settings.warningLineLength);
-            yield return new WaitForSeconds(settings.warningDuration);
+            // 깜빡이는 화살표 예고
+            yield return ShowWarningArrow(
+                from,
+                from + dir * settings.warningLineLength,
+                settings.warningDuration
+            );
 
             // 발사 + 예고선 제거
             HideWarningLine();
@@ -161,13 +178,55 @@ public class BossPhase1State : BossStateBase
         isExecutingPattern = false;
     }
 
-    private void ShowWarningLine(Vector2 start, Vector2 end)
+    // 화살표 모양 LineRenderer 표시 + 알파 PingPong 깜빡임
+    private IEnumerator ShowWarningArrow(Vector2 start, Vector2 end, float duration)
     {
         var lr = firstBoss.WarningLine;
-        if (lr == null) return;
-        lr.gameObject.SetActive(true);
+        if (lr == null)
+        {
+            yield return new WaitForSeconds(duration);
+            yield break;
+        }
+
+        // 화살표 5점 구성: start → tip → wing1 → tip → wing2
+        // (tip 경유 overdraw로 V자 화살촉을 단일 LineRenderer로 표현)
+        Vector2 dir = end - start;
+        if (dir.sqrMagnitude < 0.0001f) dir = Vector2.right;
+        dir.Normalize();
+        Vector2 perp = new Vector2(-dir.y, dir.x);
+        float h = settings.warningArrowHeadSize;
+        Vector2 wing1 = end - dir * h + perp * h * 0.6f;
+        Vector2 wing2 = end - dir * h - perp * h * 0.6f;
+
+        lr.positionCount = 5;
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
+        lr.SetPosition(2, wing1);
+        lr.SetPosition(3, end);
+        lr.SetPosition(4, wing2);
+        lr.gameObject.SetActive(true);
+
+        // 깜빡임: 알파를 PingPong으로 0.25~1.0 사이 진동
+        Color baseStart = lr.startColor;
+        Color baseEnd = lr.endColor;
+        float elapsed = 0f;
+        float blinkInterval = Mathf.Max(0.01f, settings.warningBlinkInterval);
+        while (elapsed < duration)
+        {
+            float t = Mathf.PingPong(elapsed / blinkInterval, 1f);
+            float alpha = Mathf.Lerp(0.25f, 1f, t);
+            Color cs = baseStart; cs.a = alpha;
+            Color ce = baseEnd;   ce.a = alpha;
+            lr.startColor = cs;
+            lr.endColor   = ce;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // 알파 복원 (다음 사용에 영향 없도록)
+        baseStart.a = 1f; baseEnd.a = 1f;
+        lr.startColor = baseStart;
+        lr.endColor   = baseEnd;
     }
 
     private void HideWarningLine()

@@ -35,6 +35,9 @@ public class SentryEnemy : EnemyBase
     [SerializeField] private float _edgeCheckDistance = 0.5f;
     [SerializeField] private LayerMask _groundLayer;
 
+    // 플레이어가 적의 X축 기준 이 거리 이내에 있으면 facing 갱신·X 이동 정지 → 수직 정렬 시 떨림 방지
+    [SerializeField] private float _facingDeadzone = 0.3f;
+
     // Day 10 비밀방 부서짐 연출과 연결 예정. 현재는 빈 이벤트.
     public event Action OnSentryDetected;
 
@@ -55,6 +58,7 @@ public class SentryEnemy : EnemyBase
     private float _detectTimer;
     private float _searchTimer;
     private float _attackTimer;
+    private bool _hasAttackedThisEntry;
     private bool _arrivedAtSearch;
 
     // ── 라이프사이클 ─────────────────────────────────────────
@@ -68,6 +72,7 @@ public class SentryEnemy : EnemyBase
     protected override void Update()
     {
         base.Update(); // TickDebuff
+        if (IsDead) return;
 
         switch (_currentState)
         {
@@ -87,7 +92,11 @@ public class SentryEnemy : EnemyBase
                 if (_player != null)
                 {
                     _lastKnownPlayerPosition = _player.position;
-                    UpdateFacing(_player.position.x > transform.position.x ? 1 : -1);
+
+                    // deadzone 밖일 때만 facing 갱신 — 수직 정렬 시 좌우 떨림 방지
+                    float dxChase = _player.position.x - transform.position.x;
+                    if (Mathf.Abs(dxChase) > _facingDeadzone)
+                        UpdateFacing(dxChase > 0 ? 1 : -1);
 
                     if (IsPlayerTooHigh() && !IsPlayerInViewRange())
                     {
@@ -129,11 +138,14 @@ public class SentryEnemy : EnemyBase
                     break;
                 }
 
-                UpdateFacing(_player.position.x > transform.position.x ? 1 : -1);
+                float dxAtk = _player.position.x - transform.position.x;
+                if (Mathf.Abs(dxAtk) > _facingDeadzone)
+                    UpdateFacing(dxAtk > 0 ? 1 : -1);
 
                 if (_attackBehavior != null)
                 {
-                    if (!_attackBehavior.IsInRange(_player))
+                    // 최소 1회 공격 보장 — windup 중에는 카이팅 차단, 공격 후부터 range 체크
+                    if (_hasAttackedThisEntry && !_attackBehavior.IsInRange(_player))
                     {
                         ChangeState(EnemyState.Chase);
                         break;
@@ -143,6 +155,7 @@ public class SentryEnemy : EnemyBase
                     {
                         _attackBehavior.DoAttack(_player);
                         _attackTimer = _attackCooldown;
+                        _hasAttackedThisEntry = true;
                     }
                 }
                 break;
@@ -151,6 +164,7 @@ public class SentryEnemy : EnemyBase
 
     protected virtual void FixedUpdate()
     {
+        if (IsDead) return;
         switch (_currentState)
         {
             case EnemyState.Patrol:
@@ -166,11 +180,13 @@ public class SentryEnemy : EnemyBase
                 break;
 
             case EnemyState.Chase:
-                _rb.linearVelocity = new Vector2(
-                    _facingDirection * _chaseSpeed,
-                    _rb.linearVelocity.y
-                );
+            {
+                // deadzone 안(수직 정렬)에서는 X 정지 — 좌우 떨림 방지
+                float dxFixed = (_player != null) ? _player.position.x - transform.position.x : 0f;
+                float xVelChase = Mathf.Abs(dxFixed) > _facingDeadzone ? _facingDirection * _chaseSpeed : 0f;
+                _rb.linearVelocity = new Vector2(xVelChase, _rb.linearVelocity.y);
                 break;
+            }
 
             case EnemyState.Combat:
                 float xVel = _arrivedAtSearch ? 0f : _facingDirection * _patrolSpeed;
@@ -268,6 +284,7 @@ public class SentryEnemy : EnemyBase
 
             case EnemyState.Attack:
                 _attackTimer = _attackWindup;
+                _hasAttackedThisEntry = false;
                 break;
 
             case EnemyState.Patrol:
