@@ -95,9 +95,8 @@ public class PlayerJump : MonoBehaviour
             return;
         }
 
-        // 다운 어택(포고) 중에만 차단 — 포고 velocity와 점프 충돌 방지
-        // 사이드·업 어택 중에는 점프 허용
-        if (attack != null && attack.IsPogoAttack)
+        // 공격 중에는 점프 차단 (공격 모션과 점프 충돌 방지)
+        if (attack != null && attack.IsAttacking)
         {
             doJump = false;
             doJumpCut = false;

@@ -66,8 +66,6 @@ public class PlayerAttack : MonoBehaviour
     public bool IsAttacking { get; private set; }
     public bool CanDash { get; private set; } = true;
     public bool IsAttackCycleActive => phase != AttackPhase.Ready;
-    /// <summary>다운 어택(포고) 활성 중 — PlayerJump가 포고 velocity 충돌 방지에 사용.</summary>
-    public bool IsPogoAttack => IsAttacking && currentDirection == AttackDirection.Down;
 
     private enum AttackPhase
     {
@@ -157,6 +155,11 @@ public class PlayerAttack : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer <= 0f)
                 {
+                    // 안전 정리: 어떤 경로로든 hitbox/IsAttacking이 남아있으면 리셋
+                    hitbox.Deactivate();
+                    IsAttacking = false;
+                    CanDash = true;
+
                     phase = AttackPhase.Ready;
                     comboResetTimer = comboWindow;
 
@@ -235,8 +238,7 @@ public class PlayerAttack : MonoBehaviour
                 break;
         }
 
-        hitbox.SetBox(offset, size);
-        hitbox.Activate(); // 코드 타이밍으로 즉시 활성화 — 애니메이션 이벤트 의존 제거
+        hitbox.SetBox(offset, size); // 활성화는 애니메이션 이벤트(ActivateHitbox)에서
         IsAttacking = true;
         CanDash = false;
 
@@ -254,17 +256,22 @@ public class PlayerAttack : MonoBehaviour
         CanDash = true;
     }
 
-    // 애니메이션 이벤트에서 호출 (ExecuteAttack에서 이미 Activate하므로 중복 호출 무시)
+    // 애니메이션 이벤트에서 호출 — 공격 모션의 특정 프레임에 히트박스 활성화
     public void ActivateHitbox()
     {
-        if (phase != AttackPhase.Attacking && phase != AttackPhase.Cooldown)
+        Debug.Log($"[PlayerAttack] ActivateHitbox 호출됨, phase={phase}, dir={currentDirection}");
+
+        // 공격 사이클이 아닐 때(Ready)만 무시.
+        // 코드 타이머가 먼저 만료돼 Cooldown으로 넘어간 뒤 이벤트가 와도
+        // 정상 활성화되도록 Attacking 윈도우를 (재)시작한다.
+        if (phase == AttackPhase.Ready)
             return;
 
-        // ExecuteAttack()에서 이미 활성화됨 — 애니메이션 이벤트가 늦게 오거나 아예 안 와도 문제없음
         hitbox?.Activate();
         IsAttacking = true;
         CanDash = false;
-        // timer는 ExecuteAttack에서 이미 설정됨 — 애니메이션 이벤트로 리셋하지 않음
+        timer = attackDuration;        // 활성화 시점부터 attackDuration 동안 유지
+        phase = AttackPhase.Attacking; // Cooldown이었으면 다시 Attacking으로
     }
 
     // 애니메이션 이벤트에서 호출

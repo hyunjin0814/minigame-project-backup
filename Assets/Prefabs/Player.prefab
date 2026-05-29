@@ -270,8 +270,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   hitbox: {fileID: 3150398871384732234}
-  attackDuration: 0.2
-  attackCooldown: 0.4
+  attackDuration: 0.15
+  attackCooldown: 0.3
   comboWindow: 0.5
   attackBuffer: 0.1
   hitboxOffsetSide: {x: 1.2, y: 0.9}
@@ -365,8 +365,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd81f64332204ad44bc9c0af5ed26257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHurtEffect
+  iframeDuration: 1
   flickerInterval: 0.1
-  flickerDuration: 1
+  knockbackForce: 8
+  knockbackUpForce: 3
+  knockbackDuration: 0.15
 --- !u!114 &8872950342180781239
 MonoBehaviour:
   m_ObjectHideFlags: 0
