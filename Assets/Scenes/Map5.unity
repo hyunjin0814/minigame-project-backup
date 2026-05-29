@@ -144585,6 +144585,10 @@ PrefabInstance:
       propertyPath: dropItemPrefab
       value: 
       objectReference: {fileID: 2707131361716664896, guid: ec07e4a5ff77e284194ac8eeeebc18c0, type: 3}
+    - target: {fileID: 1648163341155881294, guid: c42d5cedbbf69b34999def5567d3f419, type: 3}
+      propertyPath: phase1Settings.groggyDurationOnWallHit
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2405616681351786530, guid: c42d5cedbbf69b34999def5567d3f419, type: 3}
       propertyPath: m_Name
       value: Middle_Boss
