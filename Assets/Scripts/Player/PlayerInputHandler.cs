@@ -56,6 +56,7 @@ public class PlayerInputHandler : MonoBehaviour
         input.Player.DogDash.performed -= OnDogDashPerformed;
 
         input.Player.Disable();
+        MoveInput = Vector2.zero;
     }
 
     private void OnMove(InputAction.CallbackContext ctx) => MoveInput = ctx.ReadValue<Vector2>();
