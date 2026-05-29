@@ -15,6 +15,7 @@ public class PlayerHorizontalMovement : MonoBehaviour
     private PlayerDash dash;
     private PlayerAttack attack;
     private DogDashAttack dogDashAttack;
+    private PlayerHurtEffect hurtEffect;
 
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class PlayerHorizontalMovement : MonoBehaviour
         dash = GetComponent<PlayerDash>();
         attack = GetComponent<PlayerAttack>();
         dogDashAttack = GetComponent<DogDashAttack>();
+        hurtEffect = GetComponent<PlayerHurtEffect>();
     }
 
     public void ApplyData(TransformationData data)
@@ -40,15 +42,17 @@ public class PlayerHorizontalMovement : MonoBehaviour
         if (dash != null && dash.IsDashing)
             return;
 
-        // 공격 중 수평 이동 차단
-        if (attack != null && attack.IsAttacking)
-            return;
-
         // 강아지 돌진 공격 중 입력 기반 이동 차단 (DogDashAttack이 velocity 제어)
         if (dogDashAttack != null && dogDashAttack.IsExecuting)
             return;
 
-        float targetSpeed = inputHandler.MoveInput.x * maxSpeed;
+        // 피격 넉백 중 입력 이동 차단
+        if (hurtEffect != null && hurtEffect.IsHurt)
+            return;
+
+        // MoveInput.x는 대각선 입력 시 정규화되어 0.707이 됨 → Sign으로 y축 영향 배제
+        float inputX = inputHandler.MoveInput.x;
+        float targetSpeed = (Mathf.Abs(inputX) > 0.01f ? Mathf.Sign(inputX) : 0f) * maxSpeed;
 
         float accelRate =
             (Mathf.Abs(targetSpeed) > 0.1f) ? maxSpeed / accelTime : maxSpeed / decelTime;

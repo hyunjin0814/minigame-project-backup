@@ -346,6 +346,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2112
   _weaknessDamageMultiplier: 2
+  _canBeKnockedBack: 1
+  _knockbackForce: 5
+  _knockbackDuration: 0.15
   _deathAnimDuration: 2
   _detectRadius: 10
   _sneakWindowDuration: 1.5

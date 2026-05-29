@@ -25,6 +25,16 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     [SerializeField]
     private float _weaknessDamageMultiplier = 2f;
 
+    [Header("Knockback")]
+    [SerializeField] private bool  _canBeKnockedBack  = false;
+    [SerializeField] private float _knockbackForce    = 5f;
+    [SerializeField] private float _knockbackDuration = 0.15f;
+
+    /// <summary>FixedUpdate에서 서브클래스가 velocity 적용에 사용.</summary>
+    protected bool   _isKnockedBack;
+    protected Vector2 _knockbackVelocity;
+    private   float  _knockbackTimer;
+
     [Header("Death")]
     [SerializeField]
     private float _deathAnimDuration = 2f;
@@ -82,6 +92,7 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
         if (IsDead) return;
         TickDebuff();
         TickWeakness();
+        TickKnockback();
     }
 
     // ── 피격/사망 ─────────────────────────────────────────────
@@ -95,8 +106,18 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
             return;
         Hurt?.Invoke();
 
-        // 피격으로 공격 캔슬 — 활성화된 hitbox 즉시 정리
-        DeactivateAllHitboxes();
+        // 공격 중이 아닐 때만 hitbox 비활성화 — 공격 취소 없음 원칙 적용
+        if (_currentState != EnemyState.Attack)
+            DeactivateAllHitboxes();
+
+        // 넉백 — _canBeKnockedBack이 true인 적만 위치가 밀려남
+        if (_canBeKnockedBack)
+        {
+            float dirX = transform.position.x >= attackerPosition.x ? 1f : -1f;
+            _knockbackVelocity = new Vector2(dirX * _knockbackForce, 0f);
+            _isKnockedBack     = true;
+            _knockbackTimer    = _knockbackDuration;
+        }
 
         if (_currentState == EnemyState.Chase || _currentState == EnemyState.Attack)
             return;
@@ -136,6 +157,15 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     private void DisableAfterDeath()
     {
         gameObject.SetActive(false);
+    }
+
+    // ── 넉백 타이머 ───────────────────────────────────────────
+    private void TickKnockback()
+    {
+        if (!_isKnockedBack) return;
+        _knockbackTimer -= Time.deltaTime;
+        if (_knockbackTimer <= 0f)
+            _isKnockedBack = false;
     }
 
     // ── 디버프 ────────────────────────────────────────────────
