@@ -115,4 +115,23 @@ public class GameState : MonoBehaviour
     public void UnlockDash() { dashUnlocked = true; Debug.Log("[GameState] 대시 해금"); }
     public void UnlockCat()  { catUnlocked  = true; Debug.Log("[GameState] 고양이 해금"); }
     public void UnlockDog()  { dogUnlocked  = true; Debug.Log("[GameState] 강아지 해금"); }
+
+    public void Reset()
+    {
+        dashUnlocked     = false;
+        catUnlocked      = false;
+        dogUnlocked      = false;
+        openedDoors.Clear();
+        collectedItems.Clear();
+        lastCheckpointID    = string.Empty;
+        lastCheckpointScene = string.Empty;
+        spawnPosition       = Vector2.zero;
+        pendingEntryID      = string.Empty;
+        hasSpawnOverride    = false;
+        savedHP             = -1;
+        savedMaxHP          = -1;
+        savedForm           = PlayerForm.Human;
+        savedFacingLeft     = false;
+        Debug.Log("[GameState] 초기화");
+    }
 }

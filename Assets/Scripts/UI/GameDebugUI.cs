@@ -15,6 +15,7 @@ public class GameDebugUI : MonoBehaviour
     private Canvas CreateCanvas()
     {
         var go = new GameObject("DebugCanvas");
+        DontDestroyOnLoad(go);
         var canvas = go.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 999;
@@ -61,8 +62,12 @@ public class GameDebugUI : MonoBehaviour
         text.font      = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
     }
 
-    private void OnRestart() =>
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    private void OnRestart()
+    {
+        GameState.Instance?.Reset();
+        InventoryManager.Instance?.Clear();
+        SceneManager.LoadScene("Map1");
+    }
 
     private void OnQuit()
     {

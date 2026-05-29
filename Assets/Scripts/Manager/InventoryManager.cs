@@ -34,6 +34,8 @@ public class InventoryManager : MonoBehaviour
 
     public bool Has(InventoryItemData item) => _items.Contains(item);
 
+    public void Clear() => _items.Clear();
+
     public bool Remove(InventoryItemData item)
     {
         if (!_items.Remove(item)) return false;
