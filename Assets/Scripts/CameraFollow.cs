@@ -13,6 +13,18 @@ public class CameraFollow : MonoBehaviour
 
     private Vector3 currentVelocity = Vector3.zero;
 
+    /// <summary>씬 전환 후 카메라를 플레이어 위치로 즉시 스냅. SmoothDamp 관성도 초기화.</summary>
+    public void SnapToTarget()
+    {
+        if (target == null) return;
+        currentVelocity = Vector3.zero;
+        transform.position = new Vector3(
+            target.position.x + offset.x,
+            target.position.y + offset.y,
+            transform.position.z
+        );
+    }
+
     private void LateUpdate()
     {
         if (target == null)

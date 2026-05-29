@@ -71,6 +71,15 @@ public class SceneTransitionManager : MonoBehaviour
 
         yield return StartCoroutine(FadeOutCoroutine());
         yield return SceneManager.LoadSceneAsync(sceneName);
+
+        // PlayerSpawner.Start()가 실행될 때까지 1프레임 대기
+        yield return null;
+
+        // FadeIn 전에 카메라를 플레이어 위치로 즉시 스냅
+        // → FadeIn 도중 카메라가 이동하는 모습이 보이지 않음
+        CameraFollow cam = FindFirstObjectByType<CameraFollow>();
+        cam?.SnapToTarget();
+
         yield return StartCoroutine(FadeInCoroutine());
 
         IsTransitioning = false;

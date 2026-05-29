@@ -65,6 +65,9 @@ public class PlayerAttack : MonoBehaviour
 
     public bool IsAttacking { get; private set; }
     public bool CanDash { get; private set; } = true;
+    public bool IsAttackCycleActive => phase != AttackPhase.Ready;
+    /// <summary>다운 어택(포고) 활성 중 — PlayerJump가 포고 velocity 충돌 방지에 사용.</summary>
+    public bool IsPogoAttack => IsAttacking && currentDirection == AttackDirection.Down;
 
     private enum AttackPhase
     {
@@ -122,7 +125,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Update()
     {
-        if (!IsAttacking && inputHandler.MoveInput.x != 0)
+        if (phase == AttackPhase.Ready && inputHandler.MoveInput.x != 0)
             facingRight = inputHandler.MoveInput.x > 0;
 
         if (attackBuffered)
@@ -233,11 +236,9 @@ public class PlayerAttack : MonoBehaviour
         }
 
         hitbox.SetBox(offset, size);
+        hitbox.Activate(); // 코드 타이밍으로 즉시 활성화 — 애니메이션 이벤트 의존 제거
         IsAttacking = true;
         CanDash = false;
-
-        if (groundDetector.IsGrounded)
-            motor.SetVelocityX(0f);
 
         OnAttackTriggered?.Invoke(currentDirection);
 
@@ -253,17 +254,17 @@ public class PlayerAttack : MonoBehaviour
         CanDash = true;
     }
 
-    // 애니메이션 이벤트에서 호출
+    // 애니메이션 이벤트에서 호출 (ExecuteAttack에서 이미 Activate하므로 중복 호출 무시)
     public void ActivateHitbox()
     {
         if (phase != AttackPhase.Attacking && phase != AttackPhase.Cooldown)
             return;
 
+        // ExecuteAttack()에서 이미 활성화됨 — 애니메이션 이벤트가 늦게 오거나 아예 안 와도 문제없음
         hitbox?.Activate();
         IsAttacking = true;
         CanDash = false;
-        timer = attackDuration;
-        phase = AttackPhase.Attacking;
+        // timer는 ExecuteAttack에서 이미 설정됨 — 애니메이션 이벤트로 리셋하지 않음
     }
 
     // 애니메이션 이벤트에서 호출

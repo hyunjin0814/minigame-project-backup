@@ -179,6 +179,14 @@ public class CombatEnemy : EnemyBase
     private void FixedUpdate()
     {
         if (IsDead) return;
+
+        // 넉백 중에는 AI velocity 스킵 — 넉백 velocity만 적용
+        if (_isKnockedBack)
+        {
+            _rb.linearVelocity = new Vector2(_knockbackVelocity.x, _rb.linearVelocity.y);
+            return;
+        }
+
         switch (_currentState)
         {
             case EnemyState.Patrol:
