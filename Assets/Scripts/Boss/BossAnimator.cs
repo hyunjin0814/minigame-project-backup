@@ -28,6 +28,7 @@ public class BossAnimator : MonoBehaviour
         if (_boss == null) return;
         _boss.AttackPerformed += HandleAttack;
         _boss.TelegraphPerformed += HandleTelegraph;
+        _boss.AttackAnimRequested += HandleAttackAnim;
         _boss.Died += HandleDied;
         _boss.OnGroggyStarted += HandleGroggyStart;
         _boss.OnGroggyEnded += HandleGroggyEnd;
@@ -38,6 +39,7 @@ public class BossAnimator : MonoBehaviour
         if (_boss == null) return;
         _boss.AttackPerformed -= HandleAttack;
         _boss.TelegraphPerformed -= HandleTelegraph;
+        _boss.AttackAnimRequested -= HandleAttackAnim;
         _boss.Died -= HandleDied;
         _boss.OnGroggyStarted -= HandleGroggyStart;
         _boss.OnGroggyEnded -= HandleGroggyEnd;
@@ -51,6 +53,11 @@ public class BossAnimator : MonoBehaviour
     }
 
     private void HandleAttack()      { if (_animator != null) _animator.SetTrigger(AttackHash); }
+    private void HandleAttackAnim(string trigger)
+    {
+        if (_animator != null && !string.IsNullOrEmpty(trigger))
+            _animator.SetTrigger(trigger);
+    }
     private void HandleTelegraph()   { if (_animator != null) _animator.SetTrigger(TelegraphHash); }
     private void HandleDied()        { if (_animator != null) _animator.SetTrigger(DeathHash); }
     private void HandleGroggyStart() { if (_animator != null) _animator.SetBool(IsGroggyHash, true); }
