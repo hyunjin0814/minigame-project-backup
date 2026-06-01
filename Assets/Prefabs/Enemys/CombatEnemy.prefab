@@ -345,6 +345,7 @@ MonoBehaviour:
   _obstacleLayer:
     serializedVersion: 2
     m_Bits: 2112
+  _losePlayerRange: 14
   _weaknessDamageMultiplier: 2
   _canBeKnockedBack: 1
   _knockbackForce: 5
@@ -354,7 +355,7 @@ MonoBehaviour:
   _sneakWindowDuration: 1.5
   _patrolSpeed: 3
   _chaseSpeed: 5
-  _wallCheckDistance: 1
+  _wallCheckDistance: 2
   _edgeCheckDistance: 1.5
   _groundLayer:
     serializedVersion: 2
@@ -400,17 +401,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.2}
+  m_Offset: {x: 0, y: -0.32515436}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.6875, y: 4.6875}
+    oldSize: {x: 6.25, y: 6.25}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.3, y: 1.3}
+  m_Size: {x: 1.3, y: 1.5503086}
   m_EdgeRadius: 0
 --- !u!114 &6429528521465807279
 MonoBehaviour:

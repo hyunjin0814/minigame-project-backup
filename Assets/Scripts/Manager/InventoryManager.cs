@@ -43,4 +43,23 @@ public class InventoryManager : MonoBehaviour
         OnItemRemoved?.Invoke(item);
         return true;
     }
+
+    /// <summary>
+    /// 세이브 파일 로드 시 아이템 ID 목록으로 인벤토리를 복원한다.
+    /// ItemDatabase에서 ID → InventoryItemData 변환 후 추가.
+    /// </summary>
+    public void RestoreFromIds(System.Collections.Generic.List<string> ids, ItemDatabase database)
+    {
+        _items.Clear();
+
+        foreach (var id in ids)
+        {
+            var item = database.GetById(id);
+            if (item == null) continue;
+
+            _items.Add(item);
+            OnItemAdded?.Invoke(item);
+            Debug.Log($"[InventoryManager] 아이템 복원: {item.displayName}");
+        }
+    }
 }

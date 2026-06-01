@@ -50,6 +50,14 @@ public class GameState : MonoBehaviour
     /// <summary>마지막 스프라이트 방향. true = 왼쪽(flipX). 씬 전환 후 PlayerAnimator가 복원.</summary>
     public bool savedFacingLeft = false;
 
+    // ── 세이브 슬롯 / 통계 ────────────────────────────────────────────────
+    /// <summary>현재 활성 저장 슬롯 번호. -1이면 미선택(타이틀에서 슬롯 고르기 전).</summary>
+    public int currentSaveSlot = -1;
+    /// <summary>누적 플레이 시간 (초). 슬롯 선택 후부터 증가.</summary>
+    public float playTime = 0f;
+    /// <summary>보유 재화. 추후 상점 시스템에서 사용.</summary>
+    public int coins = 0;
+
     // ── Lifecycle ──────────────────────────────────────────────────────────
     private void Awake()
     {
@@ -60,6 +68,13 @@ public class GameState : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Update()
+    {
+        // 슬롯이 선택된 경우에만 플레이 시간 누적
+        if (currentSaveSlot >= 0)
+            playTime += Time.deltaTime;
     }
 
     // ── 체크포인트 ─────────────────────────────────────────────────────────
@@ -132,6 +147,9 @@ public class GameState : MonoBehaviour
         savedMaxHP          = -1;
         savedForm           = PlayerForm.Human;
         savedFacingLeft     = false;
+        currentSaveSlot     = -1;
+        playTime            = 0f;
+        coins               = 0;
         Debug.Log("[GameState] 초기화");
     }
 }

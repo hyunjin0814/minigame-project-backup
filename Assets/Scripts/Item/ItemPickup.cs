@@ -32,6 +32,10 @@ public class ItemPickup : MonoBehaviour
         else if (itemData is InventoryItemData)
             InventoryManager.Instance.Add(itemData);
 
+        // 수집 기록 — 씬 재방문 시 재생성 방지 (Start()의 HasCollected 체크와 쌍)
+        if (!string.IsNullOrEmpty(itemData.id))
+            GameState.Instance?.CollectItem(itemData.id);
+
         OnItemPickedUp?.Invoke(itemData);
         Destroy(gameObject);
     }

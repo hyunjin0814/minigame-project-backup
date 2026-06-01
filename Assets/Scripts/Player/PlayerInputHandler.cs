@@ -17,6 +17,7 @@ public class PlayerInputHandler : MonoBehaviour
     public event Action OnDash;
     public event Action OnScan;
     public event Action OnDogDash;
+    public event Action OnInteract;
 
     private void Awake()
     {
@@ -59,7 +60,16 @@ public class PlayerInputHandler : MonoBehaviour
         MoveInput = Vector2.zero;
     }
 
-    private void OnMove(InputAction.CallbackContext ctx) => MoveInput = ctx.ReadValue<Vector2>();
+    private void OnMove(InputAction.CallbackContext ctx)
+    {
+        var prev  = MoveInput;
+        MoveInput = ctx.ReadValue<Vector2>();
+
+        // 위 방향 첫 입력 순간에만 OnInteract 발생
+        // (이전 프레임에 없다가 이번에 눌린 경우)
+        if (MoveInput.y > 0.5f && prev.y <= 0.5f)
+            OnInteract?.Invoke();
+    }
 
     private void OnJumpPressed(InputAction.CallbackContext ctx)
     {

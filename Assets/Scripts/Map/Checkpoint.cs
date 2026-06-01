@@ -2,79 +2,88 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 각 구역 입구에 배치하는 체크포인트.
-/// 플레이어가 처음 접촉하면:
+/// Hollow Knight 방식 체크포인트.
+/// 플레이어가 범위 안에서 윗방향키(Interact)를 누를 때마다 발동:
 ///   1. HP 전체 회복
-///   2. GameState에 씬 이름 + 위치 저장
-///   3. 활성화 이펙트 표시 (이후 재접촉 무시)
+///   2. GameState에 위치 저장
+///   3. JSON 세이브 파일 갱신
 ///
-/// [인스펙터 설정]
-///  - checkpointID  : 씬 내 유일한 문자열 (예: "ZoneA_Entry")
-///  - indicatorSprite / activateEffect : 활성화 전/후 시각 표현
+/// 시각 상태:
+///   - 미등록(inactiveColor) → 처음 상호작용 시 활성(activeColor)으로 변경
+///   - 이후 재방문해도 activeColor 유지
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class Checkpoint : MonoBehaviour
 {
     [Header("식별자")]
-    [SerializeField]
-    private string checkpointID;
+    [SerializeField] private string checkpointID;
 
     [Header("시각 피드백")]
-    [SerializeField]
-    private SpriteRenderer indicatorSprite;
+    [SerializeField] private SpriteRenderer indicatorSprite;
+    [SerializeField] private Color activeColor   = Color.yellow;
+    [SerializeField] private Color inactiveColor = Color.gray;
+    [SerializeField] private GameObject activateEffect;
 
-    [SerializeField]
-    private Color activeColor = Color.yellow;
+    // 한 번이라도 등록됐는지 (시각 표현용 — 색상 유지)
+    private bool _isRegistered;
 
-    [SerializeField]
-    private Color inactiveColor = Color.gray;
-
-    [SerializeField]
-    private GameObject activateEffect;
-
-    private bool isActivated;
+    // 현재 범위 안에 있는 플레이어 참조
+    private PlayerInputHandler _playerInput;
+    private Health             _playerHealth;
 
     // ── Lifecycle ──────────────────────────────────────────────────────────
 
     private void Start()
     {
-        // 이 체크포인트가 마지막으로 저장된 경우 → 이미 활성화 상태로 표시
-        bool alreadySaved =
-            GameState.Instance != null && GameState.Instance.lastCheckpointID == checkpointID;
-
-        isActivated = alreadySaved;
+        // 이 체크포인트가 마지막으로 저장된 경우 → 활성 색상으로 표시
+        _isRegistered = GameState.Instance != null
+                     && GameState.Instance.lastCheckpointID == checkpointID;
 
         if (indicatorSprite != null)
-            indicatorSprite.color = alreadySaved ? activeColor : inactiveColor;
+            indicatorSprite.color = _isRegistered ? activeColor : inactiveColor;
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeInput();
     }
 
     // ── 트리거 ────────────────────────────────────────────────────────────
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isActivated)
-            return;
-        if (!other.CompareTag("Player"))
-            return;
+        if (!other.CompareTag("Player")) return;
 
-        Activate(other.gameObject);
+        _playerHealth = other.GetComponent<Health>();
+        _playerInput  = other.GetComponent<PlayerInputHandler>();
+
+        if (_playerInput != null)
+            _playerInput.OnInteract += TryActivate;
+
+        // TODO: 상호작용 힌트 UI 표시 ("↑ 상호작용")
     }
 
-    // ── 활성화 ────────────────────────────────────────────────────────────
-
-    private void Activate(GameObject player)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        isActivated = true;
+        if (!other.CompareTag("Player")) return;
 
-        // 1. HP 전체 회복
-        if (player.TryGetComponent<Health>(out var health))
+        UnsubscribeInput();
+
+        // TODO: 상호작용 힌트 UI 숨기기
+    }
+
+    // ── 상호작용 ──────────────────────────────────────────────────────────
+
+    private void TryActivate()
+    {
+        // HP 전체 회복
+        if (_playerHealth != null)
         {
-            int missing = health.MaxHp - health.CurrentHp;
-            if (missing > 0)
-                health.Heal(missing);
+            int missing = _playerHealth.MaxHp - _playerHealth.CurrentHp;
+            if (missing > 0) _playerHealth.Heal(missing);
         }
 
-        // 2. 체크포인트 저장
+        // 체크포인트 & 세이브 파일 저장
         if (GameState.Instance != null)
         {
             GameState.Instance.SaveCheckpoint(
@@ -82,14 +91,34 @@ public class Checkpoint : MonoBehaviour
                 SceneManager.GetActiveScene().name,
                 transform.position
             );
+
+            if (GameState.Instance.currentSaveSlot >= 0)
+                SaveManager.Save(GameState.Instance.currentSaveSlot);
         }
 
-        // 3. 시각 피드백
-        if (indicatorSprite != null)
-            indicatorSprite.color = activeColor;
-        if (activateEffect != null)
-            activateEffect.SetActive(true);
+        // 처음 등록 시에만 시각 피드백 갱신
+        if (!_isRegistered)
+        {
+            _isRegistered = true;
 
-        Debug.Log($"[Checkpoint] 활성화: {checkpointID}");
+            if (indicatorSprite != null)
+                indicatorSprite.color = activeColor;
+
+            if (activateEffect != null)
+                activateEffect.SetActive(true);
+        }
+
+        Debug.Log($"[Checkpoint] 상호작용: {checkpointID}");
+    }
+
+    // ── 내부 유틸 ─────────────────────────────────────────────────────────
+
+    private void UnsubscribeInput()
+    {
+        if (_playerInput != null)
+            _playerInput.OnInteract -= TryActivate;
+
+        _playerInput  = null;
+        _playerHealth = null;
     }
 }

@@ -20,6 +20,18 @@ public class BossRoomTrigger : MonoBehaviour
 
     private void Start()
     {
+        // 이미 처치된 보스: 씬 재진입 시 보스 비활성화 + 입장 트리거 비활성화
+        // openedDoors에 bossDoorID가 있으면 처치 완료 상태
+        if (!string.IsNullOrEmpty(bossDoorID)
+            && GameState.Instance != null
+            && GameState.Instance.IsDoorOpen(bossDoorID))
+        {
+            if (boss != null) boss.gameObject.SetActive(false);
+            entryTrigger.enabled = false;
+            // 출구 문은 LockedDoor.Start()가 openedDoors를 보고 자동 개방
+            return;
+        }
+
         if (boss != null)
             boss.Health.OnDeath += OpenDoor;
 
