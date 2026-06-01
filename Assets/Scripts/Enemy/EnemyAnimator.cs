@@ -13,12 +13,14 @@ public class EnemyAnimator : MonoBehaviour
     private static readonly int DeathHash = Animator.StringToHash("Death");
 
     private EnemyBase _enemy;
+    private bool _hasSpeedX;
 
     private void Awake()
     {
         _enemy = GetComponent<EnemyBase>();
         if (_animator == null) _animator = GetComponentInChildren<Animator>();
-        if (_rb == null) _rb = GetComponent<Rigidbody2D>();
+        if (_rb == null)       _rb       = GetComponent<Rigidbody2D>();
+        if (_animator != null) _hasSpeedX = HasParameter(SpeedXHash);
     }
 
     private void OnEnable()
@@ -39,7 +41,7 @@ public class EnemyAnimator : MonoBehaviour
 
     private void Update()
     {
-        if (_animator != null && _rb != null)
+        if (_animator != null && _rb != null && _hasSpeedX)
             _animator.SetFloat(SpeedXHash, Mathf.Abs(_rb.linearVelocity.x));
     }
 
@@ -61,6 +63,16 @@ public class EnemyAnimator : MonoBehaviour
     public void SetAnimatorController(RuntimeAnimatorController controller)
     {
         if (_animator != null)
+        {
             _animator.runtimeAnimatorController = controller;
+            _hasSpeedX = HasParameter(SpeedXHash);
+        }
+    }
+
+    private bool HasParameter(int hash)
+    {
+        foreach (var p in _animator.parameters)
+            if (p.nameHash == hash) return true;
+        return false;
     }
 }
