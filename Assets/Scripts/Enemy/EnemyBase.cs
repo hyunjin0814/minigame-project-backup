@@ -21,6 +21,10 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     [SerializeField]
     protected LayerMask _obstacleLayer;
 
+    [Tooltip("Chase/Attack 중 플레이어가 이 거리 밖으로 나가면 추적 포기. 서브클래스에서 Awake에 감지 반경+α로 설정 권장.")]
+    [SerializeField]
+    protected float _losePlayerRange = 14f;
+
     [Header("Weakness")]
     [SerializeField]
     private float _weaknessDamageMultiplier = 2f;
@@ -93,6 +97,7 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
         TickDebuff();
         TickWeakness();
         TickKnockback();
+        TickPlayerLost();
     }
 
     // ── 피격/사망 ─────────────────────────────────────────────
@@ -244,6 +249,28 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
         _weaknessTimer -= Time.deltaTime;
         if (_weaknessTimer <= 0f)
             ClearWeakness(); // Registry 정리도 포함
+    }
+
+    // ── 플레이어 이탈 감지 ────────────────────────────────────
+    private void TickPlayerLost()
+    {
+        if (_player == null) return;
+        if (_currentState != EnemyState.Chase && _currentState != EnemyState.Attack) return;
+        if (Vector2.Distance(transform.position, _player.position) > _losePlayerRange)
+        {
+            _player = null;
+            OnPlayerLost();
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 _losePlayerRange 밖으로 나가 추적 포기 시 호출.
+    /// 기본: Combat(마지막 위치 수색) → Patrol.
+    /// 공중 적 등 수색이 불필요한 경우 override해서 Patrol로 직행.
+    /// </summary>
+    protected virtual void OnPlayerLost()
+    {
+        ChangeState(EnemyState.Combat);
     }
 
     // ── 추상 메서드 ───────────────────────────────────────────
