@@ -95,13 +95,9 @@ public class PlayerJump : MonoBehaviour
             return;
         }
 
-        // 공격 중에는 점프 차단 (공격 모션과 점프 충돌 방지)
-        if (attack != null && attack.IsAttacking)
-        {
-            doJump = false;
-            doJumpCut = false;
-            return;
-        }
+        // 공격 중인지 여부 — 점프는 허용하되 애니메이션 전환(OnJumped)만 막아
+        // 공격 모션과 히트박스 이벤트가 그대로 진행되게 한다 (velocity만 변경)
+        bool attacking = attack != null && attack.IsAttacking;
 
         // 가변 점프컷 적용
         if (doJumpCut)
@@ -118,7 +114,9 @@ public class PlayerJump : MonoBehaviour
         if (doJump)
         {
             motor.SetVelocityY(jumpSpeed);
-            OnJumped?.Invoke();
+            // 공격 중에는 점프 애니메이션으로 전환하지 않음 (공격 모션 유지, velocity만 변경)
+            if (!attacking)
+                OnJumped?.Invoke();
             doJump = false;
         }
 

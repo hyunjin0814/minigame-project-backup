@@ -70,6 +70,11 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     public void RaiseAttackPerformed() => AttackPerformed?.Invoke();
     public void RaiseTelegraphPerformed() => TelegraphPerformed?.Invoke();
 
+    // ── 이름付き 공격 애니메이션 트리거 (SecondBoss용, 하위호환) ──
+    // FirstBoss는 사용 안 함. 패턴별로 다른 Animator 트리거를 재생하기 위함.
+    public event Action<string> AttackAnimRequested;
+    public void RaiseAttackAnim(string trigger) => AttackAnimRequested?.Invoke(trigger);
+
     protected virtual void Awake()
     {
         Rb = GetComponent<Rigidbody2D>();
