@@ -20,6 +20,17 @@ public class GameState : MonoBehaviour
     /// <summary>수집 완료 아이템 ID 집합 (중복 방지용)</summary>
     public HashSet<string> collectedItems = new();
 
+    // ── 지도 (탐험한 방) ──────────────────────────────────────────────────
+    /// <summary>현재 플레이어가 위치한 방(씬) ID. MapRoomDefinition이 씬 로드 시 갱신.</summary>
+    public string currentRoomID = string.Empty;
+    /// <summary>방(씬)별 그리드 칸(열,행). 루트 방을 (0,0)으로 두고 연결로 자동 배치. 키 존재 = 방문함.</summary>
+    public Dictionary<string, Vector2Int> roomCells = new();
+    /// <summary>방(씬)별 이웃 연결 목록. 출구 통로 그리기에 사용. 런타임 전용(저장 안 함).</summary>
+    [System.NonSerialized] public Dictionary<string, List<MapConnection>> roomConnections = new();
+
+    /// <summary>해당 방을 한 번이라도 방문했는지.</summary>
+    public bool HasVisitedRoom(string scene) => roomCells.ContainsKey(scene);
+
     // ── 체크포인트 ─────────────────────────────────────────────────────────
     public string  lastCheckpointID    = string.Empty;
     public string  lastCheckpointScene = string.Empty;
@@ -138,6 +149,9 @@ public class GameState : MonoBehaviour
         dogUnlocked      = false;
         openedDoors.Clear();
         collectedItems.Clear();
+        currentRoomID = string.Empty;
+        roomCells.Clear();
+        roomConnections.Clear();
         lastCheckpointID    = string.Empty;
         lastCheckpointScene = string.Empty;
         spawnPosition       = Vector2.zero;

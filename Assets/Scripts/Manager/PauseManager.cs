@@ -34,6 +34,9 @@ public class PauseManager : MonoBehaviour
         // 씬 전환 중(페이드 아웃/인)에는 ESC 차단
         if (SceneTransitionManager.Instance != null && SceneTransitionManager.Instance.IsTransitioning) return;
 
+        // 전체 지도(M)가 열려 있으면 ESC가 일시정지 패널을 열지 않도록 차단
+        if (MapUI.IsFullMapOpen) return;
+
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
             TogglePause();
     }

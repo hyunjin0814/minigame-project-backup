@@ -17,6 +17,9 @@ public class SaveData
     public List<string> openedDoors    = new();   // 열린 문 + 처치된 보스 문 ID
     public List<string> collectedItems = new();   // 한 번 수집한 아이템 ID
 
+    // ── 지도 (탐험한 방) ──────────────────────────────────────────────────
+    public List<RoomMapEntry> roomMap = new();          // 방별 크기 + 자동배치 좌표
+
     // ── 인벤토리 (현재 보유 중인 아이템 ID) ───────────────────────────────
     public List<string> inventoryItemIds = new();
 
@@ -40,4 +43,13 @@ public class SaveData
 
     // ── 재화 (추후 상점 시스템에서 사용) ──────────────────────────────────
     public int coins = 0;
+}
+
+/// <summary>탐험한 방 1개의 지도 정보 직렬화용. 그리드 칸(열,행).</summary>
+[Serializable]
+public struct RoomMapEntry
+{
+    public string scene;
+    public int    cx;
+    public int    cy;
 }

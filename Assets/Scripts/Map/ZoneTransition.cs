@@ -22,6 +22,16 @@ public class ZoneTransition : MonoBehaviour
     [SerializeField] private string targetScene;
     [SerializeField] private string targetEntryID;
 
+    [Header("지도")]
+    [Tooltip("지도에서 이 출구의 방향. Auto면 문 위치로 자동 판별. 2층 분기 등 애매한 문만 수동 지정.")]
+    [SerializeField] private MapDirOverride mapDirection = MapDirOverride.Auto;
+
+    /// <summary>지도 자동 배치용. 이 출구가 향하는 목적지 씬 이름.</summary>
+    public string TargetScene => targetScene;
+
+    /// <summary>지도 방향 수동 지정값(Auto면 자동 판별).</summary>
+    public MapDirOverride MapDirection => mapDirection;
+
     // ── 트리거 ────────────────────────────────────────────────────────────
 
     private void OnTriggerEnter2D(Collider2D other)

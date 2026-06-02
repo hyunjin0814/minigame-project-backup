@@ -161,6 +161,10 @@ public static class SaveManager
                     data.inventoryItemIds.Add(item.id);
         }
 
+        // 탐험한 방 지도 정보 (그리드 칸) Dictionary → List
+        foreach (var kv in gs.roomCells)
+            data.roomMap.Add(new RoomMapEntry { scene = kv.Key, cx = kv.Value.x, cy = kv.Value.y });
+
         return data;
     }
 
@@ -182,6 +186,10 @@ public static class SaveManager
 
         gs.collectedItems.Clear();
         foreach (var id in data.collectedItems) gs.collectedItems.Add(id);
+
+        gs.roomCells.Clear();
+        foreach (var e in data.roomMap)
+            gs.roomCells[e.scene] = new Vector2Int(e.cx, e.cy);
 
         gs.lastCheckpointScene = data.lastCheckpointScene;
         gs.lastCheckpointID    = data.lastCheckpointID;
