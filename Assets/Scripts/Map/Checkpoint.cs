@@ -24,6 +24,9 @@ public class Checkpoint : MonoBehaviour
     [SerializeField] private Color inactiveColor = Color.gray;
     [SerializeField] private GameObject activateEffect;
 
+    [Header("상호작용 힌트")]
+    [SerializeField] private GameObject interactHint;  // InteractHint 오브젝트 연결
+
     // 한 번이라도 등록됐는지 (시각 표현용 — 색상 유지)
     private bool _isRegistered;
 
@@ -60,7 +63,8 @@ public class Checkpoint : MonoBehaviour
         if (_playerInput != null)
             _playerInput.OnInteract += TryActivate;
 
-        // TODO: 상호작용 힌트 UI 표시 ("↑ 상호작용")
+        if (interactHint != null)
+            interactHint.SetActive(true);
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -69,7 +73,8 @@ public class Checkpoint : MonoBehaviour
 
         UnsubscribeInput();
 
-        // TODO: 상호작용 힌트 UI 숨기기
+        if (interactHint != null)
+            interactHint.SetActive(false);
     }
 
     // ── 상호작용 ──────────────────────────────────────────────────────────

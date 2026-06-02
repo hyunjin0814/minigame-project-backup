@@ -197,8 +197,10 @@ public static class SaveManager
         gs.playTime = data.playTime;
         gs.coins    = data.coins;
 
-        // 체크포인트 좌표로 스폰 예약
-        gs.MarkCheckpointRespawn();
+        // 체크포인트가 저장된 경우에만 해당 좌표로 스폰 예약
+        // 새 게임(checkpointID 없음)은 씬의 기본 스폰 포인트 사용
+        if (!string.IsNullOrEmpty(data.lastCheckpointID))
+            gs.MarkCheckpointRespawn();
 
         // 인벤토리 복원
         var database = Resources.Load<ItemDatabase>("ItemDatabase");

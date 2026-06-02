@@ -16,7 +16,7 @@ public class TitleManager : MonoBehaviour
     [Header("화면 그룹")]
     [SerializeField] private GameObject buttonContainer;  // 버튼 묶음 (게임 시작·설정·종료)
     [SerializeField] private GameObject slotPanel;        // 슬롯 선택 패널
-    [SerializeField] private GameObject settingsPanel;    // 설정 패널 (추후 구현)
+    // 설정 패널은 PauseManager가 소유 — PauseManager.OpenSettings() 호출
 
     [Header("슬롯 (3개)")]
     [SerializeField] private SaveSlotUI[] slots;          // SaveSlot_0 ~ SaveSlot_2 연결
@@ -32,7 +32,6 @@ public class TitleManager : MonoBehaviour
 
         // 시작 시 패널 모두 비활성
         slotPanel.SetActive(false);
-        if (settingsPanel != null) settingsPanel.SetActive(false);
     }
 
     // ── 버튼 핸들러 ───────────────────────────────────────────────────────
@@ -49,8 +48,7 @@ public class TitleManager : MonoBehaviour
 
     private void OnSettingsClicked()
     {
-        // TODO: 설정 패널 구현 후 활성화
-        if (settingsPanel != null) settingsPanel.SetActive(true);
+        PauseManager.Instance?.OpenSettings();
     }
 
     private void OnQuitClicked()

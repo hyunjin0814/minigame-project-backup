@@ -79,13 +79,20 @@ public class SaveSlotUI : MonoBehaviour
 
     private void StartNewGame()
     {
+        // 튜토리얼 씬 추가 시 "Map1" → 튜토리얼 씬 이름으로 변경
+        const string startScene = "Map1";
+
         GameState.Instance.Reset();
-        GameState.Instance.currentSaveSlot = _slotIndex;
+        GameState.Instance.currentSaveSlot    = _slotIndex;
+        GameState.Instance.lastCheckpointScene = startScene;
+
+        // 슬롯 점유 표시를 위해 초기 세이브 파일 즉시 생성
+        SaveManager.Save(_slotIndex);
 
         if (SceneTransitionManager.Instance != null)
-            SceneTransitionManager.Instance.TransitionTo("Map1");
+            SceneTransitionManager.Instance.TransitionTo(startScene);
         else
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Map1");
+            UnityEngine.SceneManagement.SceneManager.LoadScene(startScene);
     }
 
     // ── 삭제 클릭 ─────────────────────────────────────────────────────────
