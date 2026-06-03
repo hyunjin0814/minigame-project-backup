@@ -39,9 +39,13 @@ public class MapUI : MonoBehaviour
     [SerializeField] private float stubThickness = 3f;
 
     [Header("색상")]
-    [SerializeField] private Color currentColor  = new Color(0.30f, 0.70f, 0.40f);
-    [SerializeField] private Color visitedColor  = new Color(0.18f, 0.37f, 0.22f);
-    [SerializeField] private Color corridorColor = new Color(0.14f, 0.29f, 0.17f);
+    [SerializeField] private Color currentColor        = new Color(0.36f, 0.78f, 0.91f); // #5BC8E8
+    [SerializeField] private Color currentBorderColor  = new Color(0.63f, 0.89f, 0.97f); // #A0E4F8
+    [SerializeField] private Color visitedColor        = new Color(0.18f, 0.29f, 0.37f); // #2E4A5F
+    [SerializeField] private Color visitedBorderColor  = new Color(0.30f, 0.48f, 0.62f); // #4D7A9E
+    [SerializeField] private Color corridorColor       = new Color(0.18f, 0.29f, 0.37f); // #2E4A5F
+    [Tooltip("방 테두리 두께 (픽셀, worldToMapScale 이전 기준).")]
+    [SerializeField] private float borderThickness = 2f;
 
     private enum Mode { Closed, Quick, Full }
     private Mode _mode = Mode.Closed;
@@ -149,12 +153,16 @@ public class MapUI : MonoBehaviour
 
         BeginPool();
 
-        // 방 사각형
+        // 방 사각형 (테두리 → 채움 순서)
+        float b = borderThickness * worldToMapScale;
         foreach (var kv in gs.roomCells)
         {
-            Vector2 center = CellCenter(kv.Value, curCell);
-            Place(GetPooled(), center, roomSize * worldToMapScale,
-                  kv.Key == current ? currentColor : visitedColor);
+            bool isCurrent = kv.Key == current;
+            Vector2 center  = CellCenter(kv.Value, curCell);
+            Vector2 fillSz  = roomSize * worldToMapScale;
+            Vector2 borderSz = fillSz + new Vector2(b * 2f, b * 2f);
+            Place(GetPooled(), center, borderSz, isCurrent ? currentBorderColor : visitedBorderColor);
+            Place(GetPooled(), center, fillSz,   isCurrent ? currentColor       : visitedColor);
         }
 
         // 출구 통로 stub (방문한 방의 연결마다)

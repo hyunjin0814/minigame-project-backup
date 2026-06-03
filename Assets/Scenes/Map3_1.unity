@@ -95196,6 +95196,10 @@ PrefabInstance:
       value: CatItem
       objectReference: {fileID: 0}
     - target: {fileID: 8368162865578416893, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -7385789195546760866, guid: 39afccf2fabada146bb9c250d4b44af2, type: 3}
+    - target: {fileID: 8368162865578416893, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}

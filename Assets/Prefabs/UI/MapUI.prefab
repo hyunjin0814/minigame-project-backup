@@ -53,12 +53,17 @@ MonoBehaviour:
   roomContainer: {fileID: 6978936096277843891}
   roomPrefab: {fileID: 27269450046171509, guid: 10a09427308668d418b42545e70a6c3d, type: 3}
   playerIcon: {fileID: 3562613624222586109}
+  roomSize: {x: 40, y: 26}
+  cellGap: {x: 14, y: 14}
   worldToMapScale: 2
   stubLength: 1.5
   stubThickness: 1
   currentColor: {r: 0.3, g: 0.7, b: 0.4, a: 1}
+  currentBorderColor: {r: 0.63, g: 0.89, b: 0.97, a: 1}
   visitedColor: {r: 0.18, g: 0.37, b: 0.22, a: 1}
+  visitedBorderColor: {r: 0.3, g: 0.48, b: 0.62, a: 1}
   corridorColor: {r: 0.14, g: 0.29, b: 0.17, a: 1}
+  borderThickness: 2
 --- !u!1 &2844722111399054133
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,15 +123,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.6666667}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 645411862609229670, guid: 99f78f2ef40b8534c9f7cdabc54b2a80, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

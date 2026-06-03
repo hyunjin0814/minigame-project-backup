@@ -25990,6 +25990,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ZoneTransition
   targetScene: Map2
   targetEntryID: zone2_left
+  mapDirection: 0
 --- !u!61 &1599406878
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -52374,10 +52375,6 @@ PrefabInstance:
     - target: {fileID: 2455415021928989829, guid: ca1f709b749b1ec4393fc1be3ddb8ff3, type: 3}
       propertyPath: m_Name
       value: MapUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 2455415021928989829, guid: ca1f709b749b1ec4393fc1be3ddb8ff3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

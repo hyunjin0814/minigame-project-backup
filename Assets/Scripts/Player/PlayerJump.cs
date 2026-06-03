@@ -40,6 +40,21 @@ public class PlayerJump : MonoBehaviour
         attack = GetComponent<PlayerAttack>();
     }
 
+    private void OnEnable()
+    {
+        groundDetector.OnLanded += OnLanded;
+    }
+
+    private void OnDisable()
+    {
+        groundDetector.OnLanded -= OnLanded;
+    }
+
+    private void OnLanded()
+    {
+        AudioManager.Instance?.PlaySFX(SoundType.PlayerLand);
+    }
+
     public void ApplyData(TransformationData data)
     {
         jumpSpeed = data.jumpSpeed;
@@ -114,6 +129,7 @@ public class PlayerJump : MonoBehaviour
         if (doJump)
         {
             motor.SetVelocityY(jumpSpeed);
+            AudioManager.Instance?.PlaySFX(SoundType.PlayerJump);
             // 공격 중에는 점프 애니메이션으로 전환하지 않음 (공격 모션 유지, velocity만 변경)
             if (!attacking)
                 OnJumped?.Invoke();

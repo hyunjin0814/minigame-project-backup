@@ -56,6 +56,8 @@ public class PauseManager : MonoBehaviour
 
         IsPaused = true;
         Time.timeScale = 0f;
+        AudioManager.Instance?.SetGamePaused(true);
+        AudioManager.Instance?.PlayUISFX(SoundType.UIPause);
         pausePanel.SetActive(true);
     }
 
@@ -63,6 +65,8 @@ public class PauseManager : MonoBehaviour
     {
         IsPaused = false;
         Time.timeScale = 1f;
+        AudioManager.Instance?.SetGamePaused(false);
+        AudioManager.Instance?.PlayUISFX(SoundType.UIUnpause);
         pausePanel.SetActive(false);
         settingsPanel.SetActive(false);
     }
@@ -74,7 +78,12 @@ public class PauseManager : MonoBehaviour
     /// </summary>
     public void OpenSettings()
     {
-        pausePanel.SetActive(false);
+        if (settingsPanel == null)
+        {
+            Debug.LogError("[PauseManager] settingsPanel이 null입니다. 인스펙터에서 Managers 하위의 SettingsPanel을 연결했는지 확인하세요.");
+            return;
+        }
+        if (pausePanel != null) pausePanel.SetActive(false);
         settingsPanel.SetActive(true);
     }
 
@@ -84,9 +93,10 @@ public class PauseManager : MonoBehaviour
     /// </summary>
     public void CloseSettings()
     {
+        if (settingsPanel == null) return;
         settingsPanel.SetActive(false);
 
-        if (IsPaused)
+        if (IsPaused && pausePanel != null)
             pausePanel.SetActive(true);
     }
 

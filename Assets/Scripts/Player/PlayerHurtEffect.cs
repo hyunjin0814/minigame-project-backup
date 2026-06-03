@@ -33,6 +33,7 @@ public class PlayerHurtEffect : MonoBehaviour
     private void HandleHit(int amount, Vector2 source)
     {
         StopAllCoroutines();
+        AudioManager.Instance?.PlaySFX(SoundType.PlayerHurt);
         float stopDuration = HitStopManager.Instance?.Freeze(HitStopType.Light) ?? 0f;
         StartCoroutine(HurtRoutine(source, stopDuration));
     }
