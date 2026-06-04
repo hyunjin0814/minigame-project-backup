@@ -80,15 +80,24 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
 
     protected virtual void OnEnable()
     {
-        _health.OnHit += HandleHit;
+        _health.OnHit   += HandleHit;
         _health.OnDeath += HandleDeath;
+        Health.OnPlayerDied += HandlePlayerDied;
     }
 
     protected virtual void OnDisable()
     {
-        _health.OnHit -= HandleHit;
+        _health.OnHit   -= HandleHit;
         _health.OnDeath -= HandleDeath;
-        if (IsWeaknessExposed) ClearWeakness(); // 비활성화/사망 시 Registry 정리
+        Health.OnPlayerDied -= HandlePlayerDied;
+        if (IsWeaknessExposed) ClearWeakness();
+    }
+
+    private void HandlePlayerDied()
+    {
+        if (IsDead) return;
+        _player = null;
+        ChangeState(EnemyState.Patrol);
     }
 
     protected virtual void Update()

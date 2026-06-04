@@ -18,8 +18,11 @@ public class SceneTransitionManager : MonoBehaviour
 {
     public static SceneTransitionManager Instance { get; private set; }
 
-    [SerializeField] private Image fadeImage;
-    [SerializeField] private float fadeDuration = 0.5f;
+    [SerializeField]
+    private Image fadeImage;
+
+    [SerializeField]
+    private float fadeDuration = 0.5f;
 
     public bool IsTransitioning { get; private set; }
 
@@ -27,13 +30,18 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) { Destroy(gameObject); return; }
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         // 게임 시작 시 화면이 검정(불투명)에서 페이드 인되도록 준비
         SetAlpha(1f);
-        if (fadeImage != null) fadeImage.gameObject.SetActive(true);
+        if (fadeImage != null)
+            fadeImage.gameObject.SetActive(true);
     }
 
     private void Start()
@@ -52,7 +60,8 @@ public class SceneTransitionManager : MonoBehaviour
     /// <param name="entryID">대상 씬에서 찾을 SpawnPoint ID. 비우면 GameState의 기존 스폰 설정(체크포인트 복귀 등)을 따른다.</param>
     public void TransitionTo(string sceneName, string entryID = null)
     {
-        if (IsTransitioning) return;
+        if (IsTransitioning)
+            return;
 
         if (!string.IsNullOrEmpty(entryID) && GameState.Instance != null)
             GameState.Instance.SetTransitionEntry(entryID);
@@ -87,7 +96,8 @@ public class SceneTransitionManager : MonoBehaviour
 
     public IEnumerator FadeInCoroutine()
     {
-        if (fadeImage == null) yield break;
+        if (fadeImage == null)
+            yield break;
         fadeImage.gameObject.SetActive(true);
         yield return StartCoroutine(Fade(1f, 0f));
         fadeImage.gameObject.SetActive(false);
@@ -95,7 +105,8 @@ public class SceneTransitionManager : MonoBehaviour
 
     public IEnumerator FadeOutCoroutine()
     {
-        if (fadeImage == null) yield break;
+        if (fadeImage == null)
+            yield break;
         fadeImage.gameObject.SetActive(true);
         yield return StartCoroutine(Fade(0f, 1f));
     }
@@ -116,7 +127,8 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void SetAlpha(float a)
     {
-        if (fadeImage == null) return;
+        if (fadeImage == null)
+            return;
         Color c = fadeImage.color;
         c.a = a;
         fadeImage.color = c;

@@ -19,6 +19,9 @@ public class Health : MonoBehaviour, IDamageable
     /// <summary>HP/MaxHp 값이 바뀔 때마다 발생. UI 갱신 전용 (연출 부작용 없음).</summary>
     public event Action OnChanged;
 
+    /// <summary>Player 태그 오브젝트가 사망했을 때 발생. 적 AI·플레이어 컴포넌트가 구독해 일괄 처리.</summary>
+    public static event Action OnPlayerDied;
+
     private void Awake() => CurrentHp = maxHp;
 
     public void TakeDamage(int amount, Vector2 source = default)
@@ -31,7 +34,11 @@ public class Health : MonoBehaviour, IDamageable
         OnHit?.Invoke(finalAmount, source);
         OnChanged?.Invoke();
         if (CurrentHp == 0)
+        {
             OnDeath?.Invoke();
+            if (gameObject.CompareTag("Player"))
+                OnPlayerDied?.Invoke();
+        }
     }
 
     public void Heal(int amount)

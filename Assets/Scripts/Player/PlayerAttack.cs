@@ -106,6 +106,7 @@ public class PlayerAttack : MonoBehaviour
         inputHandler.OnAttack += HandleAttack;
         if (hitbox != null)
             hitbox.OnHit += HandleHit;
+        Health.OnPlayerDied += HandlePlayerDied;
     }
 
     private void OnDisable()
@@ -113,11 +114,22 @@ public class PlayerAttack : MonoBehaviour
         inputHandler.OnAttack -= HandleAttack;
         if (hitbox != null)
             hitbox.OnHit -= HandleHit;
+        Health.OnPlayerDied -= HandlePlayerDied;
 
         hitbox?.Deactivate();
         IsAttacking = false;
         CanDash = true;
         phase = AttackPhase.Ready;
+        attackBuffered = false;
+    }
+
+    private void HandlePlayerDied()
+    {
+        StopAllCoroutines();
+        hitbox?.Deactivate();
+        IsAttacking   = false;
+        CanDash       = true;
+        phase         = AttackPhase.Ready;
         attackBuffered = false;
     }
 

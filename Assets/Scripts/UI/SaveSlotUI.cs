@@ -112,8 +112,10 @@ public class SaveSlotUI : MonoBehaviour
         saveInfoGroup.SetActive(true);
         if (deleteButton != null) deleteButton.gameObject.SetActive(true);
 
-        // 체력 아이콘 (최대 체력 기준)
-        heartDisplay.SetHearts(data.savedMaxHP > 0 ? data.savedMaxHP : 3);
+        // 체력 아이콘 (저장 당시 현재/최대 체력)
+        int maxHp = data.savedMaxHP > 0 ? data.savedMaxHP : 3;
+        int curHp = data.savedHP    > 0 ? data.savedHP    : maxHp;
+        heartDisplay.Refresh(curHp, maxHp);
 
         // 위치 (씬 이름)
         locationText.text = string.IsNullOrEmpty(data.lastCheckpointScene)

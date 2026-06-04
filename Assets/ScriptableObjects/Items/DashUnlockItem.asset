@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: DashUnlockItem
   m_EditorClassIdentifier: Assembly-CSharp::AbilityUnlockItemData
   id: ability_dash
-  displayName: Abillity Dash
-  icon: {fileID: 0}
+  displayName: "\uBD80\uCE20"
+  icon: {fileID: -6914790844941560914, guid: 41ce719ab55af644e8d9406f01e621fb, type: 3}
+  hintText: "\uC774\uB3D9\uD558\uAC70\uB098 \uC810\uD504 \uB3C4\uC911\uC5D0 C\uD0A4\uB97C
+    \uC785\uB825\uD558\uBA74 \uC55E\uC73C\uB85C \uC804\uC9C4\uD569\uB2C8\uB2E4. "
   abilityType: 0
