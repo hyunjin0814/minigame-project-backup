@@ -1,21 +1,23 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class HintSubtitleUI : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private TextMeshProUGUI keyLabel;
-    [SerializeField] private TextMeshProUGUI actionLabel;
-    [SerializeField] private float displayDuration = 3f;
-    [SerializeField] private float fadeDuration    = 0.3f;
+    [SerializeField] private CanvasGroup          canvasGroup;
+    [SerializeField] private GameObject           keyBackgroundPrefab;
+    [SerializeField] private Transform            keysContainer;
+    [SerializeField] private TextMeshProUGUI      actionLabel;
+    [SerializeField] private float                displayDuration = 3f;
+    [SerializeField] private float                fadeDuration    = 0.3f;
 
-    private Coroutine _current;
+    private Coroutine                _current;
+    private readonly List<GameObject> _keyBoxes = new();
 
     private void OnEnable()  => TutorialManager.OnShowSubtitle += Show;
     private void OnDisable() => TutorialManager.OnShowSubtitle -= Show;
-
-    private void Start() => canvasGroup.alpha = 0f;
+    private void Start()     => canvasGroup.alpha = 0f;
 
     private void Show(string keyText, string actionText)
     {
@@ -25,13 +27,21 @@ public class HintSubtitleUI : MonoBehaviour
 
     private IEnumerator ShowRoutine(string keyText, string actionText)
     {
-        keyLabel.text    = keyText;
+        foreach (var box in _keyBoxes) Destroy(box);
+        _keyBoxes.Clear();
+
+        foreach (var key in keyText.Split('|'))
+        {
+            var box = Instantiate(keyBackgroundPrefab, keysContainer);
+            box.GetComponentInChildren<TextMeshProUGUI>().text = key.Trim();
+            _keyBoxes.Add(box);
+        }
+
         actionLabel.text = actionText;
 
         yield return Fade(0f, 1f);
         yield return new WaitForSecondsRealtime(displayDuration);
         yield return Fade(1f, 0f);
-
         _current = null;
     }
 

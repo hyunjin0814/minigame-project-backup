@@ -4,7 +4,7 @@ using UnityEngine;
 public class TutorialIntro : MonoBehaviour
 {
     [SerializeField] private float  delay      = 2f;
-    [SerializeField] private string keyText    = "← →";
+    [SerializeField] private string keyText    = "←|→";
     [SerializeField] private string actionText = "이동";
 
     private IEnumerator Start()
