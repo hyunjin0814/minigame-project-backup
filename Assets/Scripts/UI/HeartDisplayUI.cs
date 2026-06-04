@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class HeartDisplayUI : MonoBehaviour
 {
     [SerializeField] private GameObject heartIconPrefab;
-    [SerializeField] private Sprite fullHeartSprite;
 
     private static readonly Color EmptyColor = Color.black;
     private static readonly Color FullColor  = Color.white;
@@ -17,9 +16,7 @@ public class HeartDisplayUI : MonoBehaviour
         while (_slots.Count < max)
         {
             var go = Instantiate(heartIconPrefab, transform);
-            var img = go.GetComponent<Image>();
-            img.sprite = fullHeartSprite;
-            _slots.Add(img);
+            _slots.Add(go.GetComponent<Image>());
         }
         while (_slots.Count > max)
         {
