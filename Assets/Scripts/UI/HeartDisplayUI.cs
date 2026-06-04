@@ -1,21 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-/// <summary>
-/// HpDisplay 오브젝트에 부착.
-/// SetHearts(count) 호출 시 heartIconPrefab을 count만큼 자식으로 생성한다.
-/// </summary>
 public class HeartDisplayUI : MonoBehaviour
 {
     [SerializeField] private GameObject heartIconPrefab;
+    [SerializeField] private Sprite fullHeartSprite;
+    [SerializeField] private Sprite emptyHeartSprite;
 
-    public void SetHearts(int count)
+    private readonly List<Image> _slots = new();
+
+    public void Refresh(int current, int max)
     {
-        // 기존 하트 전부 제거
-        foreach (Transform child in transform)
-            Destroy(child.gameObject);
+        while (_slots.Count < max)
+        {
+            var go = Instantiate(heartIconPrefab, transform);
+            _slots.Add(go.GetComponent<Image>());
+        }
+        while (_slots.Count > max)
+        {
+            Destroy(_slots[^1].gameObject);
+            _slots.RemoveAt(_slots.Count - 1);
+        }
 
-        // count만큼 새로 생성
-        for (int i = 0; i < count; i++)
-            Instantiate(heartIconPrefab, transform);
+        for (int i = 0; i < _slots.Count; i++)
+            _slots[i].sprite = i < current ? fullHeartSprite : emptyHeartSprite;
     }
 }
