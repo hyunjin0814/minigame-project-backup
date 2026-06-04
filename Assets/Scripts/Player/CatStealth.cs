@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class CatStealth : MonoBehaviour
+public class CatStealth : MonoBehaviour, IContactDamageImmune
 {
     private const float HideDelay = 0.1f;
     private const float MaxStealthMoveDistance = 2.25f;
     private const float StealthCooldown = 1.5f;
 
     public bool IsDetectable { get; private set; } = true;
+
+    // 은신(감지 불가) 상태일 때 접촉 피해 면역
+    public bool IsContactDamageImmune => isActiveAndEnabled && !IsDetectable;
 
     private Rigidbody2D rb;
     private SpriteRenderer sr;

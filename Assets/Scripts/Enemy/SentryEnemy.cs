@@ -31,6 +31,9 @@ public class SentryEnemy : EnemyBase
     [SerializeField] private float _searchDuration = 3f;
     [SerializeField] private float _attackCooldown = 1.5f;
     [SerializeField] private float _attackWindup = 0.5f;
+    [Tooltip("공격 잠금 최대 시간(초). Attack 클립 마지막 프레임에 AnimEvent_AttackEnd 이벤트를 넣으면 그 시점에 정확히 풀립니다. " +
+             "이벤트가 없으면 이 시간 뒤 자동 해제되니, 클립 길이보다 약간 길게 두세요.")]
+    [SerializeField] private float _attackLockDuration = 1f;
     [SerializeField] private float _wallCheckDistance = 0.3f;
     [SerializeField] private float _edgeCheckDistance = 0.5f;
     [SerializeField] private LayerMask _groundLayer;
@@ -58,8 +61,12 @@ public class SentryEnemy : EnemyBase
     private float _detectTimer;
     private float _searchTimer;
     private float _attackTimer;
+    private float _attackLockTimer;
     private bool _hasAttackedThisEntry;
     private bool _arrivedAtSearch;
+
+    // 공격·가드·카운터처럼 상태머신·이동을 멈춰야 하는 동작 잠금. 서브클래스(EliteEnemy)가 확장.
+    protected virtual bool IsActionLocked => _attackLockTimer > 0f;
 
     // ── 라이프사이클 ─────────────────────────────────────────
     protected override void Awake()
@@ -73,6 +80,9 @@ public class SentryEnemy : EnemyBase
     {
         base.Update(); // TickDebuff
         if (IsDead) return;
+
+        if (_attackLockTimer > 0f) _attackLockTimer -= Time.deltaTime;
+        if (IsActionLocked) return; // 공격/가드/카운터 잠금 중엔 상태머신 정지
 
         switch (_currentState)
         {
@@ -153,8 +163,10 @@ public class SentryEnemy : EnemyBase
                     _attackTimer -= Time.deltaTime;
                     if (_attackTimer <= 0f)
                     {
+                        RaiseAttackPerformed(); // Attack 애니 재생 → 클립 히트박스 이벤트 발동
                         _attackBehavior.DoAttack(_player);
                         _attackTimer = _attackCooldown;
+                        _attackLockTimer = _attackLockDuration; // 공격 모션 동안 제자리 정지
                         _hasAttackedThisEntry = true;
                     }
                 }
@@ -170,6 +182,13 @@ public class SentryEnemy : EnemyBase
         if (_isKnockedBack)
         {
             _rb.linearVelocity = new Vector2(_knockbackVelocity.x, _rb.linearVelocity.y);
+            return;
+        }
+
+        // 가드/카운터 등 행동 잠금 중 — 제자리 정지
+        if (IsActionLocked)
+        {
+            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
             return;
         }
 
@@ -190,8 +209,12 @@ public class SentryEnemy : EnemyBase
             case EnemyState.Chase:
             {
                 // deadzone 안(수직 정렬)에서는 X 정지 — 좌우 떨림 방지
+                // 절벽·벽이 앞에 있으면 X 정지 — 낙사 방지
                 float dxFixed = (_player != null) ? _player.position.x - transform.position.x : 0f;
-                float xVelChase = Mathf.Abs(dxFixed) > _facingDeadzone ? _facingDirection * _chaseSpeed : 0f;
+                bool blockedAhead = IsBlockedToward(_facingDirection);
+                float xVelChase = (Mathf.Abs(dxFixed) > _facingDeadzone && !blockedAhead)
+                    ? _facingDirection * _chaseSpeed
+                    : 0f;
                 _rb.linearVelocity = new Vector2(xVelChase, _rb.linearVelocity.y);
                 break;
             }
@@ -206,6 +229,10 @@ public class SentryEnemy : EnemyBase
                 break;
         }
     }
+
+    // 공격 애니메이션 마지막 프레임에 Animation Event로 호출 → 그 시점에 정확히 이동 재개.
+    // (이벤트가 없으면 _attackLockDuration 경과 후 자동 해제)
+    public void AnimEvent_AttackEnd() => _attackLockTimer = 0f;
 
     // ── DetectPlayer ─────────────────────────────────────────
     protected override bool DetectPlayer()
@@ -356,7 +383,7 @@ public class SentryEnemy : EnemyBase
     }
 
     // ── 이동 헬퍼 ─────────────────────────────────────────────
-    private void UpdateFacing(int direction)
+    protected void UpdateFacing(int direction)
     {
         _facingDirection = direction;
         transform.localScale = new Vector3(direction, 1f, 1f);

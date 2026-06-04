@@ -6,11 +6,11 @@ using UnityEngine;
 /// 흐름: 수평 돌진 → 첫 약점 적 충돌 → 정지(공격 모션) → 시작 방향 반대로 2칸 후퇴 → 쿨타임.
 /// 잡몹 히트 시: 약점 윈도우 즉시 종료.
 /// 보스 히트 시: 보스 자체 그로기 타이머만 (Q3-2 B — 윈도우 유지).
-/// 돌진 중 무적 없음 — 기존 피격 판정 유지.
+/// 돌진 중 일반 피격 판정은 유지하되, 접촉 피해(ContactDamage)에는 면역(IContactDamageImmune).
 /// 쿨타임은 Time.time 기반이라 폼 전환과 무관. 돌진 중 폼 전환되면 AbortDash가 쿨타임 적용.
 /// </summary>
 [RequireComponent(typeof(PlayerMotor))]
-public class DogDashAttack : MonoBehaviour
+public class DogDashAttack : MonoBehaviour, IContactDamageImmune
 {
     [Header("Dash")]
     [SerializeField] private float _dashSpeed = 18f;
@@ -32,6 +32,9 @@ public class DogDashAttack : MonoBehaviour
     public float CooldownRemaining => Mathf.Max(0f, _cooldownEndTime - Time.time);
     public bool IsReady => _phase == DashPhase.Idle && Time.time >= _cooldownEndTime;
     public bool IsExecuting => _phase != DashPhase.Idle;
+
+    // 돌진 시퀀스(돌진·강타·후퇴) 중 접촉 피해 면역
+    public bool IsContactDamageImmune => isActiveAndEnabled && IsExecuting;
 
     private enum DashPhase { Idle, Dashing, Striking, Retreating }
     private DashPhase _phase = DashPhase.Idle;
