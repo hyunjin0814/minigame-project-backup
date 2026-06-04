@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88cb863c8f76c54468ae1844b59f964e, type: 3}
+  m_Name: SoundLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::SoundLibrary
+  sfxEntries:
+  - type: 0
+    clip: {fileID: 8300000, guid: b0fa53e980dbf344c90bd973a1e83bdf, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 3
+    clip: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 4
+    clip: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 5
+    clip: {fileID: 8300000, guid: 140ad8a49f3b8484992e64d05667a5c0, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 6
+    clip: {fileID: 8300000, guid: 73fd0730d93ed0c4fb52f3f0e84c235e, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 7
+    clip: {fileID: 8300000, guid: 8b7a5229d9404f84ca182d79c4255d25, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 8
+    clip: {fileID: 8300000, guid: 2a8ecf159c1f11f4fb86dcb030d16596, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  bgmEntries:
+  - type: 1
+    clip: {fileID: 8300000, guid: ccdf98260eee0534e952e127408ecbdc, type: 3}
+    volume: 1
+  - type: 2
+    clip: {fileID: 8300000, guid: dda3f8c179fa69c4298a04f219062d72, type: 3}
+    volume: 1

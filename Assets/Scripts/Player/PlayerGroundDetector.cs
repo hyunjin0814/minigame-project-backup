@@ -15,8 +15,12 @@ public class PlayerGroundDetector : MonoBehaviour
 
     public bool IsGrounded { get; private set; }
 
+    /// <summary>공중 → 착지 전환 시 1회 발생.</summary>
+    public event System.Action OnLanded;
+
     private BoxCollider2D col;
     private bool groundedThisStep;
+    private bool _prevGrounded;
 
     private void Awake()
     {
@@ -25,7 +29,14 @@ public class PlayerGroundDetector : MonoBehaviour
 
     private void FixedUpdate()
     {
-        IsGrounded = groundedThisStep;
+        bool newGrounded = groundedThisStep;
+
+        // 공중 → 지면 전환 감지
+        if (!_prevGrounded && newGrounded)
+            OnLanded?.Invoke();
+
+        IsGrounded    = newGrounded;
+        _prevGrounded = newGrounded;
         groundedThisStep = false;
     }
 

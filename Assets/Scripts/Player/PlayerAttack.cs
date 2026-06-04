@@ -268,6 +268,7 @@ public class PlayerAttack : MonoBehaviour
             return;
 
         hitbox?.Activate();
+        AudioManager.Instance?.PlaySFX(SoundType.PlayerAttackSwing);
         IsAttacking = true;
         CanDash = false;
         timer = attackDuration;        // 활성화 시점부터 attackDuration 동안 유지
@@ -292,14 +293,23 @@ public class PlayerAttack : MonoBehaviour
         if (HitStopManager.Instance != null)
         {
             HitStopType type = ResolveHitStopType(other);
+            AudioManager.Instance?.PlaySFX(HitStopTypeToSoundType(type));
             float duration = HitStopManager.Instance.Freeze(type);
             StartCoroutine(KnockbackAfter(duration, dir)); // 넉백은 정지 해제 후
         }
         else
         {
+            AudioManager.Instance?.PlaySFX(SoundType.PlayerAttackHitLight);
             ApplyKnockback(dir);
         }
     }
+
+    private static SoundType HitStopTypeToSoundType(HitStopType type) => type switch
+    {
+        HitStopType.Heavy    => SoundType.PlayerAttackHitHeavy,
+        HitStopType.Critical => SoundType.PlayerAttackHitCritical,
+        _                    => SoundType.PlayerAttackHitLight,
+    };
 
     // 치명타(백스탭·마무리 일격) > 대상 등급(HitStopProfile) > 기본 Light 순으로 판정.
     private HitStopType ResolveHitStopType(Collider2D enemyCol)

@@ -172,6 +172,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""QuickMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""9618b6fd-602f-4ed9-8638-474c99f52e2c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FullMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""b736528c-b92f-40fa-b5f3-6d482bcbaed4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -317,6 +335,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""DogDash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8961655a-b222-4bec-8f4e-1b756a8d1273"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1693a66a-12c6-412d-bbc9-92f142b29409"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FullMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -362,6 +402,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Scan = m_Player.FindAction("Scan", throwIfNotFound: true);
         m_Player_DogDash = m_Player.FindAction("DogDash", throwIfNotFound: true);
+        m_Player_QuickMap = m_Player.FindAction("QuickMap", throwIfNotFound: true);
+        m_Player_FullMap = m_Player.FindAction("FullMap", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
@@ -455,6 +497,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Scan;
     private readonly InputAction m_Player_DogDash;
+    private readonly InputAction m_Player_QuickMap;
+    private readonly InputAction m_Player_FullMap;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -502,6 +546,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/DogDash".
         /// </summary>
         public InputAction @DogDash => m_Wrapper.m_Player_DogDash;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/QuickMap".
+        /// </summary>
+        public InputAction @QuickMap => m_Wrapper.m_Player_QuickMap;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/FullMap".
+        /// </summary>
+        public InputAction @FullMap => m_Wrapper.m_Player_FullMap;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -555,6 +607,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @DogDash.started += instance.OnDogDash;
             @DogDash.performed += instance.OnDogDash;
             @DogDash.canceled += instance.OnDogDash;
+            @QuickMap.started += instance.OnQuickMap;
+            @QuickMap.performed += instance.OnQuickMap;
+            @QuickMap.canceled += instance.OnQuickMap;
+            @FullMap.started += instance.OnFullMap;
+            @FullMap.performed += instance.OnFullMap;
+            @FullMap.canceled += instance.OnFullMap;
         }
 
         /// <summary>
@@ -593,6 +651,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @DogDash.started -= instance.OnDogDash;
             @DogDash.performed -= instance.OnDogDash;
             @DogDash.canceled -= instance.OnDogDash;
+            @QuickMap.started -= instance.OnQuickMap;
+            @QuickMap.performed -= instance.OnQuickMap;
+            @QuickMap.canceled -= instance.OnQuickMap;
+            @FullMap.started -= instance.OnFullMap;
+            @FullMap.performed -= instance.OnFullMap;
+            @FullMap.canceled -= instance.OnFullMap;
         }
 
         /// <summary>
@@ -792,6 +856,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDogDash(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "QuickMap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuickMap(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FullMap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFullMap(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

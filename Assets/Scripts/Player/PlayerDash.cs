@@ -105,6 +105,7 @@ public class PlayerDash : MonoBehaviour
         savedGravityScale = rb.gravityScale;
         motor.SetGravityScale(0f);
 
+        AudioManager.Instance?.PlaySFX(SoundType.PlayerDash);
         Debug.Log($"[PlayerDash] Dash 시작 (dir={dashDirection})");
         OnDashStart?.Invoke();
     }
