@@ -6,4 +6,7 @@ public abstract class ItemData : ScriptableObject
     public string id;
     public string displayName;
     public Sprite icon;
+
+    [Header("Tutorial")]
+    [TextArea] public string hintText;
 }
