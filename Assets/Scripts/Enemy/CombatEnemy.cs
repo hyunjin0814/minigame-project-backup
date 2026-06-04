@@ -12,6 +12,9 @@ public class CombatEnemy : EnemyBase
     [SerializeField]
     private float _detectRadius = 10f;
 
+    [SerializeField]
+    private float _chaseLeashDistance = 15f;  // 이 거리 초과 시 추격 포기 → Combat(수색)
+
     // 카멜레온 → 인간 변신 후 이 시간(초) 동안 감지 무효. 적마다 다르게 설정해 난이도 조절.
     // TODO: 카멜레온 → 고양이 리네임 후 주석 업데이트
     [SerializeField]
@@ -97,6 +100,13 @@ public class CombatEnemy : EnemyBase
                 if (_player != null)
                 {
                     _lastKnownPlayerPosition = _player.position;
+
+                    // 추격 해제 거리 초과 시 Combat(수색) 전환
+                    if (Vector2.Distance(transform.position, _player.position) > _chaseLeashDistance)
+                    {
+                        ChangeState(EnemyState.Combat);
+                        break;
+                    }
 
                     // deadzone 밖일 때만 facing 갱신 — 수직 정렬 시 좌우 떨림 방지
                     float dxChase = _player.position.x - transform.position.x;
@@ -201,8 +211,12 @@ public class CombatEnemy : EnemyBase
             case EnemyState.Chase:
             {
                 // deadzone 안(수직 정렬)에서는 X 정지 — 좌우 떨림 방지
+                // 절벽·벽이 앞에 있으면 X 정지 — 낙사 방지
                 float dxFixed = (_player != null) ? _player.position.x - transform.position.x : 0f;
-                float xVelChase = Mathf.Abs(dxFixed) > _facingDeadzone ? _facingDirection * _chaseSpeed : 0f;
+                bool blockedAhead = IsBlockedToward(_facingDirection);
+                float xVelChase = (Mathf.Abs(dxFixed) > _facingDeadzone && !blockedAhead)
+                    ? _facingDirection * _chaseSpeed
+                    : 0f;
                 _rb.linearVelocity = new Vector2(xVelChase, _rb.linearVelocity.y);
                 break;
             }
@@ -367,5 +381,7 @@ public class CombatEnemy : EnemyBase
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _detectRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _chaseLeashDistance);
     }
 }
