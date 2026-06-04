@@ -6,7 +6,9 @@ public class HeartDisplayUI : MonoBehaviour
 {
     [SerializeField] private GameObject heartIconPrefab;
     [SerializeField] private Sprite fullHeartSprite;
-    [SerializeField] private Sprite emptyHeartSprite;
+
+    private static readonly Color EmptyColor = Color.black;
+    private static readonly Color FullColor  = Color.white;
 
     private readonly List<Image> _slots = new();
 
@@ -15,7 +17,9 @@ public class HeartDisplayUI : MonoBehaviour
         while (_slots.Count < max)
         {
             var go = Instantiate(heartIconPrefab, transform);
-            _slots.Add(go.GetComponent<Image>());
+            var img = go.GetComponent<Image>();
+            img.sprite = fullHeartSprite;
+            _slots.Add(img);
         }
         while (_slots.Count > max)
         {
@@ -24,6 +28,6 @@ public class HeartDisplayUI : MonoBehaviour
         }
 
         for (int i = 0; i < _slots.Count; i++)
-            _slots[i].sprite = i < current ? fullHeartSprite : emptyHeartSprite;
+            _slots[i].color = i < current ? FullColor : EmptyColor;
     }
 }
