@@ -41,15 +41,22 @@ public class PlayerDash : MonoBehaviour
 
     private void OnEnable()
     {
-        inputHandler.OnDash += HandleDash;
+        inputHandler.OnDash  += HandleDash;
+        Health.OnPlayerDied  += HandlePlayerDied;
     }
 
     private void OnDisable()
     {
-        inputHandler.OnDash -= HandleDash;
+        inputHandler.OnDash  -= HandleDash;
+        Health.OnPlayerDied  -= HandlePlayerDied;
 
         if (IsDashing)
             EndDash();
+    }
+
+    private void HandlePlayerDied()
+    {
+        if (IsDashing) EndDash();
     }
 
     private void Update()

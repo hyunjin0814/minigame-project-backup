@@ -27,8 +27,25 @@ public class PlayerHurtEffect : MonoBehaviour
         motor          = GetComponent<PlayerMotor>();
     }
 
-    private void OnEnable()  => health.OnHit += HandleHit;
-    private void OnDisable() => health.OnHit -= HandleHit;
+    private void OnEnable()
+    {
+        health.OnHit       += HandleHit;
+        Health.OnPlayerDied += HandlePlayerDied;
+    }
+
+    private void OnDisable()
+    {
+        health.OnHit       -= HandleHit;
+        Health.OnPlayerDied -= HandlePlayerDied;
+    }
+
+    private void HandlePlayerDied()
+    {
+        StopAllCoroutines();
+        IsHurt = false;
+        if (spriteRenderer != null) spriteRenderer.enabled = true;
+        health.IsInvincible = false;
+    }
 
     private void HandleHit(int amount, Vector2 source)
     {
