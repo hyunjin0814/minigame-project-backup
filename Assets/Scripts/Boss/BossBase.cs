@@ -227,8 +227,15 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         Health.OnDeath -= OnDeath;
         if (IsWeaknessExposed) ClearWeakness();
         if (IsGroggy) ExitGroggy();
+        DisableAllColliders();
         Died?.Invoke();
         Fsm.ChangeState(DeathState);
+    }
+
+    private void DisableAllColliders()
+    {
+        foreach (var col in GetComponentsInChildren<Collider2D>(true))
+            col.enabled = false;
     }
 
     public void DropItem()
