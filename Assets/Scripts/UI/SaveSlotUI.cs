@@ -83,8 +83,7 @@ public class SaveSlotUI : MonoBehaviour
         const string startScene = "Map1";
 
         GameState.Instance.Reset();
-        GameState.Instance.currentSaveSlot    = _slotIndex;
-        GameState.Instance.lastCheckpointScene = startScene;
+        GameState.Instance.currentSaveSlot = _slotIndex;
 
         // 슬롯 점유 표시를 위해 초기 세이브 파일 즉시 생성
         SaveManager.Save(_slotIndex);

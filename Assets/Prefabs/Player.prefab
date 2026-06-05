@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79eece0e7f14ac45b98f7351cedab42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHp: 3
+  maxHp: 5
 --- !u!114 &9159540766224252766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,7 +423,7 @@ MonoBehaviour:
   _retreatMaxDuration: 0.5
   _strikePauseDuration: 0.15
   _dashAttackCooldown: 7
-  _damage: 20
+  _damage: 5
   _hitboxOffset: {x: 0.7, y: 0}
   _hitboxSize: {x: 0.8, y: 0.6}
   _targetLayer:

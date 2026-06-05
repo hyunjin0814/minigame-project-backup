@@ -1,25 +1,18 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StageClearManager : MonoBehaviour
 {
     public static StageClearManager Instance { get; private set; }
 
-    [SerializeField]
-    private PlayerInputHandler playerInput;
-
-    [SerializeField]
-    private Image fadeImage;
-
-    [SerializeField]
-    private GameObject stageClearText;
-
-    [SerializeField]
-    private float fadeDuration = 1f;
-
-    [SerializeField]
-    private float displayDuration = 2f;
+    [SerializeField] private PlayerInputHandler playerInput;
+    [SerializeField] private Image fadeImage;
+    [SerializeField] private GameObject stageClearText;
+    [SerializeField] private float fadeDuration = 1f;
+    [SerializeField] private float displayDuration = 3f;
+    [SerializeField] private string titleSceneName = "Title";
 
     private void Awake()
     {
@@ -54,5 +47,12 @@ public class StageClearManager : MonoBehaviour
 
         if (stageClearText != null)
             stageClearText.SetActive(true);
+
+        yield return new WaitForSeconds(displayDuration);
+
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.TransitionTo(titleSceneName);
+        else
+            SceneManager.LoadScene(titleSceneName);
     }
 }

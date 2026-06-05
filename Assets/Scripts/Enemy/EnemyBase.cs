@@ -145,6 +145,13 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
             hitbox.Deactivate();
     }
 
+    // 사망 시 본체·접촉·공격 등 모든 콜라이더를 즉시 비활성화 (플레이어와의 상호작용 차단)
+    private void DisableAllColliders()
+    {
+        foreach (var col in GetComponentsInChildren<Collider2D>(true))
+            col.enabled = false;
+    }
+
     protected virtual void Die()
     {
         if (IsDead) return;
@@ -156,13 +163,18 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
         // 약점 즉시 해제 — 강아지가 시체를 마킹하지 못하게
         if (IsWeaknessExposed) ClearWeakness();
 
-        // 자식 hitbox만 비활성화 — 본체 콜라이더는 유지 (땅 위 안착).
-        // 적/플레이어는 Layer로 충돌 분리돼있어 본체 콜라이더가 켜져있어도 OK.
-        DeactivateAllHitboxes();
+        // 사망 즉시 플레이어와의 모든 상호작용 차단:
+        //  - 콜라이더 전부 비활성화 → 접촉 데미지(ContactDamage)·공격 히트박스 정지
+        //  - 본체 콜라이더도 꺼서 플레이어의 내려찍기(포고)가 시체에 반응하지 않게
+        DisableAllColliders();
 
-        // 잔여 속도 정지 (FixedUpdate가 IsDead 가드로 막혀있어 명시적으로 0)
+        // 물리 정지 — 시체가 낙하·충돌 없이 죽은 자리에 멈춤 (FixedUpdate도 IsDead 가드로 막힘)
         var rb = GetComponent<Rigidbody2D>();
-        if (rb != null) rb.linearVelocity = Vector2.zero;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false;
+        }
 
         // Death 애니메이션 재생 시간 확보 후 비활성화
         Invoke(nameof(DisableAfterDeath), _deathAnimDuration);
@@ -224,6 +236,10 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     {
         LastHitWasBackstab = false;
 
+        // ⓪ 완전 차단 (방향성 가드 등) — 최소 1 보정보다 먼저 처리해 0 데미지 보장
+        if (BlocksDamageFrom(source))
+            return 0;
+
         // ① 서브클래스 전용 배율 (백스탭, 가드 감소 등)
         int damage = ApplySpecialModifier(baseDamage, source);
 
@@ -237,6 +253,10 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
 
         return Mathf.Max(1, damage);
     }
+
+    // 특정 방향/조건의 피해를 완전 차단(0 데미지). 기본은 차단 안 함.
+    // 방향성 가드 등 source 기반 판정이 필요한 서브클래스가 override.
+    protected virtual bool BlocksDamageFrom(Vector2 source) => false;
 
     // 서브클래스 전용 데미지 배율. 기본 구현은 그대로 반환.
     // 위치 기반 판정(백스탭 등)이 필요한 경우 source 사용.

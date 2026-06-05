@@ -164,6 +164,7 @@ public class GameState : MonoBehaviour
         currentSaveSlot     = -1;
         playTime            = 0f;
         coins               = 0;
+        InventoryManager.Instance?.Clear();
         Debug.Log("[GameState] 초기화");
     }
 }

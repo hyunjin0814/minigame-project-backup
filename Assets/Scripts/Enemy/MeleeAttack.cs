@@ -14,11 +14,13 @@ public class MeleeAttack : MonoBehaviour, IEnemyAttack
     [SerializeField]
     private bool useAnimationEvent = false;
 
+    [Tooltip("이 공격이 켜는 히트박스. 비우면 자식에서 자동 탐색. 히트박스가 여러 개면 직접 지정할 것.")]
+    [SerializeField]
     private AttackHitbox hitbox;
 
     private void Awake()
     {
-        hitbox = GetComponentInChildren<AttackHitbox>();
+        if (hitbox == null) hitbox = GetComponentInChildren<AttackHitbox>(true);
     }
 
     public bool IsInRange(Transform target) =>
@@ -27,7 +29,7 @@ public class MeleeAttack : MonoBehaviour, IEnemyAttack
     public void DoAttack(Transform target)
     {
         if (useAnimationEvent) return; // Animation Event가 켜고 끔
-        StartCoroutine(HitboxRoutine());
+        if (hitbox != null) StartCoroutine(HitboxRoutine());
     }
 
     private IEnumerator HitboxRoutine()
@@ -37,7 +39,7 @@ public class MeleeAttack : MonoBehaviour, IEnemyAttack
         hitbox.Deactivate();
     }
 
-    // Animation Event 호출용 (Goblin Attack 클립에 등록)
-    public void AnimEvent_EnableHitbox() => hitbox.Activate();
-    public void AnimEvent_DisableHitbox() => hitbox.Deactivate();
+    // Animation Event 호출용 (Goblin/Skeleton Attack 클립에 등록)
+    public void AnimEvent_EnableHitbox() => hitbox?.Activate();
+    public void AnimEvent_DisableHitbox() => hitbox?.Deactivate();
 }

@@ -31,6 +31,11 @@ public class ContactDamage : MonoBehaviour
         if (playerTagOnly && !other.CompareTag("Player"))
             return;
 
+        // 강아지 돌진·고양이 은신 등 접촉 피해 면역 상태면 무시
+        foreach (var immune in other.GetComponentsInParent<IContactDamageImmune>())
+            if (immune.IsContactDamageImmune)
+                return;
+
         if (other.TryGetComponent<IDamageable>(out var target))
             target.TakeDamage(damage, transform.position);
     }

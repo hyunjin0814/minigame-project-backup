@@ -41,7 +41,7 @@ public class GameOverManager : MonoBehaviour
         var gs = GameState.Instance;
         string targetScene;
 
-        if (gs != null && !string.IsNullOrEmpty(gs.lastCheckpointScene))
+        if (gs != null && !string.IsNullOrEmpty(gs.lastCheckpointID))
         {
             // 체크포인트 있음 → 해당 씬으로 이동, 풀HP 부활
             gs.savedHP   = -1;
