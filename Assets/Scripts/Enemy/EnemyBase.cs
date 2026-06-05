@@ -110,7 +110,11 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     }
 
     // ── 피격/사망 ─────────────────────────────────────────────
-    private void HandleHit(int damage, Vector2 source) => OnHit(source);
+    private void HandleHit(int damage, Vector2 source)
+    {
+        _lastHitPosition = source;
+        OnHit(source);
+    }
 
     private void HandleDeath() => Die();
 
@@ -176,6 +180,10 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
             rb.simulated = false;
         }
 
+        // 처치 이펙트 (히트스톱 없음)
+        Vector2 effectPos = _lastHitPosition != Vector2.zero ? _lastHitPosition : (Vector2)transform.position;
+        EffectSpawner.Instance?.SpawnLarge(effectPos);
+
         // Death 애니메이션 재생 시간 확보 후 비활성화
         Invoke(nameof(DisableAfterDeath), _deathAnimDuration);
     }
@@ -229,15 +237,19 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     // Health.DamageModifier에 항상 이 메서드만 등록.
     // 서브클래스는 DamageModifier를 교체하지 말고 ApplySpecialModifier만 오버라이드.
     // 가장 최근 피격이 백스탭이었는지. 히트스톱 치명타 판정용(PlayerAttack이 조회).
-    // ComputeFinalDamage 진입 시 false로 리셋하고, 서브클래스가 ApplySpecialModifier에서 설정.
     public bool LastHitWasBackstab { get; protected set; }
+    // 가장 최근 피격이 방패에 막혔는지. PlayerAttack이 조회해 블록 이펙트/사운드 재생.
+    public bool LastHitWasBlocked { get; private set; }
+    // 마지막 타격 위치 — 적 처치 이펙트 스폰 위치로 사용.
+    protected Vector2 _lastHitPosition;
 
     private int ComputeFinalDamage(int baseDamage, Vector2 source)
     {
         LastHitWasBackstab = false;
 
         // ⓪ 완전 차단 (방향성 가드 등) — 최소 1 보정보다 먼저 처리해 0 데미지 보장
-        if (BlocksDamageFrom(source))
+        LastHitWasBlocked = BlocksDamageFrom(source);
+        if (LastHitWasBlocked)
             return 0;
 
         // ① 서브클래스 전용 배율 (백스탭, 가드 감소 등)

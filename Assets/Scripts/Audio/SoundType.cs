@@ -35,6 +35,7 @@ public enum SoundType
     // ── 적 ─────────────────────────────────────────────────────────
     EnemyAlert,              // 플레이어 감지 (느낌표)
     EnemyAttackSwing,
+    EliteShieldBlock,        // 방패 막기 차단
     EnemyProjectileLaunch,
     EnemyProjectileImpact,
     EnemyWeaknessExpose,     // 약점 노출

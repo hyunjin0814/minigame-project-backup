@@ -52,7 +52,8 @@ public class PlayerHurtEffect : MonoBehaviour
         StopAllCoroutines();
         AudioManager.Instance?.PlaySFX(SoundType.PlayerHurt);
         health.IsInvincible = true;  // 히트스톱 대기 전 즉시 무적 — ContactDamage 연타 방지
-        float stopDuration = HitStopManager.Instance?.Freeze(HitStopType.Light) ?? 0f;
+        EffectSpawner.Instance?.SpawnLarge(transform.position);
+        float stopDuration = HitStopManager.Instance?.Freeze(HitStopType.Long) ?? 0f;
         StartCoroutine(HurtRoutine(source, stopDuration));
     }
 

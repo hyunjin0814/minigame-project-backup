@@ -299,6 +299,19 @@ public class PlayerAttack : MonoBehaviour
             return;
         hitResolvedThisSwing = true;
 
+        var enemyBase = other.GetComponentInParent<EnemyBase>();
+
+        // 방패 막기: 히트스톱 없이 소리 + 작은 이펙트만
+        if (enemyBase != null && enemyBase.LastHitWasBlocked)
+        {
+            AudioManager.Instance?.PlaySFX(SoundType.EliteShieldBlock);
+            EffectSpawner.Instance?.SpawnSmall(hitbox.transform.position);
+            return;
+        }
+
+        // 일반 공격 히트 이펙트
+        EffectSpawner.Instance?.SpawnMedium(hitbox.transform.position);
+
         AttackDirection dir = currentDirection;
 
         // AttackHitbox가 TakeDamage를 먼저 호출하므로, 이 시점엔 데미지·백스탭·사망 처리가 끝나 있다.
