@@ -244,6 +244,9 @@ MonoBehaviour:
   humanData: {fileID: 11400000, guid: 4659c071936b2324a9acd18c3836a76c, type: 2}
   dogData: {fileID: 11400000, guid: b7a2e49fd23c6f440ae30c3f82b502e5, type: 2}
   catData: {fileID: 11400000, guid: de6d9877a2348ee4081da5389fadade5, type: 2}
+  _transformObstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &4930430848281739477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,6 +373,9 @@ MonoBehaviour:
   knockbackForce: 8
   knockbackUpForce: 3
   knockbackDuration: 0.15
+  hitFreezeSprite: {fileID: 0}
+  _effectCenterOffset: {x: 0, y: 0.5}
+  _effectEdgeDistance: 0
 --- !u!114 &8872950342180781239
 MonoBehaviour:
   m_ObjectHideFlags: 0

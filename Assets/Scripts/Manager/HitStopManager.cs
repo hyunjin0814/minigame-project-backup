@@ -36,7 +36,7 @@ public class HitStopManager : MonoBehaviour
     [SerializeField] private float heavyDuration    = 0.09f;  // 보스/대형
     [SerializeField] private float criticalDuration = 0.17f;  // 백스탭·마무리 일격
     [SerializeField] private float mediumDuration   = 0.05f;  // 적 피격
-    [SerializeField] private float longDuration     = 0.5f;   // 플레이어 피격
+    [SerializeField] private float longDuration     = 0.25f;  // 플레이어 피격
 
     private float _remaining;
 

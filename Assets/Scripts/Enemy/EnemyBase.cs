@@ -39,6 +39,12 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     protected Vector2 _knockbackVelocity;
     private   float  _knockbackTimer;
 
+    [Header("Effect")]
+    [Tooltip("이펙트가 나올 몸통 중심 (로컬 오프셋). 기본 0이면 transform 위치.")]
+    [SerializeField] private Vector2 _effectCenterOffset = Vector2.zero;
+    [Tooltip("몸통 중심에서 맞은 방향으로 밀어낼 거리. 0이면 정중앙.")]
+    [SerializeField] private float _effectEdgeDistance = 0.3f;
+
     [Header("Death")]
     [SerializeField]
     private float _deathAnimDuration = 2f;
@@ -70,6 +76,15 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     public event Action Died;
 
     protected void RaiseAttackPerformed() => AttackPerformed?.Invoke();
+
+    /// <summary>맞은 방향을 고려한 이펙트 생성 위치. 몸통 중심에서 타격 지점 쪽으로 약간 밀어낸다.</summary>
+    public Vector2 GetEffectPoint(Vector2 hitSource)
+    {
+        Vector2 center = (Vector2)transform.position + _effectCenterOffset;
+        Vector2 dir = hitSource - center;
+        if (dir.sqrMagnitude < 0.0001f) return center;
+        return center + dir.normalized * _effectEdgeDistance;
+    }
 
     // ── 라이프사이클 ─────────────────────────────────────────
     protected virtual void Awake()
@@ -180,9 +195,8 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
             rb.simulated = false;
         }
 
-        // 처치 이펙트 (히트스톱 없음)
-        Vector2 effectPos = _lastHitPosition != Vector2.zero ? _lastHitPosition : (Vector2)transform.position;
-        EffectSpawner.Instance?.SpawnLarge(effectPos);
+        // 처치 이펙트 (히트스톱 없음) — 몸통 중심에서 맞은 방향으로
+        EffectSpawner.Instance?.SpawnLarge(GetEffectPoint(_lastHitPosition));
 
         // Death 애니메이션 재생 시간 확보 후 비활성화
         Invoke(nameof(DisableAfterDeath), _deathAnimDuration);

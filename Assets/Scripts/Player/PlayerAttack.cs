@@ -305,12 +305,20 @@ public class PlayerAttack : MonoBehaviour
         if (enemyBase != null && enemyBase.LastHitWasBlocked)
         {
             AudioManager.Instance?.PlaySFX(SoundType.EliteShieldBlock);
-            EffectSpawner.Instance?.SpawnSmall(hitbox.transform.position);
+            EffectSpawner.Instance?.SpawnSmall(enemyBase.GetEffectPoint(hitbox.transform.position));
             return;
         }
 
-        // 일반 공격 히트 이펙트
-        EffectSpawner.Instance?.SpawnMedium(hitbox.transform.position);
+        // 처치 타격이면 Medium 생략 — Die()에서 Large가 나옴 (중복 방지)
+        var health = other.GetComponentInParent<Health>();
+        bool isKillingBlow = health != null && health.CurrentHp <= 0;
+        if (!isKillingBlow)
+        {
+            Vector2 hitPos = enemyBase != null
+                ? enemyBase.GetEffectPoint(hitbox.transform.position)
+                : (Vector2)hitbox.transform.position;
+            EffectSpawner.Instance?.SpawnMedium(hitPos);
+        }
 
         AttackDirection dir = currentDirection;
 

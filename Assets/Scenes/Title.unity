@@ -7422,6 +7422,7 @@ GameObject:
   - component: {fileID: 946738539}
   - component: {fileID: 946738544}
   - component: {fileID: 946738545}
+  - component: {fileID: 946738546}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -7456,6 +7457,8 @@ MonoBehaviour:
   lightDuration: 0.025
   heavyDuration: 0.09
   criticalDuration: 0.17
+  mediumDuration: 0.05
+  longDuration: 0.25
 --- !u!114 &946738541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7548,6 +7551,21 @@ MonoBehaviour:
   sfxVolume: 1
   bgmVolume: 1
   sfxPoolSize: 8
+--- !u!114 &946738546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946738537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94964631ba243984f8b726aee632e59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectSpawner
+  smallEffectPrefab: {fileID: 5152760096287313929, guid: 044c7c3973836de48a1529597ba43635, type: 3}
+  mediumEffectPrefab: {fileID: 5825520633728211743, guid: eff82b8d867289140b146d7291c42a89, type: 3}
+  largeEffectPrefab: {fileID: 6509812723862564444, guid: 6b868d38b561c9048a38b1eb2ced3c0e, type: 3}
 --- !u!1 &969493814
 GameObject:
   m_ObjectHideFlags: 0
