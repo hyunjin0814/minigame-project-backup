@@ -6,6 +6,8 @@ public abstract class BaseTransformState : ITransformState
     protected readonly PlayerTransformController controller;
     protected readonly TransformationData data;
 
+    public TransformationData Data => data;
+
     protected BaseTransformState(PlayerTransformController controller, TransformationData data)
     {
         this.controller = controller;

@@ -51,6 +51,7 @@ public class PlayerHurtEffect : MonoBehaviour
     {
         StopAllCoroutines();
         AudioManager.Instance?.PlaySFX(SoundType.PlayerHurt);
+        health.IsInvincible = true;  // 히트스톱 대기 전 즉시 무적 — ContactDamage 연타 방지
         float stopDuration = HitStopManager.Instance?.Freeze(HitStopType.Light) ?? 0f;
         StartCoroutine(HurtRoutine(source, stopDuration));
     }
@@ -67,8 +68,7 @@ public class PlayerHurtEffect : MonoBehaviour
         motor?.SetVelocityX(dirX * knockbackForce);
         motor?.SetVelocityY(knockbackUpForce);
 
-        // ③ 무적 시작
-        health.IsInvincible = true;
+        // ③ 무적은 HandleHit에서 이미 설정됨
 
         // ④ 넉백 유지 시간 (이동 입력 차단)
         yield return new WaitForSecondsRealtime(knockbackDuration);

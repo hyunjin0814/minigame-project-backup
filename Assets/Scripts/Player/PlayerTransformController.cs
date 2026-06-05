@@ -58,6 +58,9 @@ public class PlayerTransformController : MonoBehaviour
 
     public BoxCollider2D Collider { get; private set; }
 
+    [Header("Transform Obstacle Check")]
+    [SerializeField] private LayerMask _transformObstacleLayer;
+
     private void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
@@ -155,6 +158,13 @@ public class PlayerTransformController : MonoBehaviour
             return;
         }
 
+        // 변신 후 콜라이더가 Ground에 끼이는지 사전 검사
+        if (!CanFitInNewForm(newState))
+        {
+            Debug.Log("[PlayerTransformController] 변신 공간 부족 — 차단");
+            return;
+        }
+
         // 고양이 → 인간 변신 시만 스니크 윈도우 활성화
         bool comingFromCat = currentState == catState;
 
@@ -171,6 +181,16 @@ public class PlayerTransformController : MonoBehaviour
             SneakWindowActivatedAt = Time.time;
             Debug.Log("[PlayerTransformController] 스니크 윈도우 활성화");
         }
+    }
 
+    private bool CanFitInNewForm(ITransformState targetState)
+    {
+        if (targetState is not BaseTransformState baseState) return true;
+        if (_transformObstacleLayer == 0) return true;
+
+        Vector2 center = rb.position + baseState.Data.colliderOffset;
+        // 90% 크기로 검사해 경계 접촉 오판 방지
+        Vector2 checkSize = baseState.Data.colliderSize * 0.9f;
+        return Physics2D.OverlapBox(center, checkSize, 0f, _transformObstacleLayer) == null;
     }
 }
