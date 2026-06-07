@@ -14,7 +14,9 @@ public class PlayerHurtEffect : MonoBehaviour
     [SerializeField] private float knockbackDuration = 0.15f;
 
     [Header("Hit Freeze Pose")]
-    [SerializeField] private Sprite hitFreezeSprite; // 인스펙터에 adventurer-crnr-clmb-00 할당
+    [SerializeField] private Sprite humanHurtSprite;
+    [SerializeField] private Sprite catHurtSprite;
+    [SerializeField] private Sprite dogHurtSprite;
 
     [Header("Effect")]
     [Tooltip("이펙트가 나올 몸통 중심 (로컬 오프셋). 기본 0이면 transform 위치.")]
@@ -29,13 +31,15 @@ public class PlayerHurtEffect : MonoBehaviour
     private Health health;
     private PlayerMotor motor;
     private Animator animator;
+    private PlayerTransformController _transformCtrl;
 
     private void Awake()
     {
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        health         = GetComponent<Health>();
-        motor          = GetComponent<PlayerMotor>();
-        animator       = GetComponentInChildren<Animator>();
+        spriteRenderer  = GetComponentInChildren<SpriteRenderer>();
+        health          = GetComponent<Health>();
+        motor           = GetComponent<PlayerMotor>();
+        animator        = GetComponentInChildren<Animator>();
+        _transformCtrl  = GetComponent<PlayerTransformController>();
     }
 
     private void OnEnable()
@@ -67,10 +71,16 @@ public class PlayerHurtEffect : MonoBehaviour
         EffectSpawner.Instance?.SpawnLarge(GetEffectPoint(source));
 
         // 타임스톱 동안 피격 포즈 고정 (Animator가 스프라이트를 덮어쓰지 못하게 잠시 끔)
-        if (hitFreezeSprite != null && spriteRenderer != null)
+        Sprite hurtSprite = _transformCtrl?.CurrentForm switch
+        {
+            PlayerForm.Cat => catHurtSprite,
+            PlayerForm.Dog => dogHurtSprite,
+            _              => humanHurtSprite,
+        };
+        if (hurtSprite != null && spriteRenderer != null)
         {
             if (animator != null) animator.enabled = false;
-            spriteRenderer.sprite = hitFreezeSprite;
+            spriteRenderer.sprite = hurtSprite;
         }
 
         float stopDuration = HitStopManager.Instance?.Freeze(HitStopType.Long) ?? 0f;

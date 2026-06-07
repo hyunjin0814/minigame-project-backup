@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 8116956868048932652}
   - component: {fileID: 862841169915373959}
   - component: {fileID: 3446662288055364591}
-  - component: {fileID: 7326650644655522320}
+  - component: {fileID: 4365197168069714678}
   m_Layer: 10
-  m_Name: BossProjectile
+  m_Name: Projectile2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,9 +82,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: -952785642901035298, guid: a66b604a8d492224e88c788291c44ef2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -157,7 +157,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &7326650644655522320
+--- !u!114 &4365197168069714678
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -166,8 +166,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 2468403428697445729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 025dfd9d722257141bc295c80ae87be2, type: 3}
+  m_Script: {fileID: 11500000, guid: 68a5b5dda9a04a44282d815e6e7269c6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossProjectile
+  m_EditorClassIdentifier: Assembly-CSharp::Projectile
   damage: 1
   lifetime: 3

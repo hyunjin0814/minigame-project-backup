@@ -8,8 +8,8 @@ using UnityEngine.UI;
 ///   • QuickMap(Tab 홀드): 오버레이로 펼침. 게임은 계속 진행, 아이콘 실시간 갱신.
 ///   • FullMap(M 토글):   Time.timeScale=0으로 정지 후 펼침. ESC 차단(PauseManager 충돌 방지).
 ///
-/// 방은 정수 그리드 칸으로 GameState에 저장된다. 여기서 칸 → 픽셀로 변환하며
-/// 모든 방을 동일 크기·간격으로 그린다. 항상 현재 방을 패널 중앙에 둔다.
+/// mapPreset이 지정된 경우 미방문 방까지 모두 표시한다.
+/// 방은 정수 그리드 칸으로 GameState에 저장되며, 칸 → 픽셀 변환해 그린다.
 /// </summary>
 public class MapUI : MonoBehaviour
 {
@@ -39,13 +39,29 @@ public class MapUI : MonoBehaviour
     [SerializeField] private float stubThickness = 3f;
 
     [Header("색상")]
-    [SerializeField] private Color currentColor        = new Color(0.36f, 0.78f, 0.91f); // #5BC8E8
-    [SerializeField] private Color currentBorderColor  = new Color(0.63f, 0.89f, 0.97f); // #A0E4F8
-    [SerializeField] private Color visitedColor        = new Color(0.18f, 0.29f, 0.37f); // #2E4A5F
-    [SerializeField] private Color visitedBorderColor  = new Color(0.30f, 0.48f, 0.62f); // #4D7A9E
-    [SerializeField] private Color corridorColor       = new Color(0.18f, 0.29f, 0.37f); // #2E4A5F
+    [SerializeField] private Color currentColor        = new Color(0.36f, 0.78f, 0.91f);
+    [SerializeField] private Color currentBorderColor  = new Color(0.63f, 0.89f, 0.97f);
+    [SerializeField] private Color visitedColor        = new Color(0.18f, 0.29f, 0.37f);
+    [SerializeField] private Color visitedBorderColor  = new Color(0.30f, 0.48f, 0.62f);
+    [SerializeField] private Color corridorColor       = new Color(0.18f, 0.29f, 0.37f);
+    [SerializeField] private Color undiscoveredColor       = new Color(0.08f, 0.13f, 0.17f);
+    [SerializeField] private Color undiscoveredBorderColor = new Color(0.13f, 0.21f, 0.28f);
     [Tooltip("방 테두리 두께 (픽셀, worldToMapScale 이전 기준).")]
     [SerializeField] private float borderThickness = 2f;
+
+    [Header("맵 프리셋 (전체 맵 공개용)")]
+    [Tooltip("모든 방의 그리드 칸·출구·아이템 정보. 지정 시 미탐색 방도 표시된다.")]
+    [SerializeField] private MapPreset mapPreset;
+
+    [Header("아이템 아이콘")]
+    [Tooltip("아이템 아이콘으로 쓸 Image 프리팹. Sprite가 비어 있는 흰 이미지 권장.")]
+    [SerializeField] private Image itemIconPrefab;
+    [Tooltip("아이콘 한 개 크기 (픽셀, worldToMapScale 이전).")]
+    [SerializeField] private float itemIconSize = 8f;
+    [Tooltip("아이콘 사이 간격 (픽셀, worldToMapScale 이전).")]
+    [SerializeField] private float itemIconGap  = 2f;
+    [Tooltip("이미 수집한 아이템 아이콘의 투명도.")]
+    [SerializeField][Range(0f, 1f)] private float collectedIconAlpha = 0.3f;
 
     private enum Mode { Closed, Quick, Full }
     private Mode _mode = Mode.Closed;
@@ -53,6 +69,8 @@ public class MapUI : MonoBehaviour
     private PlayerInputActions _input;
     private readonly List<Image> _pool = new();
     private int _used;
+    private readonly List<Image> _iconPool = new();
+    private int _iconsUsed;
     private Transform _player;
     private string _lastBuiltRoom;
 
@@ -81,7 +99,7 @@ public class MapUI : MonoBehaviour
         _input.Player.FullMap.performed -= OnFullPerformed;
         _input.Player.Disable();
 
-        if (_mode == Mode.Full) Time.timeScale = 1f; // 안전장치
+        if (_mode == Mode.Full) Time.timeScale = 1f;
         _mode = Mode.Closed;
         IsFullMapOpen = false;
     }
@@ -148,45 +166,111 @@ public class MapUI : MonoBehaviour
         if (gs == null || roomContainer == null || roomPrefab == null) return;
 
         string current = gs.currentRoomID;
-        Vector2Int curCell = gs.roomCells.TryGetValue(current, out var cc) ? cc : Vector2Int.zero;
         _lastBuiltRoom = current;
 
+        // curCell: 프리셋 우선, 없으면 gs.roomCells
+        Dictionary<string, MapPreset.RoomEntry> presetLookup = mapPreset != null ? mapPreset.BuildLookup() : null;
+        Vector2Int curCell;
+        if (presetLookup != null && presetLookup.TryGetValue(current, out var curPreset))
+            curCell = curPreset.cell;
+        else
+            curCell = gs.roomCells.TryGetValue(current, out var gc) ? gc : Vector2Int.zero;
+
         BeginPool();
+        BeginIconPool();
 
-        // 방 사각형 (테두리 → 채움 순서)
         float b = borderThickness * worldToMapScale;
-        foreach (var kv in gs.roomCells)
-        {
-            bool isCurrent = kv.Key == current;
-            Vector2 center  = CellCenter(kv.Value, curCell);
-            Vector2 fillSz  = roomSize * worldToMapScale;
-            Vector2 borderSz = fillSz + new Vector2(b * 2f, b * 2f);
-            Place(GetPooled(), center, borderSz, isCurrent ? currentBorderColor : visitedBorderColor);
-            Place(GetPooled(), center, fillSz,   isCurrent ? currentColor       : visitedColor);
-        }
 
-        // 출구 통로 stub (방문한 방의 연결마다)
-        foreach (var kv in gs.roomConnections)
+        if (presetLookup != null)
         {
-            if (!gs.roomCells.TryGetValue(kv.Key, out var cell)) continue;
-            Vector2 roomCenter = CellCenter(cell, curCell);
-
-            foreach (var c in kv.Value)
+            // ── 프리셋 모드: 미탐색 방 포함 전체 표시 ──────────────────────
+            foreach (var entry in mapPreset.rooms)
             {
-                Vector2 dir = MapDirUtil.ToVector(c.dir);
-                bool horizontal = (c.dir == MapDir.Left || c.dir == MapDir.Right);
+                bool isCurrent = entry.sceneName == current;
+                bool isVisited = gs.roomCells.ContainsKey(entry.sceneName);
+                Vector2 center   = CellCenter(entry.cell, curCell);
+                Vector2 fillSz   = roomSize * worldToMapScale;
+                Vector2 borderSz = fillSz + new Vector2(b * 2f, b * 2f);
 
-                Vector2 edge = new Vector2(dir.x * roomSize.x * 0.5f, dir.y * roomSize.y * 0.5f) * worldToMapScale;
-                Vector2 stubCenter = roomCenter + edge + dir * (stubLength * 0.5f * worldToMapScale);
-                Vector2 stubSize = (horizontal
-                    ? new Vector2(stubLength, stubThickness)
-                    : new Vector2(stubThickness, stubLength)) * worldToMapScale;
+                Color fillColor   = isCurrent ? currentColor      : (isVisited ? visitedColor      : undiscoveredColor);
+                Color borderColor = isCurrent ? currentBorderColor : (isVisited ? visitedBorderColor : undiscoveredBorderColor);
 
-                Place(GetPooled(), stubCenter, stubSize, corridorColor);
+                Place(GetPooled(), center, borderSz, borderColor);
+                Place(GetPooled(), center, fillSz,   fillColor);
+
+                if (entry.items != null && entry.items.Length > 0)
+                    DrawItemIcons(entry.items, center, fillSz, gs);
+            }
+
+            // 방문한 방의 통로 stub (ZoneTransition 기반 정확한 방향)
+            foreach (var kv in gs.roomConnections)
+            {
+                Vector2Int cell = presetLookup.TryGetValue(kv.Key, out var pe) ? pe.cell
+                                : gs.roomCells.TryGetValue(kv.Key, out var gc)  ? gc : Vector2Int.zero;
+                Vector2 rc = CellCenter(cell, curCell);
+
+                foreach (var c in kv.Value)
+                {
+                    Vector2 dir = MapDirUtil.ToVector(c.dir);
+                    bool hz     = (c.dir == MapDir.Left || c.dir == MapDir.Right);
+                    Vector2 edge = new Vector2(dir.x * roomSize.x * 0.5f, dir.y * roomSize.y * 0.5f) * worldToMapScale;
+                    Vector2 sc   = rc + edge + dir * (stubLength * 0.5f * worldToMapScale);
+                    Vector2 ss   = (hz ? new Vector2(stubLength, stubThickness) : new Vector2(stubThickness, stubLength)) * worldToMapScale;
+                    Place(GetPooled(), sc, ss, corridorColor);
+                }
+            }
+
+            // 미방문 방의 통로 stub (프리셋 exitDirections 기반)
+            foreach (var entry in mapPreset.rooms)
+            {
+                if (gs.roomCells.ContainsKey(entry.sceneName)) continue;
+                if (entry.exitDirections == null || entry.exitDirections.Length == 0) continue;
+
+                Vector2 rc = CellCenter(entry.cell, curCell);
+                foreach (var dir in entry.exitDirections)
+                {
+                    Vector2 dv   = MapDirUtil.ToVector(dir);
+                    bool hz      = (dir == MapDir.Left || dir == MapDir.Right);
+                    Vector2 edge = new Vector2(dv.x * roomSize.x * 0.5f, dv.y * roomSize.y * 0.5f) * worldToMapScale;
+                    Vector2 sc   = rc + edge + dv * (stubLength * 0.5f * worldToMapScale);
+                    Vector2 ss   = (hz ? new Vector2(stubLength, stubThickness) : new Vector2(stubThickness, stubLength)) * worldToMapScale;
+                    Place(GetPooled(), sc, ss, undiscoveredColor);
+                }
+            }
+        }
+        else
+        {
+            // ── 폴백: 방문한 방만 표시 (기존 동작) ─────────────────────────
+            foreach (var kv in gs.roomCells)
+            {
+                bool isCurrent = kv.Key == current;
+                Vector2 center   = CellCenter(kv.Value, curCell);
+                Vector2 fillSz   = roomSize * worldToMapScale;
+                Vector2 borderSz = fillSz + new Vector2(b * 2f, b * 2f);
+                Place(GetPooled(), center, borderSz, isCurrent ? currentBorderColor : visitedBorderColor);
+                Place(GetPooled(), center, fillSz,   isCurrent ? currentColor       : visitedColor);
+            }
+
+            foreach (var kv in gs.roomConnections)
+            {
+                if (!gs.roomCells.TryGetValue(kv.Key, out var cell)) continue;
+                Vector2 roomCenter = CellCenter(cell, curCell);
+                foreach (var c in kv.Value)
+                {
+                    Vector2 dir = MapDirUtil.ToVector(c.dir);
+                    bool horizontal = (c.dir == MapDir.Left || c.dir == MapDir.Right);
+                    Vector2 edge = new Vector2(dir.x * roomSize.x * 0.5f, dir.y * roomSize.y * 0.5f) * worldToMapScale;
+                    Vector2 stubCenter = roomCenter + edge + dir * (stubLength * 0.5f * worldToMapScale);
+                    Vector2 stubSize   = (horizontal
+                        ? new Vector2(stubLength, stubThickness)
+                        : new Vector2(stubThickness, stubLength)) * worldToMapScale;
+                    Place(GetPooled(), stubCenter, stubSize, corridorColor);
+                }
             }
         }
 
         EndPool();
+        EndIconPool();
 
         if (playerIcon != null) playerIcon.SetAsLastSibling();
     }
@@ -222,17 +306,54 @@ public class MapUI : MonoBehaviour
             return;
         }
 
-        Bounds b = def.WorldBounds;
-        float nx = Mathf.InverseLerp(b.min.x, b.max.x, _player.position.x);
-        float ny = Mathf.InverseLerp(b.min.y, b.max.y, _player.position.y);
+        Bounds bounds = def.WorldBounds;
+        float nx = Mathf.InverseLerp(bounds.min.x, bounds.max.x, _player.position.x);
+        float ny = Mathf.InverseLerp(bounds.min.y, bounds.max.y, _player.position.y);
 
-        // 현재 방은 패널 중앙(0,0)에 그려지므로 중심 기준 오프셋만 적용
         Vector2 offset = new Vector2((nx - 0.5f) * roomSize.x, (ny - 0.5f) * roomSize.y) * worldToMapScale;
         playerIcon.gameObject.SetActive(true);
         playerIcon.anchoredPosition = offset;
     }
 
-    // ── 이미지 풀 ──────────────────────────────────────────────────────────
+    // ── 아이템 아이콘 ──────────────────────────────────────────────────────
+
+    private void DrawItemIcons(ItemData[] items, Vector2 roomCenter, Vector2 fillSz, GameState gs)
+    {
+        if (itemIconPrefab == null) return;
+
+        float iconSz  = itemIconSize * worldToMapScale;
+        float iconGap = itemIconGap  * worldToMapScale;
+
+        // 유효한 아이템 수 계산
+        int count = 0;
+        for (int i = 0; i < items.Length; i++)
+            if (items[i] != null && items[i].icon != null) count++;
+        if (count == 0) return;
+
+        float totalW = count * iconSz + (count - 1) * iconGap;
+        float x0 = roomCenter.x - totalW * 0.5f + iconSz * 0.5f;
+        float y  = roomCenter.y - fillSz.y * 0.5f + iconSz * 0.5f + 2f;
+
+        int idx = 0;
+        for (int i = 0; i < items.Length; i++)
+        {
+            var item = items[i];
+            if (item == null || item.icon == null) continue;
+
+            var img = GetIconPooled();
+            img.sprite         = item.icon;
+            img.preserveAspect = true;
+            bool collected     = !string.IsNullOrEmpty(item.id) && gs.HasCollected(item.id);
+            img.color          = collected ? new Color(1f, 1f, 1f, collectedIconAlpha) : Color.white;
+
+            var rt = img.rectTransform;
+            rt.anchoredPosition = new Vector2(x0 + idx * (iconSz + iconGap), y);
+            rt.sizeDelta        = new Vector2(iconSz, iconSz);
+            idx++;
+        }
+    }
+
+    // ── 이미지 풀 (방 타일) ────────────────────────────────────────────────
 
     private void BeginPool() => _used = 0;
 
@@ -251,6 +372,28 @@ public class MapUI : MonoBehaviour
         for (int i = _used; i < _pool.Count; i++)
             _pool[i].gameObject.SetActive(false);
     }
+
+    // ── 이미지 풀 (아이템 아이콘) ─────────────────────────────────────────
+
+    private void BeginIconPool() => _iconsUsed = 0;
+
+    private Image GetIconPooled()
+    {
+        Image img;
+        if (_iconsUsed < _iconPool.Count) img = _iconPool[_iconsUsed];
+        else { img = Instantiate(itemIconPrefab, roomContainer); _iconPool.Add(img); }
+        _iconsUsed++;
+        img.gameObject.SetActive(true);
+        return img;
+    }
+
+    private void EndIconPool()
+    {
+        for (int i = _iconsUsed; i < _iconPool.Count; i++)
+            _iconPool[i].gameObject.SetActive(false);
+    }
+
+    // ── 유틸 ──────────────────────────────────────────────────────────────
 
     private static void Place(Image img, Vector2 anchoredPos, Vector2 sizePx, Color color)
     {

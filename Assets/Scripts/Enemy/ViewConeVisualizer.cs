@@ -15,9 +15,10 @@ public class ViewConeVisualizer : MonoBehaviour
     [SerializeField] private int _meshSegments = 24;
 
     [Header("Material")]
-    [Tooltip("비워두면 Sprites/Default 반투명 노랑으로 자동 생성.")]
+    [Tooltip("비워두면 Sprites/Default 반투명으로 자동 생성.")]
     [SerializeField] private Material _material;
-    [SerializeField] private Color _coneColor = new Color(1f, 1f, 0f, 0.25f);
+    [SerializeField] private Color _normalColor  = new Color(1f, 1f, 0f, 0.25f);
+    [SerializeField] private Color _alertedColor = new Color(1f, 0f, 0f, 0.35f);
 
     [Header("Sorting")]
     [SerializeField] private string _sortingLayerName = "Default";
@@ -52,6 +53,15 @@ public class ViewConeVisualizer : MonoBehaviour
     }
 
     // ── 내부 메서드 ──────────────────────────────────────────
+    private void Update()
+    {
+        if (_sentry == null) return;
+
+        bool alerted = _sentry.CurrentState != EnemyBase.EnemyState.Patrol
+                    && _sentry.CurrentState != EnemyBase.EnemyState.Idle;
+        _material.color = alerted ? _alertedColor : _normalColor;
+    }
+
     private void SetupMaterial()
     {
         if (_material == null)
@@ -65,7 +75,7 @@ public class ViewConeVisualizer : MonoBehaviour
             _material = new Material(shader);
         }
 
-        _material.color = _coneColor;
+        _material.color = _normalColor;
         _meshRenderer.material = _material;
         _meshRenderer.sortingLayerName = _sortingLayerName;
         _meshRenderer.sortingOrder = _sortingOrder;

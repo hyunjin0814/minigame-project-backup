@@ -36,6 +36,11 @@ public class ItemPickup : MonoBehaviour
         if (!string.IsNullOrEmpty(itemData.id))
             GameState.Instance?.CollectItem(itemData.id);
 
+        var sound = itemData.useCustomPickupSound
+            ? itemData.pickupSound
+            : SoundType.ItemPickup;
+        AudioManager.Instance?.PlaySFX(sound);
+
         OnItemPickedUp?.Invoke(itemData);
         Destroy(gameObject);
     }

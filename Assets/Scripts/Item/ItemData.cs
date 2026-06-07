@@ -9,4 +9,8 @@ public abstract class ItemData : ScriptableObject
 
     [Header("Tutorial")]
     [TextArea] public string hintText;
+
+    [Header("Sound")]
+    public bool      useCustomPickupSound = false;
+    public SoundType pickupSound          = SoundType.ItemPickup;
 }

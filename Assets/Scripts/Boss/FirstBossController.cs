@@ -76,7 +76,7 @@ public class FirstBossController : BossBase
 
     protected override void InitStates()
     {
-        deathState = new BossDeathState(this);
+        deathState = new BossDeathState(this, triggerClear: triggerClearOnDeath);
         phase2State = new BossPhase2State(this);
         phase1State = new BossPhase1State(this, phase1Settings);
         introState = new BossIntroState(this, phase1State);

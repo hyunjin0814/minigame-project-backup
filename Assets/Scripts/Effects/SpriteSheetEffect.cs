@@ -5,6 +5,7 @@ public class SpriteSheetEffect : MonoBehaviour
 {
     [SerializeField] private Sprite[] frames;
     [SerializeField] private float fps = 12f;
+    [SerializeField] private bool destroyOnFinish = true;
 
     private SpriteRenderer _sr;
     private float _elapsed;
@@ -25,7 +26,12 @@ public class SpriteSheetEffect : MonoBehaviour
         int target = Mathf.FloorToInt(_elapsed * fps);
         if (target == _currentFrame) return;
         _currentFrame = target;
-        if (_currentFrame >= frames.Length) { Destroy(gameObject); return; }
+        if (_currentFrame >= frames.Length)
+        {
+            if (destroyOnFinish) Destroy(gameObject);
+            else gameObject.SetActive(false);
+            return;
+        }
         _sr.sprite = frames[_currentFrame];
     }
 }

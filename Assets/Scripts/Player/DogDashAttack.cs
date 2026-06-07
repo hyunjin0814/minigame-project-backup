@@ -1,13 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// 강아지 전용 돌진 공격.
-/// 발동 조건: 지상 + 약점 노출 적 존재(WeaknessRegistry.HasAny) + 쿨타임 OK.
-/// 흐름: 수평 돌진 → 첫 약점 적 충돌 → 정지(공격 모션) → 시작 방향 반대로 2칸 후퇴 → 쿨타임.
-/// 잡몹 히트 시: 약점 윈도우 즉시 종료.
-/// 보스 히트 시: 보스 자체 그로기 타이머만 (Q3-2 B — 윈도우 유지).
-/// 돌진 중 일반 피격 판정은 유지하되, 접촉 피해(ContactDamage)에는 면역(IContactDamageImmune).
-/// 쿨타임은 Time.time 기반이라 폼 전환과 무관. 돌진 중 폼 전환되면 AbortDash가 쿨타임 적용.
+/// 강아지 전용 돌진 공격 (원키 액티브 스킬).
+/// 발동: PlayerTransformController.HandleTransformDog → BeginSkill(facing).
+/// 흐름: 수평 돌진 → 첫 적 충돌 → 데미지 + 약점 부여(CanBeSensedExternally일 때) → 강타 정지 → 후퇴.
+/// 종료 시 OnSkillCompleted 발행 → PlayerTransformController가 인간 복귀.
+/// 접촉 피해(ContactDamage)에는 돌진 중 면역(IContactDamageImmune).
+/// 쿨타임은 Time.time 기반이라 폼 전환과 무관. AbortDash는 쿨타임만 적용 (이벤트 미발행).
 /// </summary>
 [RequireComponent(typeof(PlayerMotor))]
 public class DogDashAttack : MonoBehaviour, IContactDamageImmune
@@ -22,6 +21,7 @@ public class DogDashAttack : MonoBehaviour, IContactDamageImmune
     [SerializeField] private float _strikePauseDuration = 0.15f;
     [SerializeField] private float _dashAttackCooldown = 7f;
     [SerializeField] private int _damage = 20;
+    [SerializeField] private float _weaknessExposeOnHitDuration = 5f;
 
     [Header("Hitbox")]
     [SerializeField] private Vector2 _hitboxOffset = new Vector2(0.7f, 0f);
@@ -33,13 +33,15 @@ public class DogDashAttack : MonoBehaviour, IContactDamageImmune
     public bool IsReady => _phase == DashPhase.Idle && Time.time >= _cooldownEndTime;
     public bool IsExecuting => _phase != DashPhase.Idle;
 
+    /// <summary>돌진 시퀀스가 자연 종료됐을 때 발행. AbortDash(강제 중단)는 발행하지 않음.</summary>
+    public event System.Action OnSkillCompleted;
+
     // 돌진 시퀀스(돌진·강타·후퇴) 중 접촉 피해 면역
     public bool IsContactDamageImmune => isActiveAndEnabled && IsExecuting;
 
     private enum DashPhase { Idle, Dashing, Striking, Retreating }
     private DashPhase _phase = DashPhase.Idle;
 
-    private PlayerInputHandler _input;
     private PlayerGroundDetector _ground;
     private PlayerMotor _motor;
     private Rigidbody2D _rb;
@@ -55,32 +57,18 @@ public class DogDashAttack : MonoBehaviour, IContactDamageImmune
 
     private void Awake()
     {
-        _input = GetComponent<PlayerInputHandler>();
         _ground = GetComponent<PlayerGroundDetector>();
         _motor = GetComponent<PlayerMotor>();
         _rb = GetComponent<Rigidbody2D>();
     }
 
-    private void OnEnable()
-    {
-        if (_input != null) _input.OnDogDash += HandleDogDash;
-    }
-
     private void OnDisable()
     {
-        if (_input != null) _input.OnDogDash -= HandleDogDash;
         if (IsExecuting) AbortDash();
     }
 
     private void Update()
     {
-        // facing 갱신 (Idle일 때만)
-        if (_phase == DashPhase.Idle && _input != null)
-        {
-            if (_input.MoveInput.x > 0.1f) _facing = 1;
-            else if (_input.MoveInput.x < -0.1f) _facing = -1;
-        }
-
         switch (_phase)
         {
             case DashPhase.Dashing:    TickDashing(); break;
@@ -108,24 +96,12 @@ public class DogDashAttack : MonoBehaviour, IContactDamageImmune
         }
     }
 
-    private void HandleDogDash()
+    /// <summary>
+    /// PlayerTransformController에서 강아지 변신 직후 호출. facing = 1(오른쪽) or -1(왼쪽).
+    /// </summary>
+    public void BeginSkill(int facing)
     {
-        if (_phase != DashPhase.Idle) return;
-        if (Time.time < _cooldownEndTime)
-        {
-            Debug.Log($"[DogDashAttack] 쿨타임 {CooldownRemaining:F1}s 남음");
-            return;
-        }
-        if (!_ground.IsGrounded)
-        {
-            Debug.Log("[DogDashAttack] 공중에서 사용 불가");
-            return;
-        }
-        if (!WeaknessRegistry.HasAny)
-        {
-            Debug.Log("[DogDashAttack] 약점 노출된 적 없음");
-            return;
-        }
+        _facing = facing;
         StartDash();
     }
 
@@ -152,22 +128,22 @@ public class DogDashAttack : MonoBehaviour, IContactDamageImmune
             return;
         }
 
-        // 약점 적 충돌 감지
+        // 적 충돌 감지 (첫 번째 IDamageable 명중)
         Vector2 hitboxCenter = (Vector2)transform.position + new Vector2(_facing * _hitboxOffset.x, _hitboxOffset.y);
         Collider2D[] hits = Physics2D.OverlapBoxAll(hitboxCenter, _hitboxSize, 0f, _targetLayer);
         foreach (var col in hits)
         {
-            var target = col.GetComponentInParent<IWeaknessTarget>();
-            if (target == null || !target.IsWeaknessExposed) continue;
-
-            // 첫 약점 적 — 데미지 + 윈도우 처리
             var damageable = col.GetComponentInParent<IDamageable>();
-            damageable?.TakeDamage(_damage, transform.position);
+            if (damageable == null) continue;
 
-            // 잡몹 윈도우 종료, 보스는 자체 그로기 타이머 유지 (Q3-2 B)
-            if (target is EnemyBase) target.ClearWeakness();
+            damageable.TakeDamage(_damage, transform.position);
 
-            Debug.Log("[DogDashAttack] 약점 일격");
+            // 약점 부여: 잡몹=항상, 보스=그로기 상태일 때만 (CanBeSensedExternally로 판별)
+            var weaknessTarget = col.GetComponentInParent<IWeaknessTarget>();
+            if (weaknessTarget != null && weaknessTarget.CanBeSensedExternally)
+                weaknessTarget.ExposeWeakness(_weaknessExposeOnHitDuration);
+
+            Debug.Log("[DogDashAttack] 돌진 명중");
             EnterStriking();
             return;
         }
@@ -207,6 +183,7 @@ public class DogDashAttack : MonoBehaviour, IContactDamageImmune
         _phase = DashPhase.Idle;
         _cooldownEndTime = Time.time + _dashAttackCooldown;
         Debug.Log("[DogDashAttack] 종료");
+        OnSkillCompleted?.Invoke();
     }
 
     private void AbortDash()

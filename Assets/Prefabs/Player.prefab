@@ -344,7 +344,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.027922153, y: 1}
+  m_Offset: {x: 0, y: 1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -354,7 +354,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.9100294, y: 1.8499999}
+  m_Size: {x: 0.9, y: 1.8499999}
   m_EdgeRadius: 0.02
 --- !u!114 &2387996329022825757
 MonoBehaviour:
@@ -373,7 +373,9 @@ MonoBehaviour:
   knockbackForce: 8
   knockbackUpForce: 3
   knockbackDuration: 0.15
-  hitFreezeSprite: {fileID: 0}
+  humanHurtSprite: {fileID: 438606371704431329, guid: 944bd11d678635e4888a6be6c334bb33, type: 3}
+  catHurtSprite: {fileID: 4035959289877228764, guid: ba6eda6e048e61b4ba1c2d6ff489502d, type: 3}
+  dogHurtSprite: {fileID: 0}
   _effectCenterOffset: {x: 0, y: 0.5}
   _effectEdgeDistance: 0
 --- !u!114 &8872950342180781239
@@ -430,6 +432,7 @@ MonoBehaviour:
   _strikePauseDuration: 0.15
   _dashAttackCooldown: 7
   _damage: 5
+  _weaknessExposeOnHitDuration: 5
   _hitboxOffset: {x: 0.7, y: 0}
   _hitboxSize: {x: 0.8, y: 0.6}
   _targetLayer:
@@ -539,7 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
   damage: 1
-  showDebugVisual: 1
+  showDebugVisual: 0
   debugColor: {r: 1, g: 0.1, b: 0.1, a: 0.4}
 --- !u!1 &3285137868879267644
 GameObject:
