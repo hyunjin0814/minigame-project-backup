@@ -44,14 +44,43 @@ MonoBehaviour:
     pitchMin: 1
     pitchMax: 1
   - type: 8
-    clip: {fileID: 8300000, guid: 2a8ecf159c1f11f4fb86dcb030d16596, type: 3}
+    clip: {fileID: 8300000, guid: 56eaa1b44890691459df320366e0bcfe, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
-  bgmEntries:
-  - type: 1
-    clip: {fileID: 8300000, guid: ccdf98260eee0534e952e127408ecbdc, type: 3}
+  - type: 40
+    clip: {fileID: 8300000, guid: 35d5cb5f86a13784488482d7c20a8e89, type: 3}
     volume: 1
-  - type: 2
-    clip: {fileID: 8300000, guid: dda3f8c179fa69c4298a04f219062d72, type: 3}
+    pitchMin: 1
+    pitchMax: 1
+  - type: 42
+    clip: {fileID: 8300000, guid: dfd175f1ab3e76d49b08ac278ba76dae, type: 3}
     volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 43
+    clip: {fileID: 8300000, guid: a573b763fd3e6c24f8d7199313b9bcda, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 53
+    clip: {fileID: 8300000, guid: b1dc6096ead22db4e9d889dcd26b8f9d, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 55
+    clip: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 62
+    clip: {fileID: 8300000, guid: e91f5e0d220b82c42bb94346f428f1da, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  - type: 63
+    clip: {fileID: 8300000, guid: c5ebd58cef90bc34cba1e4e4e762c5c5, type: 3}
+    volume: 1
+    pitchMin: 1
+    pitchMax: 1
+  bgmEntries: []

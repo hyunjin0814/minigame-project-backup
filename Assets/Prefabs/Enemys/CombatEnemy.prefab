@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
   damage: 1
-  showDebugVisual: 1
+  showDebugVisual: 0
   debugColor: {r: 0.3789843, g: 1, b: 0.10196078, a: 0.4}
 --- !u!1 &1038759942696271874
 GameObject:
@@ -351,6 +351,8 @@ MonoBehaviour:
   _canBeKnockedBack: 1
   _knockbackForce: 5
   _knockbackDuration: 0.15
+  _effectCenterOffset: {x: 0, y: 0}
+  _effectEdgeDistance: 0.3
   _deathAnimDuration: 2
   _detectRadius: 10
   _chaseLeashDistance: 15

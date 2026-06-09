@@ -4,9 +4,11 @@ using UnityEngine.SceneManagement;
 /// <summary>히트스톱 강도 등급.</summary>
 public enum HitStopType
 {
-    Light,    // 잡몹
-    Heavy,    // 보스/대형 적
-    Critical, // 백스탭·마무리 일격
+    Light    = 0, // 잡몹
+    Heavy    = 1, // 보스/대형 적
+    Critical = 2, // 백스탭·마무리 일격
+    Medium   = 3, // 적 피격
+    Long     = 4, // 플레이어 피격 (0.5s)
 }
 
 /// <summary>
@@ -33,6 +35,8 @@ public class HitStopManager : MonoBehaviour
     [SerializeField] private float lightDuration    = 0.025f; // 잡몹
     [SerializeField] private float heavyDuration    = 0.09f;  // 보스/대형
     [SerializeField] private float criticalDuration = 0.17f;  // 백스탭·마무리 일격
+    [SerializeField] private float mediumDuration   = 0.05f;  // 적 피격
+    [SerializeField] private float longDuration     = 0.25f;  // 플레이어 피격
 
     private float _remaining;
 
@@ -88,6 +92,8 @@ public class HitStopManager : MonoBehaviour
     {
         HitStopType.Heavy    => heavyDuration,
         HitStopType.Critical => criticalDuration,
+        HitStopType.Medium   => mediumDuration,
+        HitStopType.Long     => longDuration,
         _                    => lightDuration,
     };
 }

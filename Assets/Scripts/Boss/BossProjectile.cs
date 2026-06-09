@@ -15,6 +15,7 @@ public class BossProjectile : MonoBehaviour
     public void Init(Vector2 dir, float speed, ProjectilePool ownerPool)
     {
         rb.linearVelocity = dir * speed;
+        transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
         pool = ownerPool;
         timer = lifetime;
     }

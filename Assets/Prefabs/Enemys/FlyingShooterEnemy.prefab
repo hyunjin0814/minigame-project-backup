@@ -292,6 +292,8 @@ MonoBehaviour:
   _canBeKnockedBack: 0
   _knockbackForce: 5
   _knockbackDuration: 0.15
+  _effectCenterOffset: {x: 0, y: 0}
+  _effectEdgeDistance: 0.3
   _deathAnimDuration: 2
   _detectRadius: 12
   _sneakWindowDuration: 1.5
@@ -321,7 +323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangedAttack
   maxRange: 7
-  projectilePrefab: {fileID: 2468403428697445729, guid: 44bd3315ac49c904a8f950ef4b8e4046, type: 3}
+  projectilePrefab: {fileID: 2468403428697445729, guid: 0a52c1ac0afac85458243609d5dcb8f4, type: 3}
   projectileSpeed: 8
 --- !u!95 &4471251500342511603
 Animator:

@@ -32,7 +32,11 @@ public class ProjectilePool : MonoBehaviour
 
     private BossProjectile CreateNew()
     {
-        var proj = Instantiate(prefab, transform);
+        // 보스(부모)는 FacePlayer로 localScale.x를 ±1 반전시킨다.
+        // 투사체를 보스 자식으로 두면 좌향(scale.x=-1) 발사 시 스프라이트가
+        // 거울 반전되어 진행 방향의 반대를 바라본다(velocity는 월드라 정상 이동).
+        // → flip 영향을 받지 않도록 월드 루트에 생성한다.
+        var proj = Instantiate(prefab);
         proj.gameObject.SetActive(false);
         return proj;
     }

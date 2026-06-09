@@ -12,14 +12,25 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
     [SerializeField]
     private GameObject stageClearZone;
 
+    [Tooltip("true이면 보스 사망 직후 게임 클리어 (열쇠/StageClearZone 불필요)")]
+    [SerializeField]
+    protected bool triggerClearOnDeath = false;
+
     [Header("Damage")]
     [Tooltip("약점 노출 중 받는 데미지 배율 (EnemyBase와 동일 — 강아지 스캔 보상)")]
     [SerializeField]
     private float weaknessDamageMultiplier = 2f;
 
+    [Header("Effect")]
+    [Tooltip("이펙트가 나올 몸통 중심 (로컬 오프셋). 기본 0이면 transform 위치.")]
+    [SerializeField] private Vector2 _effectCenterOffset = Vector2.zero;
+    [Tooltip("몸통 중심에서 맞은 방향으로 밀어낼 거리. 0이면 정중앙.")]
+    [SerializeField] private float _effectEdgeDistance = 0.3f;
+
     public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Sprite { get; private set; }
     public Health Health { get; private set; }
+    public Animator BossAnim { get; private set; }
     public Transform PlayerTarget { get; private set; }
     public bool HitWall { get; set; }
     public bool IsDashing { get; set; }
@@ -80,6 +91,8 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         Rb = GetComponent<Rigidbody2D>();
         Sprite = GetComponent<SpriteRenderer>();
         Health = GetComponent<Health>();
+        BossAnim = GetComponent<Animator>();
+        if (BossAnim == null) BossAnim = GetComponentInChildren<Animator>();
         Health.DamageModifier = ComputeFinalDamage;
         Fsm = new BossStateMachine();
     }
@@ -170,6 +183,7 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         Rb.linearVelocity = Vector2.zero;
         SetIntentColor(new Color(0.6f, 0.7f, 1f)); // 임시 파란 틴트 + 강아지 아이콘(BossGroggyIndicator) 병행
         Debug.Log($"[Boss] Groggy 진입 ({duration:F1}s)");
+        AudioManager.Instance?.PlaySFX(SoundType.BossGroggyEnter);
         OnGroggyStarted?.Invoke();
     }
 
@@ -180,6 +194,7 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         SetIntentColor(Color.white);
         if (IsWeaknessExposed) ClearWeakness(); // Q5 A: 그로기 잔여 시간 = 약점 윈도우 상한
         Debug.Log("[Boss] Groggy 종료");
+        AudioManager.Instance?.PlaySFX(SoundType.BossGroggyExit);
         OnGroggyEnded?.Invoke();
     }
 
@@ -197,9 +212,19 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         if (_groggyTimer <= 0f) ExitGroggy();
     }
 
+    /// <summary>맞은 방향을 고려한 이펙트 생성 위치. EnemyBase.GetEffectPoint와 동일한 로직.</summary>
+    public Vector2 GetEffectPoint(Vector2 hitSource)
+    {
+        Vector2 center = (Vector2)transform.position + _effectCenterOffset;
+        Vector2 dir = hitSource - center;
+        if (dir.sqrMagnitude < 0.0001f) return center;
+        return center + dir.normalized * _effectEdgeDistance;
+    }
+
     private void OnHit(int amount, Vector2 _)
     {
         StartCoroutine(HitFlashRoutine());
+        AudioManager.Instance?.PlaySFX(SoundType.BossHurt);
         Hurt?.Invoke();
     }
 
@@ -228,6 +253,7 @@ public abstract class BossBase : MonoBehaviour, IWeaknessTarget
         if (IsWeaknessExposed) ClearWeakness();
         if (IsGroggy) ExitGroggy();
         DisableAllColliders();
+        AudioManager.Instance?.PlaySFX(SoundType.BossDeath);
         Died?.Invoke();
         Fsm.ChangeState(DeathState);
     }

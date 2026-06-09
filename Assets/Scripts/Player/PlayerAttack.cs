@@ -299,6 +299,36 @@ public class PlayerAttack : MonoBehaviour
             return;
         hitResolvedThisSwing = true;
 
+        var enemyBase = other.GetComponentInParent<EnemyBase>();
+
+        // 방패 막기: 히트스톱 없이 소리 + 작은 이펙트만
+        if (enemyBase != null && enemyBase.LastHitWasBlocked)
+        {
+            AudioManager.Instance?.PlaySFX(SoundType.EliteShieldBlock);
+            EffectSpawner.Instance?.SpawnSmall(enemyBase.GetEffectPoint(hitbox.transform.position));
+            return;
+        }
+
+        // 처치 타격이면 Medium 생략 — Die()에서 Large가 나옴 (중복 방지)
+        var health = other.GetComponentInParent<Health>();
+        bool isKillingBlow = health != null && health.CurrentHp <= 0;
+
+        var bossBase = other.GetComponentInParent<BossBase>();
+        Vector2 hitboxPos = hitbox.transform.position;
+        Vector2 hitPos = enemyBase != null ? enemyBase.GetEffectPoint(hitboxPos)
+                       : bossBase  != null ? bossBase.GetEffectPoint(hitboxPos)
+                       : hitboxPos;
+
+        if (!isKillingBlow)
+            EffectSpawner.Instance?.SpawnMedium(hitPos);
+
+        // 배율 피해 텍스트
+        bool isBackstab = enemyBase != null && enemyBase.LastHitWasBackstab;
+        if (isBackstab)
+            EffectSpawner.Instance?.SpawnMultiplierText(hitPos, "×3", new Color(1f, 0.85f, 0f));     // 금색 — 고양이 기습
+        else if (bossBase != null && bossBase.IsWeaknessExposed)
+            EffectSpawner.Instance?.SpawnMultiplierText(hitPos, "×2", new Color(1f, 0.55f, 0.1f));   // 주황 — 보스 약점
+
         AttackDirection dir = currentDirection;
 
         // AttackHitbox가 TakeDamage를 먼저 호출하므로, 이 시점엔 데미지·백스탭·사망 처리가 끝나 있다.

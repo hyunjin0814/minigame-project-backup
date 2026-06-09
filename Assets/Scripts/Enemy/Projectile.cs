@@ -19,6 +19,7 @@ public class Projectile : MonoBehaviour
     public void Init(Vector2 dir, float spd)
     {
         velocity = dir * spd;
+        transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
     private void FixedUpdate()

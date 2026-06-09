@@ -179,8 +179,10 @@ public abstract class SecondBossCombatState : BossStateBase
         Debug.Log("[SecondBoss] Cleave 시작");
         Boss.FacePlayer();
         Boss.SetIntentColor(new Color(1f, 0.6f, 0.2f)); // 주황 텔레그래프
+        AudioManager.Instance?.PlaySFX(SoundType.BossCleaveCharge); // 도끼 들어올림
         yield return new WaitForSeconds(Scaled(s.cleaveTelegraph));
         Boss.SetIntentColor(Color.white);
+        // BossCleaveImpact → AnimHitboxOn("cleave") 에서 재생
 
         Boss.RaiseAttackAnim("cleave");
         if (boss.CleaveHitbox == null) Debug.LogWarning("[SecondBoss] CleaveHitbox 미할당!");
@@ -198,8 +200,11 @@ public abstract class SecondBossCombatState : BossStateBase
 
         Boss.FacePlayer();
         Boss.SetIntentColor(new Color(0.7f, 0.3f, 1f)); // 보라 텔레그래프
+        AudioManager.Instance?.PlaySFX(SoundType.BossSmashReady); // 점프 준비
         yield return new WaitForSeconds(Scaled(s.smashTelegraph));
         Boss.SetIntentColor(Color.white);
+        // BossSmashJump → AnimSmashJump() 에서 재생
+        // BossSmashLand → AnimSmashLand() 에서 재생
 
         int count = Mathf.Max(1, s.smashJumpCount); // 미설정(0)이면 1회로 안전 폴백
         for (int jump = 0; jump < count; jump++)
@@ -263,6 +268,7 @@ public abstract class SecondBossCombatState : BossStateBase
     {
         Boss.FacePlayer();
         Boss.SetIntentColor(new Color(1f, 0.3f, 0.1f)); // 붉은 텔레그래프
+        AudioManager.Instance?.PlaySFX(SoundType.BossFireBreathCharge); // 화염 차징
         yield return new WaitForSeconds(Scaled(s.fireBreathTelegraph));
         Boss.SetIntentColor(Color.white);
 
@@ -276,7 +282,9 @@ public abstract class SecondBossCombatState : BossStateBase
         // 분사 ON 이벤트 대기 (0.6s 내 안 오면 클립에 이벤트가 없는 것)
         float w = 0f;
         while (!boss.FireBreathOn && w < 0.6f) { w += Time.deltaTime; yield return null; }
-        if (!boss.FireBreathOn)
+        if (boss.FireBreathOn)
+            AudioManager.Instance?.PlaySFX(SoundType.BossFireBreathShoot); // 화염 발사 시작
+        else
             Debug.LogWarning("[SecondBoss] FireBreath ON 이벤트 미발생 — 클립에 AnimHitboxOn \"fire_breath\" 확인");
 
         // OFF 이벤트까지 상태 점유 (안전 타임아웃 3s)
@@ -299,6 +307,7 @@ public abstract class SecondBossCombatState : BossStateBase
 
         Boss.FacePlayer();
         Boss.SetIntentColor(new Color(0.3f, 0.6f, 1f)); // 파랑 텔레그래프
+        AudioManager.Instance?.PlaySFX(SoundType.BossCastCharge); // 구체 차징
         yield return new WaitForSeconds(Scaled(s.castTelegraph));
         Boss.SetIntentColor(Color.white);
 
@@ -321,6 +330,7 @@ public abstract class SecondBossCombatState : BossStateBase
             ).normalized;
 
             boss.Pool.Spawn(origin, dir);
+            AudioManager.Instance?.PlaySFX(SoundType.BossCastLaunch); // 구체 발사마다
             if (s.castInterval > 0f) yield return new WaitForSeconds(Scaled(s.castInterval));
         }
     }

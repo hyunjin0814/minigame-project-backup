@@ -39,6 +39,12 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     protected Vector2 _knockbackVelocity;
     private   float  _knockbackTimer;
 
+    [Header("Effect")]
+    [Tooltip("이펙트가 나올 몸통 중심 (로컬 오프셋). 기본 0이면 transform 위치.")]
+    [SerializeField] private Vector2 _effectCenterOffset = Vector2.zero;
+    [Tooltip("몸통 중심에서 맞은 방향으로 밀어낼 거리. 0이면 정중앙.")]
+    [SerializeField] private float _effectEdgeDistance = 0.3f;
+
     [Header("Death")]
     [SerializeField]
     private float _deathAnimDuration = 2f;
@@ -70,6 +76,15 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     public event Action Died;
 
     protected void RaiseAttackPerformed() => AttackPerformed?.Invoke();
+
+    /// <summary>맞은 방향을 고려한 이펙트 생성 위치. 몸통 중심에서 타격 지점 쪽으로 약간 밀어낸다.</summary>
+    public Vector2 GetEffectPoint(Vector2 hitSource)
+    {
+        Vector2 center = (Vector2)transform.position + _effectCenterOffset;
+        Vector2 dir = hitSource - center;
+        if (dir.sqrMagnitude < 0.0001f) return center;
+        return center + dir.normalized * _effectEdgeDistance;
+    }
 
     // ── 라이프사이클 ─────────────────────────────────────────
     protected virtual void Awake()
@@ -110,7 +125,11 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     }
 
     // ── 피격/사망 ─────────────────────────────────────────────
-    private void HandleHit(int damage, Vector2 source) => OnHit(source);
+    private void HandleHit(int damage, Vector2 source)
+    {
+        _lastHitPosition = source;
+        OnHit(source);
+    }
 
     private void HandleDeath() => Die();
 
@@ -176,6 +195,9 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
             rb.simulated = false;
         }
 
+        // 처치 이펙트 (히트스톱 없음) — 몸통 중심에서 맞은 방향으로
+        EffectSpawner.Instance?.SpawnLarge(GetEffectPoint(_lastHitPosition));
+
         // Death 애니메이션 재생 시간 확보 후 비활성화
         Invoke(nameof(DisableAfterDeath), _deathAnimDuration);
     }
@@ -229,15 +251,19 @@ public abstract class EnemyBase : MonoBehaviour, IWeaknessTarget
     // Health.DamageModifier에 항상 이 메서드만 등록.
     // 서브클래스는 DamageModifier를 교체하지 말고 ApplySpecialModifier만 오버라이드.
     // 가장 최근 피격이 백스탭이었는지. 히트스톱 치명타 판정용(PlayerAttack이 조회).
-    // ComputeFinalDamage 진입 시 false로 리셋하고, 서브클래스가 ApplySpecialModifier에서 설정.
     public bool LastHitWasBackstab { get; protected set; }
+    // 가장 최근 피격이 방패에 막혔는지. PlayerAttack이 조회해 블록 이펙트/사운드 재생.
+    public bool LastHitWasBlocked { get; private set; }
+    // 마지막 타격 위치 — 적 처치 이펙트 스폰 위치로 사용.
+    protected Vector2 _lastHitPosition;
 
     private int ComputeFinalDamage(int baseDamage, Vector2 source)
     {
         LastHitWasBackstab = false;
 
         // ⓪ 완전 차단 (방향성 가드 등) — 최소 1 보정보다 먼저 처리해 0 데미지 보장
-        if (BlocksDamageFrom(source))
+        LastHitWasBlocked = BlocksDamageFrom(source);
+        if (LastHitWasBlocked)
             return 0;
 
         // ① 서브클래스 전용 배율 (백스탭, 가드 감소 등)

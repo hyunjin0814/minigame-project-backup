@@ -76,9 +76,17 @@ public class SecondBossController : BossBase
         Debug.Log($"[SecondBoss] ▶ AnimHitboxOn(\"{which}\") 이벤트 수신");
         switch (which)
         {
-            case "cleave":      cleaveHitbox?.Activate();     break;
-            case "smash":       smashHitbox?.Activate();      break;
-            case "fire_breath": fireBreathHitbox?.Activate(); FireBreathOn = true; break;
+            case "cleave":
+                cleaveHitbox?.Activate();
+                AudioManager.Instance?.PlaySFX(SoundType.BossCleaveImpact); // 도끼 땅 박힘
+                break;
+            case "smash":
+                smashHitbox?.Activate();
+                break;
+            case "fire_breath":
+                fireBreathHitbox?.Activate();
+                FireBreathOn = true;
+                break;
         }
     }
 
@@ -106,6 +114,7 @@ public class SecondBossController : BossBase
     {
         Debug.Log("[SecondBoss] ▶ AnimSmashJump 이벤트 수신 (도약)");
         SmashJumpSignaled = true;
+        AudioManager.Instance?.PlaySFX(SoundType.BossSmashJump); // 도약 사운드
     }
 
     // Smash 클립 frame 100 이벤트 (착지 확정 + 충격 히트박스 ON)
@@ -114,6 +123,7 @@ public class SecondBossController : BossBase
         Debug.Log("[SecondBoss] ▶ AnimSmashLand 이벤트 수신 (착지+히트박스 ON)");
         SmashLandSignaled = true;
         smashHitbox?.Activate();
+        AudioManager.Instance?.PlaySFX(SoundType.BossSmashLand); // 착지 충격 사운드
     }
 
     private BossIntroState introState;
@@ -133,7 +143,7 @@ public class SecondBossController : BossBase
 
     protected override void InitStates()
     {
-        deathState  = new BossDeathState(this);
+        deathState  = new BossDeathState(this, triggerClear: triggerClearOnDeath);
         phase2State = new SecondBossPhase2State(this, combatSettings);
         phase1State = new SecondBossPhase1State(this, combatSettings);
         introState  = new BossIntroState(this, phase1State);

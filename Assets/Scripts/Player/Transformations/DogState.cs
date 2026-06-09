@@ -13,8 +13,6 @@ public class DogState : BaseTransformState
     public override void Enter()
     {
         base.Enter();
-        if (_dogScanner != null)
-            _dogScanner.enabled = true;
         if (_dogDashAttack != null)
             _dogDashAttack.enabled = true;
     }

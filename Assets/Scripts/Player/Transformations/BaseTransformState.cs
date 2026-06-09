@@ -6,6 +6,8 @@ public abstract class BaseTransformState : ITransformState
     protected readonly PlayerTransformController controller;
     protected readonly TransformationData data;
 
+    public TransformationData Data => data;
+
     protected BaseTransformState(PlayerTransformController controller, TransformationData data)
     {
         this.controller = controller;
@@ -25,6 +27,10 @@ public abstract class BaseTransformState : ITransformState
         // 콜라이더 사이즈 교체
         controller.Collider.size = data.colliderSize;
         controller.Collider.offset = data.colliderOffset;
+
+        // 변신 이펙트 & 사운드 (세 가지 폼 공통)
+        EffectSpawner.Instance?.SpawnTransform(controller.transform.position);
+        AudioManager.Instance?.PlaySFX(SoundType.TransformHuman);
     }
 
     public virtual void Exit() { }

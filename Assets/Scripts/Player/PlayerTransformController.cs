@@ -42,6 +42,7 @@ public class PlayerTransformController : MonoBehaviour
     public bool IsCatForm => currentState == catState;
 
     private Rigidbody2D rb;
+    private PlayerGroundDetector _groundDetector;
     private ITransformState currentState;
 
     public CatStealth CatStealth { get; private set; }
@@ -58,6 +59,9 @@ public class PlayerTransformController : MonoBehaviour
 
     public BoxCollider2D Collider { get; private set; }
 
+    [Header("Transform Obstacle Check")]
+    [SerializeField] private LayerMask _transformObstacleLayer;
+
     private void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
@@ -71,6 +75,7 @@ public class PlayerTransformController : MonoBehaviour
         DogScanner = GetComponent<DogScanner>();
         DogDashAttack = GetComponent<DogDashAttack>();
         rb = GetComponent<Rigidbody2D>();
+        _groundDetector = GetComponent<PlayerGroundDetector>();
 
         // State 인스턴스 생성
         humanState = new HumanState(this, humanData);
@@ -97,6 +102,8 @@ public class PlayerTransformController : MonoBehaviour
         inputHandler.OnTransformHuman += HandleTransformHuman;
         inputHandler.OnTransformDog += HandleTransformDog;
         inputHandler.OnTransformCat += HandleTransformCat;
+        if (DogDashAttack != null)
+            DogDashAttack.OnSkillCompleted += HandleDogSkillCompleted;
     }
 
     private void OnDisable()
@@ -104,19 +111,45 @@ public class PlayerTransformController : MonoBehaviour
         inputHandler.OnTransformHuman -= HandleTransformHuman;
         inputHandler.OnTransformDog -= HandleTransformDog;
         inputHandler.OnTransformCat -= HandleTransformCat;
+        if (DogDashAttack != null)
+            DogDashAttack.OnSkillCompleted -= HandleDogSkillCompleted;
     }
 
     private void HandleTransformHuman() => ChangeState(humanState);
 
     private void HandleTransformDog()
     {
+        // 인간 폼에서만 사용 가능한 액티브 스킬
+        if (CurrentForm != PlayerForm.Human) return;
+
         if (GameState.Instance != null && !GameState.Instance.dogUnlocked)
         {
             Debug.Log("[PlayerTransformController] 강아지 변신 미해금");
             OnLockedAbilityAttempted?.Invoke(AbilityType.Dog);
             return;
         }
+
+        if (!DogDashAttack.IsReady)
+        {
+            Debug.Log($"[PlayerTransformController] 강아지 스킬 쿨타임 {DogDashAttack.CooldownRemaining:F1}s 남음");
+            return;
+        }
+
+        if (_groundDetector != null && !_groundDetector.IsGrounded)
+        {
+            Debug.Log("[PlayerTransformController] 공중에서 강아지 스킬 사용 불가");
+            return;
+        }
+
         ChangeState(dogState);
+        int facing = PlayerAnimator.IsFacingLeft ? -1 : 1;
+        DogDashAttack.BeginSkill(facing);
+    }
+
+    private void HandleDogSkillCompleted()
+    {
+        if (CurrentForm == PlayerForm.Dog)
+            ChangeState(humanState);
     }
 
     private void HandleTransformCat()
@@ -127,7 +160,12 @@ public class PlayerTransformController : MonoBehaviour
             OnLockedAbilityAttempted?.Invoke(AbilityType.Cat);
             return;
         }
-        ChangeState(catState);
+
+        // 토글: 고양이 폼이면 인간으로, 인간 폼이면 고양이로
+        if (CurrentForm == PlayerForm.Cat)
+            ChangeState(humanState);
+        else if (CurrentForm == PlayerForm.Human)
+            ChangeState(catState);
     }
 
     /// <summary>현재 변신 형태를 PlayerForm 열거값으로 반환.</summary>
@@ -155,6 +193,13 @@ public class PlayerTransformController : MonoBehaviour
             return;
         }
 
+        // 변신 후 콜라이더가 Ground에 끼이는지 사전 검사
+        if (!CanFitInNewForm(newState))
+        {
+            Debug.Log("[PlayerTransformController] 변신 공간 부족 — 차단");
+            return;
+        }
+
         // 고양이 → 인간 변신 시만 스니크 윈도우 활성화
         bool comingFromCat = currentState == catState;
 
@@ -171,6 +216,16 @@ public class PlayerTransformController : MonoBehaviour
             SneakWindowActivatedAt = Time.time;
             Debug.Log("[PlayerTransformController] 스니크 윈도우 활성화");
         }
+    }
 
+    private bool CanFitInNewForm(ITransformState targetState)
+    {
+        if (targetState is not BaseTransformState baseState) return true;
+        if (_transformObstacleLayer == 0) return true;
+
+        Vector2 center = rb.position + baseState.Data.colliderOffset;
+        // 90% 크기로 검사해 경계 접촉 오판 방지
+        Vector2 checkSize = baseState.Data.colliderSize * 0.9f;
+        return Physics2D.OverlapBox(center, checkSize, 0f, _transformObstacleLayer) == null;
     }
 }
