@@ -1,21 +1,31 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class RangedAttack : MonoBehaviour, IEnemyAttack
 {
-    [SerializeField]
-    private float maxRange = 8f;
+    [SerializeField] private float maxRange = 8f;
+    [SerializeField] private Projectile projectilePrefab;
+    [SerializeField] private float projectileSpeed = 8f;
+    [SerializeField] private int defaultCapacity = 5;
+    [SerializeField] private int maxSize = 10;
 
-    [SerializeField]
-    private GameObject projectilePrefab;
+    private IObjectPool<Projectile> pool;
 
-    [SerializeField]
-    private float projectileSpeed = 8f;
+    private void Awake()
+    {
+        pool = new ObjectPool<Projectile>(
+            CreateProjectile,
+            OnGetFromPool,
+            OnReleaseToPool,
+            OnDestroyPooledObject,
+            collectionCheck: true,
+            defaultCapacity: defaultCapacity,
+            maxSize: maxSize
+        );
+    }
 
     public bool IsInRange(Transform target)
-    {
-        float dist = Vector2.Distance(transform.position, target.position);
-        return dist <= maxRange;
-    }
+        => Vector2.Distance(transform.position, target.position) <= maxRange;
 
     public void DoAttack(Transform target)
     {
@@ -23,7 +33,20 @@ public class RangedAttack : MonoBehaviour, IEnemyAttack
             ? (Vector2)col.bounds.center
             : (Vector2)target.position;
         Vector2 dir = (targetCenter - (Vector2)transform.position).normalized;
-        GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        proj.GetComponent<Projectile>().Init(dir, projectileSpeed);
+
+        var proj = pool.Get();
+        proj.transform.position = transform.position;
+        proj.Init(dir, projectileSpeed, pool);
     }
+
+    private Projectile CreateProjectile()
+    {
+        var proj = Instantiate(projectilePrefab);
+        proj.gameObject.SetActive(false);
+        return proj;
+    }
+
+    private void OnGetFromPool(Projectile proj) => proj.gameObject.SetActive(true);
+    private void OnReleaseToPool(Projectile proj) => proj.gameObject.SetActive(false);
+    private void OnDestroyPooledObject(Projectile proj) => Destroy(proj.gameObject);
 }

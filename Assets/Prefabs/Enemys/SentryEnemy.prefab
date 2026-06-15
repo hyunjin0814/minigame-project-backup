@@ -87,7 +87,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 2d81947f20382104b872118c831c3aeb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -162,6 +162,8 @@ MonoBehaviour:
   _canBeKnockedBack: 0
   _knockbackForce: 5
   _knockbackDuration: 0.15
+  _effectCenterOffset: {x: 0, y: 0}
+  _effectEdgeDistance: 0.3
   _deathAnimDuration: 2
   _viewAngle: 60
   _viewDistance: 6
@@ -464,6 +466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ViewConeVisualizer
   _meshSegments: 24
   _material: {fileID: 0}
-  _coneColor: {r: 1, g: 1, b: 0, a: 0.25}
+  _normalColor: {r: 1, g: 1, b: 0, a: 0.25}
+  _alertedColor: {r: 1, g: 0, b: 0, a: 0.35}
   _sortingLayerName: Default
   _sortingOrder: -1

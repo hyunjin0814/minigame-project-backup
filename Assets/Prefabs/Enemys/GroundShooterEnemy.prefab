@@ -89,7 +89,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: b08ed2689a9ae1e459b6424a4e2787a3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -186,6 +186,8 @@ MonoBehaviour:
   _canBeKnockedBack: 0
   _knockbackForce: 5
   _knockbackDuration: 0.15
+  _effectCenterOffset: {x: 0, y: 0}
+  _effectEdgeDistance: 0.3
   _deathAnimDuration: 2
   _detectRadius: 10
   _sneakWindowDuration: 1.5
@@ -272,8 +274,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangedAttack
   maxRange: 8
-  projectilePrefab: {fileID: 2468403428697445729, guid: 44bd3315ac49c904a8f950ef4b8e4046, type: 3}
+  projectilePrefab: {fileID: 4365197168069714678, guid: 44bd3315ac49c904a8f950ef4b8e4046, type: 3}
   projectileSpeed: 8
+  defaultCapacity: 5
+  maxSize: 10
 --- !u!114 &7457827132731083694
 MonoBehaviour:
   m_ObjectHideFlags: 0

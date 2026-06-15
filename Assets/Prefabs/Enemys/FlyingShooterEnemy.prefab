@@ -323,8 +323,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangedAttack
   maxRange: 7
-  projectilePrefab: {fileID: 2468403428697445729, guid: 0a52c1ac0afac85458243609d5dcb8f4, type: 3}
+  projectilePrefab: {fileID: 4365197168069714678, guid: 0a52c1ac0afac85458243609d5dcb8f4, type: 3}
   projectileSpeed: 8
+  defaultCapacity: 5
+  maxSize: 10
 --- !u!95 &4471251500342511603
 Animator:
   serializedVersion: 7

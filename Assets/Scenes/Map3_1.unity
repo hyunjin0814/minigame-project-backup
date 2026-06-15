@@ -167651,29 +167651,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6594928294013891713, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
-      propertyPath: m_Radius
-      value: 0.6174829
-      objectReference: {fileID: 0}
-    - target: {fileID: 6594928294013891713, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.29790115
-      objectReference: {fileID: 0}
-    - target: {fileID: 6594928294013891713, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
-      propertyPath: m_Offset.y
-      value: 0.6251757
-      objectReference: {fileID: 0}
     - target: {fileID: 7264906038194083094, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
       propertyPath: m_Name
       value: CatItem
-      objectReference: {fileID: 0}
-    - target: {fileID: 8368162865578416893, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -7385789195546760866, guid: 39afccf2fabada146bb9c250d4b44af2, type: 3}
-    - target: {fileID: 8368162865578416893, guid: bfecc6315e792094c8fa64b2f01536d3, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

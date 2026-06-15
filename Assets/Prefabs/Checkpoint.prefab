@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421edacf04a8923468c95babc013e2c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
-  checkpointID: cp_zone7
+  checkpointID: cp_zone5
   activateEffect: {fileID: 336429327780514132}
   interactHint: {fileID: 6327087112213656465}
 --- !u!1001 &4839527579191007581

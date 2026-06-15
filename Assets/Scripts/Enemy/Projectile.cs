@@ -1,35 +1,32 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
 {
-    [SerializeField]
-    private int damage = 1;
+    [SerializeField] private int damage = 1;
+    [SerializeField] private float lifetime = 3f;
 
-    [SerializeField]
-    private float lifetime = 3f;
-
-    private Vector2 velocity;
+    private IObjectPool<Projectile> objectPool;
     private Rigidbody2D rb;
+    private float timer;
+    private bool isReturning;
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
+    private void Awake() => rb = GetComponent<Rigidbody2D>();
 
-    public void Init(Vector2 dir, float spd)
+    public void Init(Vector2 dir, float spd, IObjectPool<Projectile> ownerPool)
     {
-        velocity = dir * spd;
+        rb.linearVelocity = dir * spd;
         transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-    }
-
-    private void FixedUpdate()
-    {
-        rb.linearVelocity = velocity;
+        objectPool = ownerPool;
+        timer = lifetime;
+        isReturning = false;
     }
 
     private void Update()
     {
-        Destroy(gameObject, lifetime); // TODO: 풀링으로 교체 예정 (#11)
+        timer -= Time.deltaTime;
+        if (timer <= 0f) ReturnToPool();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -37,6 +34,14 @@ public class Projectile : MonoBehaviour
         if (other.TryGetComponent<IDamageable>(out var target))
             target.TakeDamage(damage);
 
-        Destroy(gameObject); // TODO: 풀링으로 교체 예정 (#11)
+        ReturnToPool();
+    }
+
+    private void ReturnToPool()
+    {
+        if (isReturning) return;
+        isReturning = true;
+        rb.linearVelocity = Vector2.zero;
+        objectPool.Release(this);
     }
 }
