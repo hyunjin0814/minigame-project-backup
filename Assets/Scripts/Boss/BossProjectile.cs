@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossProjectile : MonoBehaviour
@@ -6,18 +7,23 @@ public class BossProjectile : MonoBehaviour
     [SerializeField] private int damage = 1;
     [SerializeField] private float lifetime = 3f;
 
+    private IObjectPool<BossProjectile> objectPool;
+
+
     private Rigidbody2D rb;
-    private ProjectilePool pool;
+    public IObjectPool<BossProjectile> ObjectPool { set => objectPool = value; }
     private float timer;
+    private bool isReturning; // 이중 반환 방지
 
     private void Awake() => rb = GetComponent<Rigidbody2D>();
 
-    public void Init(Vector2 dir, float speed, ProjectilePool ownerPool)
+    public void Init(Vector2 dir, float speed, IObjectPool<BossProjectile> ownerPool)
     {
         rb.linearVelocity = dir * speed;
         transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-        pool = ownerPool;
+        ObjectPool = ownerPool;
         timer = lifetime;
+        isReturning = false;
     }
 
     private void Update()
@@ -38,7 +44,9 @@ public class BossProjectile : MonoBehaviour
 
     private void ReturnToPool()
     {
+        if (isReturning) return;            // Update + OnTriggerEnter2D 동시 호출 방어
+        isReturning = true;
         rb.linearVelocity = Vector2.zero;
-        pool.Return(this);
+        objectPool.Release(this);
     }
 }
