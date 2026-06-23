@@ -73,3 +73,4 @@ Assets/StreamingAssets/HockeyAppUnityAndroid
 # /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*
 # /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/AddressableAssetSettings.asset
 **/[Aa]ssets/[Ii]mported/
+/[Aa]ssets/google-services.json
