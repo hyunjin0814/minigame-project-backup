@@ -1,0 +1,1700 @@
+{
+  "issue": {
+    "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21",
+    "repository_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+    "labels_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21/labels{/name}",
+    "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21/comments",
+    "events_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21/events",
+    "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21",
+    "id": 4491008408,
+    "node_id": "PR_kwDOSd8tx87dwQ3-",
+    "number": 21,
+    "title": "feat: 적 AI 강화 - 시야·Chase·Attack·Search 상태 완성 (#20)",
+    "user": {
+      "login": "hyunjin0814",
+      "id": 259763388,
+      "node_id": "U_kgDOD3usvA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hyunjin0814",
+      "html_url": "https://github.com/hyunjin0814",
+      "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+      "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+      "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+      "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+      "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "labels": [],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-05-21T01:34:00Z",
+    "updated_at": "2026-05-27T00:26:25Z",
+    "closed_at": "2026-05-21T01:35:29Z",
+    "assignee": null,
+    "author_association": "MEMBER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "draft": false,
+    "pull_request": {
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/21",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21",
+      "diff_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21.diff",
+      "patch_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21.patch",
+      "merged_at": "2026-05-21T01:35:29Z"
+    },
+    "body": "## Summary\n- Alert 시야 확장(1.4배), 시야 콘 색상 5단계 시각화\n- Chase 하이브리드 동작(원형 감지 + lastSeen 돌진) + 벽/절벽 막힘 처리\n- Attack 원형 감지 및 히스테리시스(grace timer)로 자연스러운 전투 유지\n- Search 두리번 타이머 도착 후에만 카운트, 재탐지 시 Alert 복귀\n- **fix: Chase/Attack 중 플레이어 점프 시 원형 범위 안이면 Search 전환 방지**\n\n## Test plan\n- [x] 플레이어가 Chase/Attack 상태 적을 점프로 넘어갈 때 Search로 즉시 전환되지 않는지 확인\n- [x] 플레이어가 원형 범위(chaseCircleRadius 7 / attackCircleRadius 9) 밖 높은 발판으로 올라가면 Search 전환 확인\n- [x] Alert → Chase → Attack → Search 전체 FSM 흐름 확인\n- [x] 벽/절벽에 막혔을 때 Chase lunge 포기 후 Search 진입 확인\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+    "closed_by": {
+      "login": "hyunjin0814",
+      "id": 259763388,
+      "node_id": "U_kgDOD3usvA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hyunjin0814",
+      "html_url": "https://github.com/hyunjin0814",
+      "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+      "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+      "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+      "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+      "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "reactions": {
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null
+  },
+  "comments": [],
+  "pull": {
+    "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/21",
+    "id": 3720416766,
+    "node_id": "PR_kwDOSd8tx87dwQ3-",
+    "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21",
+    "diff_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21.diff",
+    "patch_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21.patch",
+    "issue_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21",
+    "number": 21,
+    "state": "closed",
+    "locked": false,
+    "title": "feat: 적 AI 강화 - 시야·Chase·Attack·Search 상태 완성 (#20)",
+    "user": {
+      "login": "hyunjin0814",
+      "id": 259763388,
+      "node_id": "U_kgDOD3usvA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hyunjin0814",
+      "html_url": "https://github.com/hyunjin0814",
+      "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+      "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+      "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+      "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+      "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "## Summary\n- Alert 시야 확장(1.4배), 시야 콘 색상 5단계 시각화\n- Chase 하이브리드 동작(원형 감지 + lastSeen 돌진) + 벽/절벽 막힘 처리\n- Attack 원형 감지 및 히스테리시스(grace timer)로 자연스러운 전투 유지\n- Search 두리번 타이머 도착 후에만 카운트, 재탐지 시 Alert 복귀\n- **fix: Chase/Attack 중 플레이어 점프 시 원형 범위 안이면 Search 전환 방지**\n\n## Test plan\n- [x] 플레이어가 Chase/Attack 상태 적을 점프로 넘어갈 때 Search로 즉시 전환되지 않는지 확인\n- [x] 플레이어가 원형 범위(chaseCircleRadius 7 / attackCircleRadius 9) 밖 높은 발판으로 올라가면 Search 전환 확인\n- [x] Alert → Chase → Attack → Search 전체 FSM 흐름 확인\n- [x] 벽/절벽에 막혔을 때 Chase lunge 포기 후 Search 진입 확인\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+    "created_at": "2026-05-21T01:34:00Z",
+    "updated_at": "2026-05-27T00:26:25Z",
+    "closed_at": "2026-05-21T01:35:29Z",
+    "merged_at": "2026-05-21T01:35:29Z",
+    "merge_commit_sha": "4289678e2b5dc398c95b64447dea270d7403a0af",
+    "assignees": [],
+    "requested_reviewers": [],
+    "requested_teams": [],
+    "labels": [],
+    "milestone": null,
+    "draft": false,
+    "commits_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/21/commits",
+    "review_comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/21/comments",
+    "review_comment_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/comments{/number}",
+    "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21/comments",
+    "statuses_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/statuses/80f1fced1e87b338eb806518f699976c75a55e66",
+    "head": {
+      "label": "Devel-Rocket-ClassRoom:features/enemy-ai-enhancement",
+      "ref": "features/enemy-ai-enhancement",
+      "sha": "80f1fced1e87b338eb806518f699976c75a55e66",
+      "user": {
+        "login": "Devel-Rocket-ClassRoom",
+        "id": 254347713,
+        "node_id": "O_kgDODykJwQ",
+        "avatar_url": "https://avatars.githubusercontent.com/u/254347713?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Devel-Rocket-ClassRoom",
+        "html_url": "https://github.com/Devel-Rocket-ClassRoom",
+        "followers_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/followers",
+        "following_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/subscriptions",
+        "organizations_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/orgs",
+        "repos_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/repos",
+        "events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "repo": {
+        "id": 1239363015,
+        "node_id": "R_kgDOSd8txw",
+        "name": "minigame-project-hyunjin0814",
+        "full_name": "Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "private": false,
+        "owner": {
+          "login": "Devel-Rocket-ClassRoom",
+          "id": 254347713,
+          "node_id": "O_kgDODykJwQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/254347713?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/Devel-Rocket-ClassRoom",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom",
+          "followers_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/followers",
+          "following_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/subscriptions",
+          "organizations_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/orgs",
+          "repos_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/repos",
+          "events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "description": "minigame-project-hyunjin0814 created by GitHub Classroom",
+        "fork": false,
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "forks_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/forks",
+        "keys_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/teams",
+        "hooks_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/hooks",
+        "issue_events_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/events",
+        "assignees_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/tags",
+        "blobs_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/languages",
+        "stargazers_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/stargazers",
+        "contributors_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/contributors",
+        "subscribers_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/subscribers",
+        "subscription_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/subscription",
+        "commits_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/comments{/number}",
+        "contents_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/merges",
+        "archive_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/downloads",
+        "issues_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/labels{/name}",
+        "releases_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/releases{/id}",
+        "deployments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/deployments",
+        "created_at": "2026-05-15T02:48:35Z",
+        "updated_at": "2026-06-23T00:41:45Z",
+        "pushed_at": "2026-06-24T04:09:23Z",
+        "git_url": "git://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814.git",
+        "ssh_url": "git@github.com:Devel-Rocket-ClassRoom/minigame-project-hyunjin0814.git",
+        "clone_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814.git",
+        "svn_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "homepage": null,
+        "size": 54443,
+        "stargazers_count": 0,
+        "watchers_count": 0,
+        "language": "C#",
+        "has_issues": true,
+        "has_projects": true,
+        "has_downloads": false,
+        "has_wiki": true,
+        "has_pages": false,
+        "has_discussions": false,
+        "forks_count": 0,
+        "mirror_url": null,
+        "archived": false,
+        "disabled": false,
+        "open_issues_count": 1,
+        "license": null,
+        "allow_forking": true,
+        "is_template": false,
+        "web_commit_signoff_required": false,
+        "has_pull_requests": true,
+        "pull_request_creation_policy": "all",
+        "topics": [],
+        "visibility": "public",
+        "forks": 0,
+        "open_issues": 1,
+        "watchers": 0,
+        "default_branch": "main"
+      }
+    },
+    "base": {
+      "label": "Devel-Rocket-ClassRoom:main",
+      "ref": "main",
+      "sha": "004fc3bf08393c6dab094b4c01a05ea04167fdfb",
+      "user": {
+        "login": "Devel-Rocket-ClassRoom",
+        "id": 254347713,
+        "node_id": "O_kgDODykJwQ",
+        "avatar_url": "https://avatars.githubusercontent.com/u/254347713?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Devel-Rocket-ClassRoom",
+        "html_url": "https://github.com/Devel-Rocket-ClassRoom",
+        "followers_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/followers",
+        "following_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/subscriptions",
+        "organizations_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/orgs",
+        "repos_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/repos",
+        "events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/received_events",
+        "type": "Organization",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "repo": {
+        "id": 1239363015,
+        "node_id": "R_kgDOSd8txw",
+        "name": "minigame-project-hyunjin0814",
+        "full_name": "Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "private": false,
+        "owner": {
+          "login": "Devel-Rocket-ClassRoom",
+          "id": 254347713,
+          "node_id": "O_kgDODykJwQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/254347713?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/Devel-Rocket-ClassRoom",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom",
+          "followers_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/followers",
+          "following_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/subscriptions",
+          "organizations_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/orgs",
+          "repos_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/repos",
+          "events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/Devel-Rocket-ClassRoom/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "description": "minigame-project-hyunjin0814 created by GitHub Classroom",
+        "fork": false,
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "forks_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/forks",
+        "keys_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/teams",
+        "hooks_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/hooks",
+        "issue_events_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/events",
+        "assignees_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/tags",
+        "blobs_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/languages",
+        "stargazers_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/stargazers",
+        "contributors_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/contributors",
+        "subscribers_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/subscribers",
+        "subscription_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/subscription",
+        "commits_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/comments{/number}",
+        "contents_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/merges",
+        "archive_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/downloads",
+        "issues_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/labels{/name}",
+        "releases_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/releases{/id}",
+        "deployments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/deployments",
+        "created_at": "2026-05-15T02:48:35Z",
+        "updated_at": "2026-06-23T00:41:45Z",
+        "pushed_at": "2026-06-24T04:09:23Z",
+        "git_url": "git://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814.git",
+        "ssh_url": "git@github.com:Devel-Rocket-ClassRoom/minigame-project-hyunjin0814.git",
+        "clone_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814.git",
+        "svn_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814",
+        "homepage": null,
+        "size": 54443,
+        "stargazers_count": 0,
+        "watchers_count": 0,
+        "language": "C#",
+        "has_issues": true,
+        "has_projects": true,
+        "has_downloads": false,
+        "has_wiki": true,
+        "has_pages": false,
+        "has_discussions": false,
+        "forks_count": 0,
+        "mirror_url": null,
+        "archived": false,
+        "disabled": false,
+        "open_issues_count": 1,
+        "license": null,
+        "allow_forking": true,
+        "is_template": false,
+        "web_commit_signoff_required": false,
+        "has_pull_requests": true,
+        "pull_request_creation_policy": "all",
+        "topics": [],
+        "visibility": "public",
+        "forks": 0,
+        "open_issues": 1,
+        "watchers": 0,
+        "default_branch": "main"
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/21"
+      },
+      "html": {
+        "href": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pull/21"
+      },
+      "issue": {
+        "href": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21"
+      },
+      "comments": {
+        "href": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/issues/21/comments"
+      },
+      "review_comments": {
+        "href": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/21/comments"
+      },
+      "review_comment": {
+        "href": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/comments{/number}"
+      },
+      "commits": {
+        "href": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/pulls/21/commits"
+      },
+      "statuses": {
+        "href": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/statuses/80f1fced1e87b338eb806518f699976c75a55e66"
+      }
+    },
+    "author_association": "MEMBER",
+    "auto_merge": null,
+    "assignee": null,
+    "active_lock_reason": null,
+    "merged": true,
+    "mergeable": null,
+    "rebaseable": null,
+    "mergeable_state": "unknown",
+    "merged_by": {
+      "login": "hyunjin0814",
+      "id": 259763388,
+      "node_id": "U_kgDOD3usvA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hyunjin0814",
+      "html_url": "https://github.com/hyunjin0814",
+      "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+      "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+      "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+      "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+      "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "comments": 0,
+    "review_comments": 0,
+    "maintainer_can_modify": false,
+    "commits": 15,
+    "additions": 828,
+    "deletions": 89,
+    "changed_files": 8
+  },
+  "reviews": [],
+  "review_comments": [],
+  "commits": [
+    {
+      "sha": "85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c",
+      "node_id": "C_kwDOSd8tx9oAKDg1MTgwYmVkY2Q1ZDVmODNiZDBhNWRkYjJjZTQ4NmNiNDQzOTRkOWM",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T07:38:14Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T07:38:14Z"
+        },
+        "message": "feat: 인게임 시야 콘 시각화 (#20)\n\n- SightConeRenderer 신규: MeshFilter/MeshRenderer로 부채꼴 메시 동적 생성\n- EnemySight: DetectionRadius/DetectionAngle 읽기 전용 프로퍼티 노출\n- EnemyController: CurrentState 읽기 전용 프로퍼티 노출\n- 상태별 콘 색상 (Patrol=회색, Alert=노랑, Chase/Attack=빨강)\n- 적 좌우 반전 시 자식 오브젝트로서 자동으로 반전됨",
+        "tree": {
+          "sha": "91cbc0952a19afbeb4d653cd03e10fcc6b1bbfc5",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/91cbc0952a19afbeb4d653cd03e10fcc6b1bbfc5"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "004fc3bf08393c6dab094b4c01a05ea04167fdfb",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/004fc3bf08393c6dab094b4c01a05ea04167fdfb",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/004fc3bf08393c6dab094b4c01a05ea04167fdfb"
+        }
+      ]
+    },
+    {
+      "sha": "792037c8341602aa0283a7f59fbec1ab6420b270",
+      "node_id": "C_kwDOSd8tx9oAKDc5MjAzN2M4MzQxNjAyYWEwMjgzYTdmNTlmYmVjMWFiNjQyMGIyNzA",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T07:38:50Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T07:38:50Z"
+        },
+        "message": "feat: 적 AI Alert 상태 추가 (#20)\n\n- Patrol → Alert → Chase 흐름으로 변경 (즉시 추격 대신 1초 멈춤)\n- Alert: 1초 풀 대기 후 재감지 시 Chase, 아니면 Patrol 복귀\n- EnemyMovement.ApplyAlertVelocity: x 속도만 0으로, 중력은 유지",
+        "tree": {
+          "sha": "caae42ce83657df92987b4e46f3dd08e48c8aa40",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/caae42ce83657df92987b4e46f3dd08e48c8aa40"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/792037c8341602aa0283a7f59fbec1ab6420b270",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/792037c8341602aa0283a7f59fbec1ab6420b270",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/792037c8341602aa0283a7f59fbec1ab6420b270",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/792037c8341602aa0283a7f59fbec1ab6420b270/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/85180bedcd5d5f83bd0a5ddb2ce486cb44394d9c"
+        }
+      ]
+    },
+    {
+      "sha": "71dee571321446a1eb0bb1bc1da0310d5573450e",
+      "node_id": "C_kwDOSd8tx9oAKDcxZGVlNTcxMzIxNDQ2YTFlYjBiYjFiYzFkYTAzMTBkNTU3MzQ1MGU",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T08:40:50Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T08:40:50Z"
+        },
+        "message": "feat: 적 AI Search 상태 추가 (#20)\n\n- Chase/Attack → Search 흐름으로 변경 (직접 Patrol 복귀 대신 마지막 본 위치 두리번)\n- Chase/Attack에서 매 프레임 lastSeenPosition 갱신\n- Search: lastSeenPosition으로 이동 → 좌우 두리번 → 3초 후 Patrol\n- Search 중 시야각 재감지 시 Alert로 (Chase/Attack 직행 아님)\n- EnemyMovement.SearchTick: 도착 판정 + 좌우 반전 두리번\n- EnemyMovement.ApplySearchVelocity: 도착 전 patrolSpeed, 도착 후 정지",
+        "tree": {
+          "sha": "75f7a995820c2e56fd0f3192343df3a512cbaaba",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/75f7a995820c2e56fd0f3192343df3a512cbaaba"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/71dee571321446a1eb0bb1bc1da0310d5573450e",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/71dee571321446a1eb0bb1bc1da0310d5573450e",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/71dee571321446a1eb0bb1bc1da0310d5573450e",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/71dee571321446a1eb0bb1bc1da0310d5573450e/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "792037c8341602aa0283a7f59fbec1ab6420b270",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/792037c8341602aa0283a7f59fbec1ab6420b270",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/792037c8341602aa0283a7f59fbec1ab6420b270"
+        }
+      ]
+    },
+    {
+      "sha": "067d06048e2299a6c3a623d7039698fe3407c243",
+      "node_id": "C_kwDOSd8tx9oAKDA2N2QwNjA0OGUyMjk5YTZjM2E2MjNkNzAzOTY5OGZlMzQwN2MyNDM",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T08:52:11Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T08:52:11Z"
+        },
+        "message": "feat: Chase 상태 원형 감지 도입 (#20)\n\n- EnemySight.IsPlayerInCircle 신규: 인자 반경으로 360° 감지 + 벽 차단(LoS)\n- EnemyController.chaseCircleRadius SerializeField 추가 (기본 7)\n- Chase 이탈 검사를 IsPlayerWithinRadius(5) → IsPlayerInCircle(7)로 변경\n- 인지 후엔 시야각이 아닌 원형 감지 — 등 뒤로 돌아도 추격 유지\n- 벽 뒤로 숨으면 Search로 전환 가능 (잠입 도구로서 벽 활용)",
+        "tree": {
+          "sha": "44a3c67e589125437466ad0f9bd609b8373ce669",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/44a3c67e589125437466ad0f9bd609b8373ce669"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/067d06048e2299a6c3a623d7039698fe3407c243",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/067d06048e2299a6c3a623d7039698fe3407c243",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/067d06048e2299a6c3a623d7039698fe3407c243",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/067d06048e2299a6c3a623d7039698fe3407c243/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "71dee571321446a1eb0bb1bc1da0310d5573450e",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/71dee571321446a1eb0bb1bc1da0310d5573450e",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/71dee571321446a1eb0bb1bc1da0310d5573450e"
+        }
+      ]
+    },
+    {
+      "sha": "2a16266df88e8321fd8c287214ef6ad5a462eece",
+      "node_id": "C_kwDOSd8tx9oAKDJhMTYyNjZkZjg4ZTgzMjFmZDhjMjg3MjE0ZWY2YWQ1YTQ2MmVlY2U",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T08:52:52Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T08:52:52Z"
+        },
+        "message": "feat: 시야 콘 색상 5단계 분리 (#20)\n\n- Patrol(회색) / Alert(노랑) / Search(연주황) / Chase(주홍) / Attack(진빨강)\n- Patrol과 Search를 시각적으로 구분 (회색 vs 주황)\n- Chase와 Attack을 시각적으로 구분 (주홍 vs 진빨강, 알파도 100→140)\n- 상태 전환을 한눈에 식별 가능",
+        "tree": {
+          "sha": "2ce7ec540f8b76ccac84327fee66ebca0ef264eb",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/2ce7ec540f8b76ccac84327fee66ebca0ef264eb"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/2a16266df88e8321fd8c287214ef6ad5a462eece",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/2a16266df88e8321fd8c287214ef6ad5a462eece",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/2a16266df88e8321fd8c287214ef6ad5a462eece",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/2a16266df88e8321fd8c287214ef6ad5a462eece/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "067d06048e2299a6c3a623d7039698fe3407c243",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/067d06048e2299a6c3a623d7039698fe3407c243",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/067d06048e2299a6c3a623d7039698fe3407c243"
+        }
+      ]
+    },
+    {
+      "sha": "d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a",
+      "node_id": "C_kwDOSd8tx9oAKGQzZGE4MGI5OWU0YjBhM2ZmMDU1OWE0NGE1YmE2NDJhYmQ5ZWU3OGE",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:04:47Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:04:47Z"
+        },
+        "message": "feat: 시야 콘 모양 상태별 동적 전환 (#20)\n\n- EnemyController.ChaseCircleRadius 프로퍼티 노출\n- SightConeRenderer.GetCurrentGeometry: 상태별 (radius, angle) 결정\n- Chase 진입 시 부채꼴(60°) → 원형(360°)으로 모양 변환\n- Chase 이탈 시 원형 → 부채꼴 복귀\n- 감지 방식(시야각 vs 원형) 차이가 시각적으로 식별 가능",
+        "tree": {
+          "sha": "d47e2b494227a6de78e05c7b1105b752136a80ce",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/d47e2b494227a6de78e05c7b1105b752136a80ce"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "2a16266df88e8321fd8c287214ef6ad5a462eece",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/2a16266df88e8321fd8c287214ef6ad5a462eece",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/2a16266df88e8321fd8c287214ef6ad5a462eece"
+        }
+      ]
+    },
+    {
+      "sha": "cbea4148efc4cc188a8895a7b9f2232268beea42",
+      "node_id": "C_kwDOSd8tx9oAKGNiZWE0MTQ4ZWZjNGNjMTg4YTg4OTVhN2I5ZjIyMzIyNjhiZWVhNDI",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:26:17Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:26:17Z"
+        },
+        "message": "feat: Attack 상태 원형 감지 + 히스테리시스 (#20)\n\n- EnemyController.attackCircleRadius (9), attackOutOfRangeGrace (1.5) 추가\n- Attack 이탈 검사를 IsPlayerInCircle로 — Chase(7)보다 넓은 9, 벽 차단\n- 원형 밖 1.5초 grace 유지 후 Search 전환 (콘 깜박임 방지)\n- 사거리 안: 정지 + 공격 / 사거리 밖 + 원형 안: 추격 이동 / grace: 대기\n- AttackCircleRadius 프로퍼티 노출 + SightConeRenderer Attack 원형 시각화",
+        "tree": {
+          "sha": "c008f25da92f890fb04068d22b75317e4abe2e9d",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/c008f25da92f890fb04068d22b75317e4abe2e9d"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/cbea4148efc4cc188a8895a7b9f2232268beea42",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/cbea4148efc4cc188a8895a7b9f2232268beea42",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/cbea4148efc4cc188a8895a7b9f2232268beea42",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/cbea4148efc4cc188a8895a7b9f2232268beea42/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/d3da80b99e4b0a3ff0559a44a5ba642abd9ee78a"
+        }
+      ]
+    },
+    {
+      "sha": "5897266bc5c368231c2fe477476a8dd3d405099c",
+      "node_id": "C_kwDOSd8tx9oAKDU4OTcyNjZiYzVjMzY4MjMxYzJmZTQ3NzQ3NmE4ZGQzZDQwNTA5OWM",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:26:20Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:26:20Z"
+        },
+        "message": "fix: 원거리 적 EnemySight의 Obstacle Layer 누락 수정 (#20)\n\n벽 너머에서도 플레이어를 감지해 공격하던 문제 해결.\nLoS Raycast가 동작하려면 obstacleLayer가 벽 레이어를 포함해야 함.",
+        "tree": {
+          "sha": "d1fc7e5c95a59680a207b70683cf890697173c24",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/d1fc7e5c95a59680a207b70683cf890697173c24"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/5897266bc5c368231c2fe477476a8dd3d405099c",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/5897266bc5c368231c2fe477476a8dd3d405099c",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/5897266bc5c368231c2fe477476a8dd3d405099c",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/5897266bc5c368231c2fe477476a8dd3d405099c/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "cbea4148efc4cc188a8895a7b9f2232268beea42",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/cbea4148efc4cc188a8895a7b9f2232268beea42",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/cbea4148efc4cc188a8895a7b9f2232268beea42"
+        }
+      ]
+    },
+    {
+      "sha": "6a198362deb74339eba14fa32925993d70f10d84",
+      "node_id": "C_kwDOSd8tx9oAKDZhMTk4MzYyZGViNzQzMzllYmExNGZhMzI5MjU5OTNkNzBmMTBkODQ",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:28:55Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:28:55Z"
+        },
+        "message": "fix: Search 두리번 타이머가 이동 중에도 카운트되는 문제 (#20)\n\n이동 시간이 두리번 시간에 포함되어 lastSeenPosition 도착 전에 Patrol 복귀하던 문제 해결.\n\n- EnemyMovement.ArrivedAtSearch 프로퍼티 노출\n- Search 케이스에서 ArrivedAtSearch가 true일 때만 searchTimer 카운트\n- 이동 시간 제외 → searchDuration이 순수 두리번 시간 의미를 가짐",
+        "tree": {
+          "sha": "c9bf37c24a905cdd7b30ae0f5864320b7615e2dd",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/c9bf37c24a905cdd7b30ae0f5864320b7615e2dd"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/6a198362deb74339eba14fa32925993d70f10d84",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/6a198362deb74339eba14fa32925993d70f10d84",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/6a198362deb74339eba14fa32925993d70f10d84",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/6a198362deb74339eba14fa32925993d70f10d84/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "5897266bc5c368231c2fe477476a8dd3d405099c",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/5897266bc5c368231c2fe477476a8dd3d405099c",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/5897266bc5c368231c2fe477476a8dd3d405099c"
+        }
+      ]
+    },
+    {
+      "sha": "ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a",
+      "node_id": "C_kwDOSd8tx9oAKGJhNjNjY2RjZjliNDM3OTFkZGE5ZGMxMzVkY2M1MGVhZTFmM2JkNGE",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:40:02Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T09:40:02Z"
+        },
+        "message": "feat: Alert 시야 확장 (#20)\n\n- EnemySight.CanSeePlayer/IsPlayerWithinRadius에 radiusMultiplier 인자 추가\n- EnemyController.alertRadiusMultiplier (1.4) SerializeField 추가\n- Alert 1초 후 재확인 시 확장 반경(5×1.4=7)으로 CanSeePlayer 호출\n- AlertRadiusMultiplier 프로퍼티 노출 + SightConeRenderer Alert 콘 확장 시각화\n- 카멜레온이 잠시 노출됐다가 다시 은신해도 Alert 확장으로 들킬 수 있음 (잠입 페널티)",
+        "tree": {
+          "sha": "6e72423e7a74b94846f432842b2f80ff52b8d3bd",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/6e72423e7a74b94846f432842b2f80ff52b8d3bd"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "6a198362deb74339eba14fa32925993d70f10d84",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/6a198362deb74339eba14fa32925993d70f10d84",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/6a198362deb74339eba14fa32925993d70f10d84"
+        }
+      ]
+    },
+    {
+      "sha": "d550dd8f3c19348c65a5187345e3081855e50937",
+      "node_id": "C_kwDOSd8tx9oAKGQ1NTBkZDhmM2MxOTM0OGM2NWE1MTg3MzQ1ZTMwODE4NTVlNTA5Mzc",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T10:09:32Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T10:09:32Z"
+        },
+        "message": "중간 저장\n\n중간 저장",
+        "tree": {
+          "sha": "f7b9d888b8f9d406f4050e6c68e1712c40bd651d",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/f7b9d888b8f9d406f4050e6c68e1712c40bd651d"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/d550dd8f3c19348c65a5187345e3081855e50937",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/d550dd8f3c19348c65a5187345e3081855e50937",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/d550dd8f3c19348c65a5187345e3081855e50937",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/d550dd8f3c19348c65a5187345e3081855e50937/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/ba63ccdcf9b43791dda9dc135dcc50eae1f3bd4a"
+        }
+      ]
+    },
+    {
+      "sha": "503ce0f79c386ee359afcfc4333ee2fc96bed736",
+      "node_id": "C_kwDOSd8tx9oAKDUwM2NlMGY3OWMzODZlZTM1OWFmY2ZjNDMzM2VlMmZjOTZiZWQ3MzY",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T10:10:32Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-20T10:10:32Z"
+        },
+        "message": "중간 저장\n\n중간 저장",
+        "tree": {
+          "sha": "73b8e0a2ee9c43c63b95ae99245466a72c5d7857",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/73b8e0a2ee9c43c63b95ae99245466a72c5d7857"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/503ce0f79c386ee359afcfc4333ee2fc96bed736",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/503ce0f79c386ee359afcfc4333ee2fc96bed736",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/503ce0f79c386ee359afcfc4333ee2fc96bed736",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/503ce0f79c386ee359afcfc4333ee2fc96bed736/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "d550dd8f3c19348c65a5187345e3081855e50937",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/d550dd8f3c19348c65a5187345e3081855e50937",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/d550dd8f3c19348c65a5187345e3081855e50937"
+        }
+      ]
+    },
+    {
+      "sha": "c4132fafb724edd6472f8791bfd94736af6f503e",
+      "node_id": "C_kwDOSd8tx9oAKGM0MTMyZmFmYjcyNGVkZDY0NzJmODc5MWJmZDk0NzM2YWY2ZjUwM2U",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-21T01:17:57Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-21T01:17:57Z"
+        },
+        "message": "feat: Chase 하이브리드 동작 + Attack 진입 폴리싱 (#20)\n\nChase 하이브리드:\n- EnemyMovement.chaseLungeSpeed (7), ChaseTowardTarget, ArrivedAtChaseTarget 추가\n- Chase 원형 안: 동적 추적 (chaseSpeed) + lastSeenPosition 갱신\n- Chase 원형 밖: lastSeenPosition으로 lunge 속도(7)로 돌진, 도착 시 Search\n\nAttack 진입 폴리싱:\n- Chase → Attack 트리거에 inChaseCircle 조건 추가 (LoS 차단 상태 제외)\n- attackWindup (0.5) SerializeField 추가\n- ChangeState: Attack 진입 시 attackTimer = attackWindup (첫 공격 딜레이)\n- 다른 상태 진입 시 기존대로 attackTimer = 0",
+        "tree": {
+          "sha": "274b77a90ad87e1ceed59e8937ae21e80d946d45",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/274b77a90ad87e1ceed59e8937ae21e80d946d45"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/c4132fafb724edd6472f8791bfd94736af6f503e",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/c4132fafb724edd6472f8791bfd94736af6f503e",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/c4132fafb724edd6472f8791bfd94736af6f503e",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/c4132fafb724edd6472f8791bfd94736af6f503e/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "503ce0f79c386ee359afcfc4333ee2fc96bed736",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/503ce0f79c386ee359afcfc4333ee2fc96bed736",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/503ce0f79c386ee359afcfc4333ee2fc96bed736"
+        }
+      ]
+    },
+    {
+      "sha": "da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448",
+      "node_id": "C_kwDOSd8tx9oAKGRhM2IyZGE4ZGNkYzEyZmMxYmNhMDc2ZTBlNDJlYmQ4ZDMyYjE0NDg",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-21T01:19:21Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-21T01:19:21Z"
+        },
+        "message": "fix: Chase lunge / Search 중 벽 막힘 처리 (#20)\n\n벽 너머 lastSeenPosition으로 갈 수 없을 때 적이 벽 앞에서 무한히 멈춰있던 문제 해결.\n\n- EnemyMovement.IsBlockedToward(direction) 신규: Patrol의 wall/edge 검사 패턴을 외부 노출\n- Chase lunge: ArrivedAtChaseTarget || IsBlockedToward 시 Search 전환\n- SearchTick: 벽/절벽에 막히면 arrivedAtSearch = true로 간주 → 그 자리에서 두리번\n- TestScene: 적 groundLayer 마스크에 Platform 레이어 추가\n- 알아둘 점: Platform 타일은 PlatformEffector2D + CompositeCollider2D 조합 시\n  옆면 콜라이더가 없을 수 있어 벽 용도로는 Ground 타일 사용 권장 (GDD 의도와 일치)",
+        "tree": {
+          "sha": "fe96c94d43f462c9d8aa7cfe4f1ed3256560c104",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/fe96c94d43f462c9d8aa7cfe4f1ed3256560c104"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "c4132fafb724edd6472f8791bfd94736af6f503e",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/c4132fafb724edd6472f8791bfd94736af6f503e",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/c4132fafb724edd6472f8791bfd94736af6f503e"
+        }
+      ]
+    },
+    {
+      "sha": "80f1fced1e87b338eb806518f699976c75a55e66",
+      "node_id": "C_kwDOSd8tx9oAKDgwZjFmY2VkMWU4N2IzMzhlYjgwNjUxOGY2OTk5NzZjNzVhNTVlNjY",
+      "commit": {
+        "author": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-21T01:33:30Z"
+        },
+        "committer": {
+          "name": "이현진",
+          "email": "zse846@gmail.com",
+          "date": "2026-05-21T01:33:30Z"
+        },
+        "message": "fix: Chase/Attack 중 점프 회피 시 Search 즉시 전환 방지 (#20)\n\n원형 감지 범위(chaseCircleRadius / attackCircleRadius) 안에 플레이어가\n있는 경우 IsPlayerTooHigh 판정을 무시해 Search 전환을 막음.\n씬 배치 및 HumanData jumpSpeed(15→25) 테스트 조정 포함.\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>",
+        "tree": {
+          "sha": "80e4d090328d5efa78c57a08c5a68cde1b3836ef",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/trees/80e4d090328d5efa78c57a08c5a68cde1b3836ef"
+        },
+        "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/git/commits/80f1fced1e87b338eb806518f699976c75a55e66",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/80f1fced1e87b338eb806518f699976c75a55e66",
+      "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/80f1fced1e87b338eb806518f699976c75a55e66",
+      "comments_url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/80f1fced1e87b338eb806518f699976c75a55e66/comments",
+      "author": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "hyunjin0814",
+        "id": 259763388,
+        "node_id": "U_kgDOD3usvA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/259763388?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/hyunjin0814",
+        "html_url": "https://github.com/hyunjin0814",
+        "followers_url": "https://api.github.com/users/hyunjin0814/followers",
+        "following_url": "https://api.github.com/users/hyunjin0814/following{/other_user}",
+        "gists_url": "https://api.github.com/users/hyunjin0814/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/hyunjin0814/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/hyunjin0814/subscriptions",
+        "organizations_url": "https://api.github.com/users/hyunjin0814/orgs",
+        "repos_url": "https://api.github.com/users/hyunjin0814/repos",
+        "events_url": "https://api.github.com/users/hyunjin0814/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/hyunjin0814/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448",
+          "url": "https://api.github.com/repos/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commits/da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448",
+          "html_url": "https://github.com/Devel-Rocket-ClassRoom/minigame-project-hyunjin0814/commit/da3b2da8dcdc12fc1bca076e0e42ebd8d32b1448"
+        }
+      ]
+    }
+  ]
+}
